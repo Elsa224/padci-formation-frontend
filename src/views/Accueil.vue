@@ -45,13 +45,23 @@
     <!-- LIGNE BOUTON AJOUTER + BARRE DE RECHERCHE -->
     <div class="flex flex-wrap justify-between items-center gap-4 mb-4 px-4">
       <!-- Bouton Ajouter à gauche -->
-      <router-link
-        to="/nouvelle-demande"
-        class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow transition-all duration-300 flex items-center justify-center gap-2 group"
-      >
-        <i class="bx bx-plus-circle text-lg group-hover:rotate-90 transition-transform duration-300"></i>
-        <span>Ajouter une nouvelle demande</span>
-      </router-link>
+      <div class="flex items-center gap-3">
+        <router-link
+          to="/nouvelle-demande"
+          class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow transition-all duration-300 flex items-center justify-center gap-2 group"
+        >
+          <i class="bx bx-plus-circle text-lg group-hover:rotate-90 transition-transform duration-300"></i>
+          <span>Ajouter une nouvelle demande</span>
+        </router-link>
+
+        <router-link
+          to="/contact"
+          class="bg-white border border-primary text-primary hover:bg-primary hover:text-white px-4 py-2 rounded-lg shadow transition-all duration-300 flex items-center justify-center gap-2"
+        >
+          <i class="bx bx-envelope text-lg"></i>
+          <span>Contact</span>
+        </router-link>
+      </div>
 
       <!-- Barre de recherche à droite -->
       <div class="relative w-full sm:w-72">

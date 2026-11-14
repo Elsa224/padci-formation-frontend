@@ -19,6 +19,7 @@ import Chapitre5 from '@/views/formations/Chapitre5.vue'
 import Exercices from '@/components/Exercices.vue'
 import Evaluations from '@/components/Evaluations.vue'
 import Inscription from '@/views/Inscription.vue'
+import Contact from '@/views/Contact.vue'
 import Certificats from '@/components/Certificats.vue'
 
 const router = createRouter({
@@ -61,6 +62,11 @@ const router = createRouter({
       path: '/inscription',
       name: 'inscription',
       component: Inscription
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: Contact
     },
 
     // PAGES AVEC SIDEBAR

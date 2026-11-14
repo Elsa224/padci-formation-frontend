@@ -27,7 +27,21 @@
     </div>
 
     <!-- Contenu des étapes -->
-    <form @submit.prevent="submitForm" class="space-y-6">
+    <!-- Écran de succès -->
+    <div v-if="submitted" class="text-center py-10 space-y-4">
+      <i class="bx bx-check-circle text-6xl text-green-600"></i>
+      <h2 class="text-xl font-semibold text-gray-800">Demande envoyée avec succès</h2>
+      <p class="text-gray-600">
+        Votre dossier a bien été transmis. Un email de confirmation vient de vous être envoyé.
+        Notre équipe reviendra vers vous.
+      </p>
+      <router-link to="/accueil"
+                   class="inline-block px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition">
+        Retour à l'accueil
+      </router-link>
+    </div>
+
+    <form v-else @submit.prevent="submitForm" class="space-y-6">
       <!-- Étape 1 : Identité -->
       <div v-if="currentStep === 1" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -173,6 +187,11 @@
         <p class="text-sm text-gray-500">Veuillez vérifier vos informations avant de valider.</p>
       </div>
 
+      <!-- Message d'erreur -->
+      <div v-if="errorMsg" class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-4 py-3">
+        {{ errorMsg }}
+      </div>
+
       <!-- Boutons de navigation -->
       <div class="flex justify-between items-center pt-4 border-t">
         <button type="button" @click="prevStep" v-if="currentStep > 1"
@@ -186,9 +205,9 @@
           Suivant
         </button>
 
-        <button type="submit" v-if="currentStep === 5"
-                class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-          Soumettre ma demande
+        <button type="submit" v-if="currentStep === 5" :disabled="submitting"
+                class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition disabled:opacity-60 disabled:cursor-not-allowed">
+          {{ submitting ? 'Envoi en cours…' : 'Soumettre ma demande' }}
         </button>
       </div>
     </form>
@@ -201,6 +220,9 @@ export default {
   data() {
     return {
       currentStep: 1,
+      submitting: false,
+      submitted: false,
+      errorMsg: '',
       stepLabels: ['Identité', 'Parents', 'Documents', 'Formation', 'Récapitulatif'],
       formations: [
         'Cyber security',
@@ -281,11 +303,34 @@ export default {
         this.form[field] = file;
       }
     },
-    submitForm() {
-      // Ici vous pouvez envoyer les données (formData avec les fichiers)
-      alert('Votre demande a été soumise avec succès !');
-      console.log('Données du formulaire :', this.form);
-      // Réinitialiser ou rediriger...
+    async submitForm() {
+      if (this.submitting) return;
+      this.errorMsg = '';
+      this.submitting = true;
+      try {
+        const fd = new FormData();
+        const scalars = [
+          'nom', 'prenom', 'nationalite', 'nni', 'email', 'telephone',
+          'dateNaissance', 'nomMere', 'nomPere', 'fonction', 'adresse', 'formation'
+        ];
+        scalars.forEach((k) => fd.append(k, this.form[k] ?? ''));
+        fd.append('pasCarteIdentite', this.form.pasCarteIdentite ? 'true' : 'false');
+        ['carteIdentite', 'attestationIdentite', 'photoIdentite', 'extraitNaissance'].forEach((k) => {
+          if (this.form[k]) fd.append(k, this.form[k]);
+        });
+
+        const base = import.meta.env.VITE_API_BASE || '';
+        const res = await fetch(`${base}/api/inscription`, { method: 'POST', body: fd });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || "Échec de l'envoi. Réessayez plus tard.");
+        }
+        this.submitted = true;
+      } catch (e) {
+        this.errorMsg = e.message || 'Erreur réseau. Vérifiez votre connexion et réessayez.';
+      } finally {
+        this.submitting = false;
+      }
     }
   }
 };
