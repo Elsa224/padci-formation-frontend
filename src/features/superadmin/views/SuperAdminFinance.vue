@@ -3,28 +3,28 @@
     <!-- EN-TÊTE -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Budget &amp; Décaissements</h1>
-        <p class="text-sm text-gray-500 mt-1">Gouvernance financière du programme (ADR-011).</p>
+        <h1 class="text-2xl font-bold text-ink">Budget &amp; Décaissements</h1>
+        <p class="text-sm text-quiet mt-1">Gouvernance financière du programme (ADR-011).</p>
       </div>
     </div>
 
     <!-- CARTES DE BUDGET -->
-    <div v-if="isBudgetPending || isDisbursementsPending" class="text-center text-gray-500 py-6">
+    <div v-if="isBudgetPending || isDisbursementsPending" class="text-center text-quiet py-6">
       Chargement…
     </div>
     <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div
         v-for="total in budgetTotals"
         :key="total.currency"
-        class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 relative overflow-hidden"
+        class="bg-white rounded-xl shadow-sm p-6 border border-line relative overflow-hidden"
       >
         <div
           class="absolute top-0 right-0 w-20 h-20 bg-orange-50 rounded-bl-full -mr-4 -mt-4"
         ></div>
-        <p class="text-gray-500 text-sm font-medium relative z-10">
+        <p class="text-quiet text-sm font-medium relative z-10">
           Budget alloué ({{ total.currency }})
         </p>
-        <p class="text-2xl font-bold text-gray-800 mt-1 relative z-10">
+        <p class="text-2xl font-bold text-ink mt-1 relative z-10">
           {{ formatAmount(total.allocated, total.currency) }}
         </p>
         <div class="w-full bg-gray-100 rounded-full h-2 mt-4 relative z-10">
@@ -33,7 +33,7 @@
             :style="{ width: total.consumedPercent + '%' }"
           ></div>
         </div>
-        <p class="text-xs text-gray-500 mt-2 relative z-10">
+        <p class="text-xs text-quiet mt-2 relative z-10">
           Consommé : {{ formatAmount(total.consumed, total.currency) }} ({{
             total.consumedPercent
           }}%)
@@ -42,32 +42,32 @@
 
       <div
         v-if="budgetTotals.length === 0"
-        class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 text-sm text-gray-500 md:col-span-2"
+        class="bg-white rounded-xl shadow-sm p-6 border border-line text-sm text-quiet md:col-span-2"
       >
         Aucune ligne budgétaire créée pour l'instant.
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <p class="text-gray-500 text-sm font-medium">Décaissements en attente</p>
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+        <p class="text-quiet text-sm font-medium">Décaissements en attente</p>
         <div class="flex items-end gap-2 mt-1">
-          <p class="text-2xl font-bold text-gray-800">{{ pendingDisbursementsCount }}</p>
-          <p class="text-sm font-normal text-gray-500 mb-1">en attente d'ANO signée</p>
+          <p class="text-2xl font-bold text-ink">{{ pendingDisbursementsCount }}</p>
+          <p class="text-sm font-normal text-quiet mb-1">en attente d'ANO signée</p>
         </div>
       </div>
     </div>
 
     <!-- TABLEAU DES DÉCAISSEMENTS -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-        <h3 class="text-lg font-bold text-gray-800">Demandes de décaissement</h3>
-        <span class="text-xs font-medium bg-gray-100 text-gray-600 px-3 py-1 rounded-full"
+    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="text-lg font-bold text-ink">Demandes de décaissement</h3>
+        <span class="text-xs font-medium bg-gray-100 text-quiet px-3 py-1 rounded-full"
           >{{ disbursements.length }} au total</span
         >
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider">
               <th class="py-3 px-6">Date</th>
               <th class="py-3 px-6">Bénéficiaire</th>
               <th class="py-3 px-6">Objet</th>
@@ -77,7 +77,7 @@
               <th class="py-3 px-6 text-center">Action</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-sm">
+          <tbody class="divide-y divide-line text-sm">
             <tr v-if="isDisbursementsError">
               <td colspan="7" class="py-8 text-center text-red-600">
                 {{
@@ -87,22 +87,22 @@
               </td>
             </tr>
             <tr v-else-if="disbursements.length === 0">
-              <td colspan="7" class="py-8 text-center text-gray-500">
+              <td colspan="7" class="py-8 text-center text-quiet">
                 Aucune demande de décaissement.
               </td>
             </tr>
             <tr
               v-for="disbursement in disbursements"
               :key="disbursement.key"
-              class="hover:bg-gray-50 transition"
+              class="hover:bg-canvas transition"
             >
-              <td class="py-4 px-6 text-gray-600">{{ formatDate(disbursement.requested_at) }}</td>
-              <td class="py-4 px-6 font-medium text-gray-800">{{ disbursement.beneficiary }}</td>
-              <td class="py-4 px-6 text-gray-600">{{ disbursement.purpose }}</td>
-              <td class="py-4 px-6 font-bold text-gray-800">
+              <td class="py-4 px-6 text-quiet">{{ formatDate(disbursement.requested_at) }}</td>
+              <td class="py-4 px-6 font-medium text-ink">{{ disbursement.beneficiary }}</td>
+              <td class="py-4 px-6 text-quiet">{{ disbursement.purpose }}</td>
+              <td class="py-4 px-6 font-bold text-ink">
                 {{ formatAmount(disbursement.amount_minor, disbursement.currency) }}
               </td>
-              <td class="py-4 px-6 text-gray-600">
+              <td class="py-4 px-6 text-quiet">
                 <span
                   v-if="disbursement.ano_request"
                   :class="
@@ -111,7 +111,7 @@
                 >
                   {{ disbursement.ano_request.status === 'signed' ? 'Signée' : 'Non signée' }}
                 </span>
-                <span v-else class="text-gray-400">Aucune</span>
+                <span v-else class="text-quiet">Aucune</span>
               </td>
               <td class="py-4 px-6">
                 <span
@@ -130,7 +130,7 @@
                 >
                   Valider
                 </button>
-                <span v-else class="text-gray-400 text-xs">—</span>
+                <span v-else class="text-quiet text-xs">-</span>
               </td>
             </tr>
           </tbody>
@@ -162,11 +162,11 @@
               />
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-800 mb-2">Confirmer le décaissement</h3>
-          <p class="text-sm text-gray-500 mb-1">
+          <h3 class="text-lg font-bold text-ink mb-2">Confirmer le décaissement</h3>
+          <p class="text-sm text-quiet mb-1">
             Vous êtes sur le point de valider le paiement de :
           </p>
-          <p class="text-base font-bold text-gray-800 mb-6">
+          <p class="text-base font-bold text-ink mb-6">
             {{
               selectedDisbursement
                 ? formatAmount(selectedDisbursement.amount_minor, selectedDisbursement.currency)
@@ -184,7 +184,7 @@
           <div class="flex gap-3">
             <button
               @click="showConfirmModal = false"
-              class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition"
+              class="flex-1 px-4 py-2.5 bg-gray-100 text-ink rounded-xl font-medium hover:bg-gray-200 transition"
             >
               Annuler
             </button>
@@ -243,7 +243,7 @@ function formatAmount(amountMinor: number, currency: string): string {
 }
 
 function formatDate(value: string | null): string {
-  if (!value) return '—'
+  if (!value) return '-'
   return new Date(value).toLocaleDateString('fr-FR')
 }
 
@@ -277,7 +277,7 @@ function statusClass(status: string): string {
     case 'rejected':
       return 'bg-red-100 text-red-700'
     default:
-      return 'bg-gray-100 text-gray-700'
+      return 'bg-gray-100 text-ink'
   }
 }
 

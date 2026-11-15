@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col">
+  <div class="min-h-screen bg-canvas flex flex-col">
     <!-- HEADER -->
     <section class="relative w-full h-96 overflow-hidden">
       <img
@@ -24,19 +24,19 @@
 
         <div class="text-center">
           <h2 class="text-xl font-bold text-[#007668] mb-1">Support de cours</h2>
-          <p class="text-sm text-gray-600">Chapitre 1 — Le Code de la Route en Côte d'Ivoire</p>
+          <p class="text-sm text-quiet">Chapitre 1 - Le Code de la Route en Côte d'Ivoire</p>
         </div>
       </div>
 
       <!-- INTRODUCTION DU COURS -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-8">
-        <p class="text-gray-700 leading-relaxed">
+        <p class="text-ink leading-relaxed">
           Chaque jour, des centaines de coursiers circulent dans les rues d'Abidjan pour livrer des
           colis, des repas et des documents. Ce travail est utile pour toute la ville. Mais les
           routes d'Abidjan peuvent être dangereuses : embouteillages, carrefours difficiles, piétons
           nombreux, routes abîmées.
         </p>
-        <p class="text-gray-700 leading-relaxed mt-4">
+        <p class="text-ink leading-relaxed mt-4">
           Ce module de formation a été créé spécialement pour les coursiers. Il explique les règles
           de la route, comment conduire en sécurité, et comment éviter les accidents.
         </p>
@@ -70,7 +70,7 @@
             <span>Savoir quoi faire en cas d'accident</span>
           </li>
         </ul>
-        <div class="mt-4 flex items-center gap-2 text-sm text-gray-600 bg-white/50 p-3 rounded-lg">
+        <div class="mt-4 flex items-center gap-2 text-sm text-quiet bg-white/50 p-3 rounded-lg">
           <ClockIcon class="text-[#007668]" />
           <span
             >⏱ Durée estimée : 45 minutes • Lisez chaque partie calmement. À la fin, un quiz vous
@@ -82,9 +82,9 @@
       <!-- CHAPITRE 1.1 -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-6">
         <h3 class="font-bold text-[#007668] text-lg mb-3">
-          Chapitre 1 — Le Code de la Route en Côte d'Ivoire
+          Chapitre 1 - Le Code de la Route en Côte d'Ivoire
         </h3>
-        <p class="text-gray-700 mb-4">
+        <p class="text-ink mb-4">
           Le Code de la Route est un ensemble de règles que tous les conducteurs doivent respecter.
           Ces règles protègent votre vie et la vie des autres.
         </p>
@@ -96,7 +96,7 @@
           />
           <div>
             <p class="font-semibold text-[#007668]">Le saviez-vous?</p>
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-ink">
               En Côte d'Ivoire, les accidents de la route sont l'une des premières causes de décès.
               La majorité des accidents arrivent à cause du non-respect du Code de la Route.
               Respecter les règles, c'est protéger votre vie et votre travail.
@@ -104,8 +104,8 @@
           </div>
         </div>
 
-        <h4 class="font-semibold text-[#007668] mb-2">1.2 — Les documents obligatoires</h4>
-        <p class="text-sm text-gray-600 mb-3">
+        <h4 class="font-semibold text-[#007668] mb-2">1.2 - Les documents obligatoires</h4>
+        <p class="text-sm text-quiet mb-3">
           En tant que coursier, vous devez toujours avoir ces documents avec vous :
         </p>
 
@@ -122,7 +122,7 @@
                 <td class="p-3 font-medium">Permis de conduire (A ou A2 pour moto)</td>
                 <td class="p-3 text-sm">Prouve que vous avez le droit de conduire</td>
               </tr>
-              <tr class="border-b bg-gray-50">
+              <tr class="border-b bg-canvas">
                 <td class="p-3 font-medium">Carte grise du véhicule</td>
                 <td class="p-3 text-sm">Prouve que le véhicule est enregistré</td>
               </tr>
@@ -130,7 +130,7 @@
                 <td class="p-3 font-medium">Assurance en cours de validité</td>
                 <td class="p-3 text-sm">Couvre les dommages en cas d'accident</td>
               </tr>
-              <tr class="border-b bg-gray-50">
+              <tr class="border-b bg-canvas">
                 <td class="p-3 font-medium">Carte nationale d'identité</td>
                 <td class="p-3 text-sm">Pièce d'identité officielle</td>
               </tr>
@@ -142,19 +142,19 @@
           <CircleAlertIcon class="text-red-600 flex-shrink-0" :size="24" />
           <div>
             <p class="font-semibold text-red-700">Attention !</p>
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-ink">
               Rouler sans ces documents peut entraîner une amende ou la saisie de votre véhicule par
               la Police ou la Gendarmerie.
             </p>
           </div>
         </div>
 
-        <h4 class="font-semibold text-[#007668] mb-2">1.3 — Les équipements obligatoires</h4>
-        <p class="text-sm text-gray-600 mb-3">
+        <h4 class="font-semibold text-[#007668] mb-2">1.3 - Les équipements obligatoires</h4>
+        <p class="text-sm text-quiet mb-3">
           Pour votre sécurité et celle des autres, certains équipements sont obligatoires :
         </p>
 
-        <ul class="list-disc pl-6 mb-4 space-y-1 text-gray-700">
+        <ul class="list-disc pl-6 mb-4 space-y-1 text-ink">
           <li>Le casque homologué (pour vous ET votre passager si vous en avez un)</li>
           <li>Les rétroviseurs en bon état</li>
           <li>Les clignotants qui fonctionnent</li>
@@ -166,7 +166,7 @@
           <LightbulbIcon class="text-blue-600 flex-shrink-0" :size="24" />
           <div>
             <p class="font-semibold text-blue-700">Conseil pratique</p>
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-ink">
               Vérifiez votre véhicule chaque matin avant de partir : pneus, freins, rétroviseurs,
               feux. Cela prend 5 minutes et peut vous sauver la vie.
             </p>
@@ -177,14 +177,14 @@
       <!-- CHAPITRE 2 (Raccourci) -->
       <div class="bg-white rounded-xl shadow-md p-6 mb-8">
         <h3 class="font-bold text-[#007668] text-lg mb-2">
-          Chapitre 2 — Les Panneaux et Signaux de Circulation
+          Chapitre 2 - Les Panneaux et Signaux de Circulation
         </h3>
-        <p class="text-gray-700">
+        <p class="text-ink">
           Les panneaux de signalisation indiquent ce que vous devez faire ou ne pas faire sur la
           route. Il est très important de les connaître.
         </p>
         <div class="mt-4 text-center py-4 bg-gray-100 rounded-lg">
-          <p class="text-gray-500 italic">
+          <p class="text-quiet italic">
             (Contenu détaillé à venir dans la version complète du cours)
           </p>
         </div>
@@ -204,8 +204,8 @@
             <FileTextIcon class="text-red-600" :size="36" />
           </div>
           <h3 class="font-bold text-[#007668] text-lg mb-1">PDF</h3>
-          <p class="text-sm text-gray-600">Télécharger le cours complet</p>
-          <span class="text-xs text-gray-400 mt-2">PDF • 2.5 MB</span>
+          <p class="text-sm text-quiet">Télécharger le cours complet</p>
+          <span class="text-xs text-quiet mt-2">PDF • 2.5 MB</span>
         </a>
 
         <!-- Lien Vidéo - Ouvre la vidéo module1 -->
@@ -220,8 +220,8 @@
             <VideoIcon class="text-blue-600" :size="36" />
           </div>
           <h3 class="font-bold text-[#007668] text-lg mb-1">Vidéo</h3>
-          <p class="text-sm text-gray-600">Regarder la leçon vidéo</p>
-          <span class="text-xs text-gray-400 mt-2">Module 1 • 15 min</span>
+          <p class="text-sm text-quiet">Regarder la leçon vidéo</p>
+          <span class="text-xs text-quiet mt-2">Module 1 • 15 min</span>
         </a>
 
         <!-- Lien Quiz -->
@@ -236,8 +236,8 @@
             <CircleQuestionMarkIcon class="text-green-600" :size="36" />
           </div>
           <h3 class="font-bold text-[#007668] text-lg mb-1">Quiz</h3>
-          <p class="text-sm text-gray-600">Tester vos connaissances</p>
-          <span class="text-xs text-gray-400 mt-2">10 questions</span>
+          <p class="text-sm text-quiet">Tester vos connaissances</p>
+          <span class="text-xs text-quiet mt-2">10 questions</span>
         </a>
       </div>
 
@@ -251,7 +251,7 @@
           S'enregistrer pour cette formation
           <ArrowRightIcon :size="24" />
         </RouterLink>
-        <p class="text-xs text-gray-500 mt-3">
+        <p class="text-xs text-quiet mt-3">
           L'enregistrement vous permet de suivre votre progression et d'obtenir une attestation
         </p>
       </div>

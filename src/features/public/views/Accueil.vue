@@ -16,7 +16,7 @@
       <div class="relative flex-1 min-w-[200px]">
         <select
           v-model="selectedCity"
-          class="w-full appearance-none bg-white border border-gray-200 rounded-full pl-10 pr-10 py-3 text-sm text-gray-700 font-medium shadow hover:border-primary focus:border-primary focus:outline-none transition-all duration-300 cursor-pointer"
+          class="w-full appearance-none bg-white border border-line rounded-full pl-10 pr-10 py-3 text-sm text-ink font-medium shadow hover:border-primary focus:border-primary focus:outline-none transition-all duration-300 cursor-pointer"
         >
           <option value="" disabled selected>Ville</option>
           <option v-for="city in cities" :key="city.code" :value="city.code">
@@ -56,12 +56,12 @@
 
       <!-- Barre de recherche à droite -->
       <div class="relative w-full sm:w-72">
-        <SearchIcon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" :size="16" />
+        <SearchIcon class="absolute left-3 top-1/2 -translate-y-1/2 text-quiet" :size="16" />
         <input
           type="text"
           v-model="searchQuery"
           placeholder="Rechercher..."
-          class="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 focus:border-primary focus:outline-none shadow-sm transition-all duration-300 text-sm"
+          class="w-full pl-9 pr-3 py-2 rounded-lg border border-line focus:border-primary focus:outline-none shadow-sm transition-all duration-300 text-sm"
         >
       </div>
     </div>
@@ -80,25 +80,25 @@
             </tr>
           </thead>
 
-          <tbody class="divide-y divide-gray-200">
+          <tbody class="divide-y divide-line">
             <tr v-for="(app, index) in paginatedApplications" :key="index" class="hover:bg-yellow-50 transition-colors duration-200">
-              <td class="px-4 py-3 text-sm text-gray-900">
+              <td class="px-4 py-3 text-sm text-ink">
                 {{ app.service }}
               </td>
-              <td class="px-4 py-3 text-sm text-gray-600">
+              <td class="px-4 py-3 text-sm text-quiet">
                 {{ app.subservice }}
               </td>
-              <td class="px-4 py-3 text-sm text-gray-600">
+              <td class="px-4 py-3 text-sm text-quiet">
                 {{ app.date }}
               </td>
-              <td class="px-4 py-3 text-sm text-gray-600">
+              <td class="px-4 py-3 text-sm text-quiet">
                 {{ app.status }}
               </td>
               <td class="px-4 py-3 text-sm">
                 <!-- ROUTER LINK MODIFIABLE -->
                 <router-link
                   :to="app.route"
-                  class="text-primary hover:text-primary/90 inline-flex items-center justify-center bg-gray-50 w-10 h-10 rounded-full border border-gray-200 hover:border-primary transition-all group"
+                  class="text-primary hover:text-primary/90 inline-flex items-center justify-center bg-canvas w-10 h-10 rounded-full border border-line hover:border-primary transition-all group"
                 >
                   <EyeIcon class="group-hover:scale-110 transition-transform" :size="20" />
                 </router-link>
@@ -109,25 +109,25 @@
       </div>
 
       <!-- PAGINATION -->
-      <div class="bg-white px-4 py-3 border-t border-gray-200">
+      <div class="bg-white px-4 py-3 border-t border-line">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div class="text-sm text-gray-700 text-center sm:text-left">
+          <div class="text-sm text-ink text-center sm:text-left">
             Page {{ currentPage }} sur {{ totalPages }}
           </div>
           <div class="flex justify-center sm:justify-end">
             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-              <button @click="prevPage" :disabled="currentPage === 1" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              <button @click="prevPage" :disabled="currentPage === 1" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed">
                 <ChevronLeftIcon :size="18" />
               </button>
               <button v-for="page in displayedPages" :key="page" @click="goToPage(page)" :class="[
                 'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
                 currentPage === page
                   ? 'z-10 bg-primary border-primary text-white'
-                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                  : 'bg-white border-line text-ink hover:bg-canvas'
               ]">
                 {{ page }}
               </button>
-              <button @click="nextPage" :disabled="currentPage === totalPages" class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              <button @click="nextPage" :disabled="currentPage === totalPages" class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed">
                 <ChevronRightIcon :size="18" />
               </button>
             </nav>
@@ -282,7 +282,7 @@ export default {
         'En attente': 'bg-yellow-100 text-yellow-800',
         'Disponible': 'bg-blue-100 text-blue-800'
       }
-      return classes[status] || 'bg-gray-100 text-gray-800'
+      return classes[status] || 'bg-gray-100 text-ink'
     },
 
     prevPage() {

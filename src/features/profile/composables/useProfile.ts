@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { computed, onScopeDispose } from 'vue'
 import { apiMeta, http } from '@/api/http'
 import { useAuthStore, type SessionUser } from '@/stores/auth'
 
 /** `UserResource` shape, same contract as the session user plus profile detail. */
 export interface Profile extends SessionUser {
+  has_profile_photo: boolean
   id: number
   email_verified: boolean
   email_verified_at: string | null
@@ -13,6 +15,37 @@ export interface Profile extends SessionUser {
   mfa_required: boolean
   last_login_at: string | null
   created_at: string
+}
+
+export function useProfilePhoto() {
+  const queryClient = useQueryClient()
+  const auth = useAuthStore()
+  const photo = useQuery({
+    queryKey: ['profile-photo', auth.user?.key],
+    enabled: computed(() => Boolean(auth.token)),
+    queryFn: async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8070/api/v1'}/profile/photo`, {
+        headers: { Authorization: `Bearer ${auth.token}`, Accept: 'image/*' },
+      })
+      if (response.status === 404) return null
+      if (!response.ok) throw new Error('Impossible de charger la photo.')
+      return URL.createObjectURL(await response.blob())
+    },
+    gcTime: 0,
+  })
+  const invalidate = () => {
+    if (photo.data.value) URL.revokeObjectURL(photo.data.value)
+    void queryClient.invalidateQueries({ queryKey: ['profile-photo'] })
+    void queryClient.invalidateQueries({ queryKey: ['profile'] })
+  }
+  const upload = useMutation({ mutationFn: async (file: File) => {
+    const form = new FormData()
+    form.append('photo', file)
+    await http.post('/profile/photo', form)
+  }, onSuccess: invalidate })
+  const remove = useMutation({ mutationFn: async () => { await http.delete('/profile/photo') }, onSuccess: invalidate })
+  onScopeDispose(() => { if (photo.data.value) URL.revokeObjectURL(photo.data.value) })
+  return { photo, upload, remove }
 }
 
 /** GET /profile. */

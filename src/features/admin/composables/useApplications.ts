@@ -29,6 +29,14 @@ export interface ApplicationUser {
   email: string
 }
 
+export interface ApplicationEquipmentReview {
+  key: string
+  status: 'not_required' | 'pending' | 'needs_info' | 'approved' | 'rejected'
+  declaration: Record<string, unknown> | null
+  reason: string | null
+  reviewed_by?: { key: string; name: string } | null
+}
+
 /** `ApplicationResource` shape. `payload` is free-form — see StoreApplicationRequest. */
 export interface Application {
   id: number
@@ -36,6 +44,7 @@ export interface Application {
   status: 'submitted' | 'in_review' | 'accepted' | 'waitlisted' | 'rejected' | 'withdrawn'
   motivation: string | null
   payload: Record<string, unknown> | null
+  equipment_review?: ApplicationEquipmentReview | null
   user?: ApplicationUser
   pathway?: ApplicationPathway
   cohort?: ApplicationCohort | null

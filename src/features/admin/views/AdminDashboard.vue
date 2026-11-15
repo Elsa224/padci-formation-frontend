@@ -4,24 +4,24 @@
     <!-- ================= EN-TÊTE ================= -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Tableau de bord</h1>
-        <p class="text-sm text-gray-500 mt-1">
+        <h1 class="text-2xl font-bold text-ink">Tableau de bord</h1>
+        <p class="text-sm text-quiet mt-1">
           Vue d'ensemble du programme : apprenants, cohortes, cours et certifications.
         </p>
       </div>
     </div>
 
     <!-- ================= STATISTIQUES PRINCIPALES (KPIs réels) ================= -->
-    <div v-if="isOverviewPending" class="text-center text-gray-500 py-6">Chargement des indicateurs…</div>
+    <div v-if="isOverviewPending" class="text-center text-quiet py-6">Chargement des indicateurs…</div>
     <div v-else-if="isOverviewError" class="text-center text-red-600 py-6">
       {{ (overviewError as ApiError)?.message ?? 'Impossible de charger les indicateurs.' }}
     </div>
     <div v-else-if="overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Apprenants</p>
-            <p class="text-3xl font-bold text-gray-800 mt-1">{{ overview.learners_total }}</p>
+            <p class="text-quiet text-sm font-medium">Apprenants</p>
+            <p class="text-3xl font-bold text-ink mt-1">{{ overview.learners_total }}</p>
           </div>
           <div class="bg-primary/10 p-3 rounded-xl">
             <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -31,11 +31,11 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Cohortes actives</p>
-            <p class="text-3xl font-bold text-gray-800 mt-1">{{ overview.active_cohorts_total }}</p>
+            <p class="text-quiet text-sm font-medium">Cohortes actives</p>
+            <p class="text-3xl font-bold text-ink mt-1">{{ overview.active_cohorts_total }}</p>
           </div>
           <div class="bg-primary/10 p-3 rounded-xl">
             <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,11 +45,11 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Taux de complétion</p>
-            <p class="text-3xl font-bold text-gray-800 mt-1">{{ Math.round(overview.completion_rate * 100) }}%</p>
+            <p class="text-quiet text-sm font-medium">Taux de complétion</p>
+            <p class="text-3xl font-bold text-ink mt-1">{{ Math.round(overview.completion_rate * 100) }}%</p>
           </div>
           <div class="bg-primary/10 p-3 rounded-xl">
             <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,11 +59,11 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-md transition">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Certificats délivrés</p>
-            <p class="text-3xl font-bold text-gray-800 mt-1">{{ overview.certificates_issued_total }}</p>
+            <p class="text-quiet text-sm font-medium">Certificats délivrés</p>
+            <p class="text-3xl font-bold text-ink mt-1">{{ overview.certificates_issued_total }}</p>
           </div>
           <div class="bg-primary/10 p-3 rounded-xl">
             <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,34 +78,34 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
       <!-- Répartition par filière (réel, GET /admin/dashboard/reports/pathways) -->
-      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-line">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-bold text-gray-800">Inscrits par filière</h3>
+          <h3 class="text-lg font-bold text-ink">Inscrits par filière</h3>
         </div>
-        <div v-if="isPathwaysPending" class="h-64 flex items-center justify-center text-sm text-gray-500">Chargement…</div>
+        <div v-if="isPathwaysPending" class="h-64 flex items-center justify-center text-sm text-quiet">Chargement…</div>
         <div v-else-if="isPathwaysError" class="h-64 flex items-center justify-center text-sm text-red-600">Impossible de charger.</div>
         <div v-else-if="pathwayMetrics && pathwayMetrics.length > 0" class="h-64">
           <Bar :data="pathwayChartData" :options="chartOptions" />
         </div>
-        <div v-else class="h-64 flex items-center justify-center text-sm text-gray-500">Aucune filière à afficher.</div>
+        <div v-else class="h-64 flex items-center justify-center text-sm text-quiet">Aucune filière à afficher.</div>
       </div>
 
       <!-- Statut des candidatures (réel, totaux par statut via GET /admin/applications) -->
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">Statut des candidatures</h3>
-        <div v-if="isStatusCountsPending" class="h-64 flex items-center justify-center text-sm text-gray-500">Chargement…</div>
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+        <h3 class="text-lg font-bold text-ink mb-4">Statut des candidatures</h3>
+        <div v-if="isStatusCountsPending" class="h-64 flex items-center justify-center text-sm text-quiet">Chargement…</div>
         <div v-else-if="isStatusCountsError" class="h-64 flex items-center justify-center text-sm text-red-600">Impossible de charger.</div>
         <div v-else-if="statusCounts && totalApplications > 0" class="h-64">
           <Doughnut :data="statusChartData" :options="doughnutOptions" />
         </div>
-        <div v-else class="h-64 flex items-center justify-center text-sm text-gray-500">Aucune candidature pour l'instant.</div>
+        <div v-else class="h-64 flex items-center justify-center text-sm text-quiet">Aucune candidature pour l'instant.</div>
       </div>
     </div>
 
     <!-- ================= DERNIÈRES CANDIDATURES ACCEPTÉES (réel) ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-        <h3 class="text-lg font-bold text-gray-800">Dernières candidatures acceptées</h3>
+    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="px-6 py-4 border-b border-line flex items-center justify-between">
+        <h3 class="text-lg font-bold text-ink">Dernières candidatures acceptées</h3>
         <router-link to="/admin/candidatures" class="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
           Tout voir
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
@@ -114,35 +114,35 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider">
               <th class="py-3 px-6">Candidat</th>
               <th class="py-3 px-6">Filière</th>
               <th class="py-3 px-6">Session</th>
               <th class="py-3 px-6">Date de décision</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-sm">
+          <tbody class="divide-y divide-line text-sm">
             <tr v-if="isRecentPending">
-              <td colspan="4" class="py-8 text-center text-gray-500">Chargement…</td>
+              <td colspan="4" class="py-8 text-center text-quiet">Chargement…</td>
             </tr>
             <tr v-else-if="recentAccepted.length === 0">
-              <td colspan="4" class="py-8 text-center text-gray-500">Aucune candidature acceptée pour l'instant.</td>
+              <td colspan="4" class="py-8 text-center text-quiet">Aucune candidature acceptée pour l'instant.</td>
             </tr>
-            <tr v-for="application in recentAccepted" :key="application.key" class="hover:bg-gray-50 transition">
+            <tr v-for="application in recentAccepted" :key="application.key" class="hover:bg-canvas transition">
               <td class="py-4 px-6">
                 <div class="flex items-center gap-3">
                   <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
                     {{ initialsOf(application.user?.name) }}
                   </div>
                   <div>
-                    <p class="font-medium text-gray-800">{{ application.user?.name ?? '—' }}</p>
-                    <p class="text-xs text-gray-500">{{ application.user?.email ?? '—' }}</p>
+                    <p class="font-medium text-ink">{{ application.user?.name ?? '-' }}</p>
+                    <p class="text-xs text-quiet">{{ application.user?.email ?? '-' }}</p>
                   </div>
                 </div>
               </td>
-              <td class="py-4 px-6 text-gray-600">{{ application.pathway?.name ?? '—' }}</td>
-              <td class="py-4 px-6 text-gray-600">{{ application.cohort?.code ?? '—' }}</td>
-              <td class="py-4 px-6 text-gray-600">{{ formatDate(application.decided_at) }}</td>
+              <td class="py-4 px-6 text-quiet">{{ application.pathway?.name ?? '-' }}</td>
+              <td class="py-4 px-6 text-quiet">{{ application.cohort?.code ?? '-' }}</td>
+              <td class="py-4 px-6 text-quiet">{{ formatDate(application.decided_at) }}</td>
             </tr>
           </tbody>
         </table>
@@ -262,12 +262,12 @@ const { data: recentData, isPending: isRecentPending } = useApplications(
 const recentAccepted = computed(() => (recentData.value?.items ?? []).slice(0, 5))
 
 function initialsOf(name: string | undefined): string {
-  if (!name) return '—'
+  if (!name) return '-'
   return name.split(' ').filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('')
 }
 
 function formatDate(value: string | null | undefined): string {
-  if (!value) return '—'
+  if (!value) return '-'
   return new Date(value).toLocaleDateString('fr-FR')
 }
 </script>

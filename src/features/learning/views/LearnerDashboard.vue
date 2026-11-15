@@ -1,45 +1,39 @@
 <template>
-  <div class="space-y-8">
+  <section class="app-page" aria-labelledby="dashboard-title">
     <!-- EN-TÊTE DU TABLEAU DE BORD -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Mon Espace de Formation</h1>
-        <p class="text-sm text-gray-500 mt-1">
-          Bienvenue sur votre espace apprenant. Retrouvez vos cours actifs et vos sessions
-          programmées.
-        </p>
+        <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Espace apprenant</p>
+        <h1 id="dashboard-title" class="app-page-title mt-2">Ma formation</h1>
+        <p class="app-page-copy">Retrouvez vos cours actifs, vos sessions et le suivi de vos admissions.</p>
       </div>
       <div class="flex items-center gap-3">
         <router-link
           to="/mes-candidatures"
-          class="px-4 py-2 border border-gray-200 text-gray-700 bg-white rounded-xl text-xs font-semibold hover:bg-gray-50 transition shadow-sm"
+          class="app-action-secondary text-xs"
         >
           Suivi de mes candidatures
         </router-link>
         <router-link
           to="/catalogue"
-          class="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/90 transition shadow-sm"
+          class="app-action-primary text-xs"
         >
           Catalogue &rarr;
         </router-link>
       </div>
-    </div>
+    </header>
 
     <!-- ÉTAT DE CHARGEMENT / ERREUR -->
-    <div v-if="isPending" class="text-center py-12 text-gray-500">
-      Chargement de vos formations…
-    </div>
-    <div v-else-if="isError" class="text-center py-12 text-red-600">
-      {{ (error as ApiError)?.message ?? 'Impossible de charger vos formations.' }}
-    </div>
+    <div v-if="isPending" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"><div v-for="index in 3" :key="index" class="app-panel space-y-5"><div class="app-skeleton h-5 w-1/3" /><div class="app-skeleton h-7 w-3/4" /><div class="app-skeleton h-11 w-full" /></div></div>
+    <div v-else-if="isError" class="app-panel py-12 text-center"><p class="font-semibold text-danger-ink">Vos formations ne sont pas disponibles.</p><p class="mt-2 text-sm text-quiet">{{ (error as ApiError)?.message ?? 'Réessayez dans quelques instants.' }}</p></div>
 
     <!-- AUCUNE FORMATION -->
     <div
       v-else-if="enrollments.length === 0"
-      class="bg-white rounded-2xl border border-gray-200/80 p-10 text-center space-y-4 shadow-sm"
+      class="app-panel p-8 text-center sm:p-10"
     >
       <div
-        class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary"
+        class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"
       >
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -50,15 +44,15 @@
           />
         </svg>
       </div>
-      <h3 class="text-lg font-bold text-gray-800">Aucune formation active pour l'instant</h3>
-      <p class="text-sm text-gray-500 max-w-md mx-auto">
+      <h2 class="mt-5 text-lg font-bold text-ink">Aucune formation active pour l'instant</h2>
+      <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-quiet">
         Vous n'êtes pas encore inscrit à une cohorte active. Consultez le catalogue des filières et
         déposez votre candidature pour rejoindre une session.
       </p>
-      <div class="pt-2">
+      <div class="pt-5">
         <router-link
           to="/catalogue"
-          class="inline-block px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition shadow-sm"
+          class="app-action-primary inline-flex"
         >
           Découvrir le catalogue des sessions
         </router-link>
@@ -67,11 +61,11 @@
 
     <!-- GRILLE DES FORMATIONS ACTIVES -->
     <div v-else class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         <div
           v-for="enrollment in enrollments"
           :key="enrollment.key"
-          class="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+          class="app-panel flex flex-col p-6 transition duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md"
         >
           <div class="space-y-4">
             <div class="flex items-center justify-between">
@@ -79,43 +73,43 @@
                 class="px-2.5 py-0.5 rounded-full text-xs font-bold"
                 :class="
                   enrollment.status === 'active'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-600'
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-slate-100 text-quiet'
                 "
               >
                 {{ enrollment.status === 'active' ? 'En cours' : enrollment.status }}
               </span>
-              <span v-if="enrollment.cohort" class="text-xs text-gray-400 font-mono">
+              <span v-if="enrollment.cohort" class="text-xs font-medium text-quiet">
                 {{ enrollment.cohort.session }}
               </span>
             </div>
 
             <div>
-              <h2 class="text-lg font-bold text-gray-900 line-clamp-2">
+              <h2 class="line-clamp-2 text-lg font-bold text-ink">
                 {{ enrollment.course?.title || 'Formation en ligne' }}
               </h2>
-              <p v-if="enrollment.cohort" class="text-xs text-gray-500 mt-1">
-                Cohorte : <strong class="text-gray-700">{{ enrollment.cohort.name }}</strong>
+              <p v-if="enrollment.cohort" class="mt-1 text-xs text-quiet">
+                Cohorte : <strong class="text-ink">{{ enrollment.cohort.name }}</strong>
               </p>
             </div>
           </div>
 
-          <div class="pt-6 mt-4 border-t border-gray-100">
+          <div class="mt-5 border-t border-line pt-5">
             <router-link
               v-if="enrollment.course"
               :to="`/formations/${enrollment.course.key}`"
-              class="w-full inline-block text-center px-4 py-2.5 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/90 transition shadow-sm"
+              class="app-action-primary w-full justify-center text-xs"
             >
               Accéder au cours &rarr;
             </router-link>
-            <span v-else class="text-xs text-gray-400 text-center block">
+            <span v-else class="block text-center text-xs text-quiet">
               Contenu en cours de publication
             </span>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

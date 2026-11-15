@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col">
+  <div class="min-h-screen bg-canvas flex flex-col">
     <!-- CONTENU PRINCIPAL -->
     <section class="px-4 md:px-6 py-8 max-w-4xl mx-auto w-full">
       <!-- EN-TÊTE DU QUIZ -->
@@ -43,7 +43,7 @@
           <div
             v-for="(question, index) in questions"
             :key="index"
-            class="border border-gray-200 rounded-lg p-5"
+            class="border border-line rounded-lg p-5"
             :class="{ 'border-green-500 bg-green-50': isQuestionCorrect(index) && showResults }"
           >
             <!-- En-tête de question -->
@@ -54,7 +54,7 @@
                 {{ index + 1 }}
               </span>
               <div class="flex-1">
-                <p class="font-medium text-gray-800">{{ question.text }}</p>
+                <p class="font-medium text-ink">{{ question.text }}</p>
                 <p v-if="question.hint && showResults" class="text-sm text-[#007668] mt-1 italic">
                   <LightbulbIcon class="mr-1" /> {{ question.hint }}
                 </p>
@@ -80,7 +80,7 @@
                 :class="[
                   selectedAnswers[index] === option.letter
                     ? 'border-[#007668] bg-[#007668]/5'
-                    : 'border-gray-200 hover:border-[#007668] hover:bg-gray-50',
+                    : 'border-line hover:border-[#007668] hover:bg-canvas',
                   showResults && option.letter === question.correctAnswer
                     ? 'border-green-500 bg-green-100'
                     : '',
@@ -92,8 +92,8 @@
                 ]"
               >
                 <div class="flex items-start gap-2">
-                  <span class="font-bold text-gray-600">{{ option.letter }}.</span>
-                  <span class="text-gray-700">{{ option.text }}</span>
+                  <span class="font-bold text-quiet">{{ option.letter }}.</span>
+                  <span class="text-ink">{{ option.text }}</span>
                   <!-- Indicateur de bonne réponse -->
                   <span
                     v-if="showResults && option.letter === question.correctAnswer"
@@ -125,7 +125,7 @@
               >
                 {{ score >= 7 ? 'Félicitations !' : 'Dommage...' }}
               </h3>
-              <p class="text-gray-700">
+              <p class="text-ink">
                 Vous avez obtenu {{ score }}/10 bonnes réponses.
                 <span v-if="score >= 7">Vous avez validé le module !</span>
                 <span v-else>Vous n'avez pas atteint la note minimale de 7/10.</span>
@@ -144,11 +144,11 @@
 
         <!-- BOUTONS D'ACTION -->
         <div
-          class="flex flex-col md:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-200"
+          class="flex flex-col md:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-line"
         >
           <button
             @click="resetQuiz"
-            class="flex items-center gap-2 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-bold hover:bg-gray-300 transition-all w-full md:w-auto justify-center"
+            class="flex items-center gap-2 bg-gray-200 text-ink px-6 py-3 rounded-lg font-bold hover:bg-gray-300 transition-all w-full md:w-auto justify-center"
           >
             <RotateCcwIcon />
             <span>Réinitialiser</span>
@@ -162,7 +162,7 @@
             :class="
               allQuestionsAnswered
                 ? 'bg-[#FFDC00] text-[#007668] hover:bg-[#007668] hover:text-white'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-gray-300 text-quiet cursor-not-allowed'
             "
           >
             <ShieldCheckIcon />

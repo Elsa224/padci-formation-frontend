@@ -4,8 +4,8 @@
     <!-- ================= EN-TÊTE ================= -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Rapports & Suivi-Évaluation</h1>
-        <p class="text-sm text-gray-500 mt-1">
+        <h1 class="text-2xl font-bold text-ink">Rapports & Suivi-Évaluation</h1>
+        <p class="text-sm text-quiet mt-1">
           Indicateurs de performance (KPIs) et rapports du projet PADCI (Composante 3).
         </p>
       </div>
@@ -20,9 +20,9 @@
     </div>
 
     <!-- ================= TABLEAU DES INDICATEURS CLÉS (KPIs du TDR) ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="px-6 py-5 border-b border-gray-100">
-        <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="px-6 py-5 border-b border-line">
+        <h2 class="text-lg font-bold text-ink flex items-center gap-2">
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
@@ -32,95 +32,95 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line">
               <th class="py-3 px-6">Indicateur</th>
               <th class="py-3 px-6 text-center">Cible (TDR)</th>
               <th class="py-3 px-6 text-center">Réalisé</th>
               <th class="py-3 px-6">Progression</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-sm">
+          <tbody class="divide-y divide-line text-sm">
             <!-- Ligne 1 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-4 px-6 font-medium text-gray-800">Formateurs formés et certifiés</td>
-              <td class="py-4 px-6 text-center text-gray-600">200</td>
+            <tr class="hover:bg-canvas transition">
+              <td class="py-4 px-6 font-medium text-ink">Formateurs formés et certifiés</td>
+              <td class="py-4 px-6 text-center text-quiet">200</td>
               <td class="py-4 px-6 text-center font-bold text-primary">148</td>
               <td class="py-4 px-6">
                 <div class="flex items-center gap-2">
                   <div class="w-full bg-gray-100 rounded-full h-2">
                     <div class="bg-primary h-2 rounded-full" style="width: 74%"></div>
                   </div>
-                  <span class="text-xs font-bold text-gray-700">74%</span>
+                  <span class="text-xs font-bold text-ink">74%</span>
                 </div>
               </td>
             </tr>
             <!-- Ligne 2 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-4 px-6 font-medium text-gray-800">Taux de certification Cisco/Oracle</td>
-              <td class="py-4 px-6 text-center text-gray-600">≥ 80%</td>
+            <tr class="hover:bg-canvas transition">
+              <td class="py-4 px-6 font-medium text-ink">Taux de certification Cisco/Oracle</td>
+              <td class="py-4 px-6 text-center text-quiet">≥ 80%</td>
               <td class="py-4 px-6 text-center font-bold text-primary">82%</td>
               <td class="py-4 px-6">
                 <div class="flex items-center gap-2">
                   <div class="w-full bg-gray-100 rounded-full h-2">
                     <div class="bg-primary h-2 rounded-full" style="width: 82%"></div>
                   </div>
-                  <span class="text-xs font-bold text-gray-700">82%</span>
+                  <span class="text-xs font-bold text-ink">82%</span>
                 </div>
               </td>
             </tr>
             <!-- Ligne 3 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-4 px-6 font-medium text-gray-800">Taux d'assiduité aux sessions</td>
-              <td class="py-4 px-6 text-center text-gray-600">≥ 90%</td>
+            <tr class="hover:bg-canvas transition">
+              <td class="py-4 px-6 font-medium text-ink">Taux d'assiduité aux sessions</td>
+              <td class="py-4 px-6 text-center text-quiet">≥ 90%</td>
               <td class="py-4 px-6 text-center font-bold text-primary">94%</td>
               <td class="py-4 px-6">
                 <div class="flex items-center gap-2">
                   <div class="w-full bg-gray-100 rounded-full h-2">
                     <div class="bg-primary h-2 rounded-full" style="width: 94%"></div>
                   </div>
-                  <span class="text-xs font-bold text-gray-700">94%</span>
+                  <span class="text-xs font-bold text-ink">94%</span>
                 </div>
               </td>
             </tr>
             <!-- Ligne 4 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-4 px-6 font-medium text-gray-800">Taux de satisfaction (évaluation à chaud)</td>
-              <td class="py-4 px-6 text-center text-gray-600">≥ 85%</td>
+            <tr class="hover:bg-canvas transition">
+              <td class="py-4 px-6 font-medium text-ink">Taux de satisfaction (évaluation à chaud)</td>
+              <td class="py-4 px-6 text-center text-quiet">≥ 85%</td>
               <td class="py-4 px-6 text-center font-bold text-primary">89%</td>
               <td class="py-4 px-6">
                 <div class="flex items-center gap-2">
                   <div class="w-full bg-gray-100 rounded-full h-2">
                     <div class="bg-primary h-2 rounded-full" style="width: 89%"></div>
                   </div>
-                  <span class="text-xs font-bold text-gray-700">89%</span>
+                  <span class="text-xs font-bold text-ink">89%</span>
                 </div>
               </td>
             </tr>
             <!-- Ligne 5 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-4 px-6 font-medium text-gray-800">Kits pédagogiques validés</td>
-              <td class="py-4 px-6 text-center text-gray-600">5</td>
+            <tr class="hover:bg-canvas transition">
+              <td class="py-4 px-6 font-medium text-ink">Kits pédagogiques validés</td>
+              <td class="py-4 px-6 text-center text-quiet">5</td>
               <td class="py-4 px-6 text-center font-bold text-primary">4</td>
               <td class="py-4 px-6">
                 <div class="flex items-center gap-2">
                   <div class="w-full bg-gray-100 rounded-full h-2">
                     <div class="bg-amber-400 h-2 rounded-full" style="width: 80%"></div>
                   </div>
-                  <span class="text-xs font-bold text-gray-700">80%</span>
+                  <span class="text-xs font-bold text-ink">80%</span>
                 </div>
               </td>
             </tr>
             <!-- Ligne 6 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-4 px-6 font-medium text-gray-800">Taux de femmes dans le pool (Parité)</td>
-              <td class="py-4 px-6 text-center text-gray-600">30 - 40%</td>
+            <tr class="hover:bg-canvas transition">
+              <td class="py-4 px-6 font-medium text-ink">Taux de femmes dans le pool (Parité)</td>
+              <td class="py-4 px-6 text-center text-quiet">30 - 40%</td>
               <td class="py-4 px-6 text-center font-bold text-primary">36%</td>
               <td class="py-4 px-6">
                 <div class="flex items-center gap-2">
                   <div class="w-full bg-gray-100 rounded-full h-2">
                     <div class="bg-primary h-2 rounded-full" style="width: 36%"></div>
                   </div>
-                  <span class="text-xs font-bold text-gray-700">36%</span>
+                  <span class="text-xs font-bold text-ink">36%</span>
                 </div>
               </td>
             </tr>
@@ -133,8 +133,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
       <!-- Graphique 1 : Répartition Hommes / Femmes par filière -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <div class="bg-white rounded-xl shadow-sm border border-line p-6">
+        <h3 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
           Répartition par Genre (Parité)
         </h3>
@@ -144,8 +144,8 @@
       </div>
 
       <!-- Graphique 2 : Taux de réussite par filière -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <div class="bg-white rounded-xl shadow-sm border border-line p-6">
+        <h3 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
           Taux de réussite (Certification) par Filière
         </h3>
@@ -156,19 +156,19 @@
     </div>
 
     <!-- ================= HISTORIQUE DES RAPPORTS TÉLÉCHARGEABLES ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-        <h3 class="text-lg font-bold text-gray-800">Documents & Rapports générés</h3>
+    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="px-6 py-5 border-b border-line flex justify-between items-center">
+        <h3 class="text-lg font-bold text-ink">Documents & Rapports générés</h3>
       </div>
-      <ul class="divide-y divide-gray-100">
-        <li v-for="(doc, index) in rapports" :key="index" class="p-4 sm:px-6 hover:bg-gray-50 transition flex items-center justify-between gap-4">
+      <ul class="divide-y divide-line">
+        <li v-for="(doc, index) in rapports" :key="index" class="p-4 sm:px-6 hover:bg-canvas transition flex items-center justify-between gap-4">
           <div class="flex items-center gap-4">
             <div class="w-10 h-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center shrink-0">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
             </div>
             <div>
-              <p class="font-bold text-gray-800 text-sm">{{ doc.nom }}</p>
-              <p class="text-xs text-gray-500 mt-0.5">Généré le {{ doc.date }} · {{ doc.taille }}</p>
+              <p class="font-bold text-ink text-sm">{{ doc.nom }}</p>
+              <p class="text-xs text-quiet mt-0.5">Généré le {{ doc.date }} · {{ doc.taille }}</p>
             </div>
           </div>
           <button class="text-primary hover:bg-primary/10 p-2 rounded-lg transition" title="Télécharger">
@@ -192,7 +192,7 @@ import {
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 // ==================== DONNÉES GENRE (Parité TDR) ====================
-// Couleurs Chart.js : options de config natives sans classes Tailwind —
+// Couleurs Chart.js : options de config natives sans classes Tailwind -
 // valeurs littérales. #198341 = --color-primary (marque), #9ca3af = gris
 // de contraste, #f3f4f6 = grille (gray-100).
 const genderChartData = {

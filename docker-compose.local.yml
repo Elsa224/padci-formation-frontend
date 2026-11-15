@@ -1,5 +1,5 @@
 # =============================================================================
-# docker-compose.local.yml — PADCI-WEB : dev avec rechargement à chaud
+# docker-compose.local.yml — EMSP-WEB : dev avec rechargement à chaud
 #
 #   docker compose -f docker-compose.local.yml up
 #
@@ -9,9 +9,11 @@
 # host/conteneur sur ce dossier.
 #
 # Port choisi pour ne pas entrer en conflit avec le port de dev de Vite
-# (5173, déjà whitelisté côté CORS par PADCI-API) ni avec d'autres projets
+# (5173, déjà whitelisté côté CORS par EMSP-API) ni avec d'autres projets
 # Docker de la machine.
 # =============================================================================
+
+name: emsp-web
 
 services:
   web:
@@ -21,7 +23,7 @@ services:
       args:
         USER_ID: ${UID:-1000}
         GROUP_ID: ${GID:-1000}
-    container_name: padci_web
+    container_name: emsp_web
     environment:
       VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8070/api/v1}
     ports:

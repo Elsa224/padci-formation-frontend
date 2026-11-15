@@ -3,16 +3,16 @@
     <!-- EN-TÊTE -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Vue Globale PADCI</h1>
-        <p class="text-sm text-gray-500 mt-1">
+        <h1 class="text-2xl font-bold text-ink">Vue Globale PADCI</h1>
+        <p class="text-sm text-quiet mt-1">
           Pilotage du programme : apprentissage et gouvernance financière.
         </p>
       </div>
       <div
-        class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100"
+        class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-line"
       >
         <div class="w-2 h-2 rounded-full bg-orange-300 animate-pulse"></div>
-        <span class="text-sm font-medium text-gray-600"
+        <span class="text-sm font-medium text-quiet"
           >Financement : Banque Mondiale (ADR-011)</span
         >
       </div>
@@ -54,12 +54,12 @@
 
     <!-- STATISTIQUES CLÉS -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Apprenants</p>
+            <p class="text-quiet text-sm font-medium">Apprenants</p>
             <p class="text-3xl font-bold text-orange-600 mt-1">
-              {{ overview?.learners_total ?? '—' }}
+              {{ overview?.learners_total ?? '-' }}
             </p>
           </div>
           <div class="bg-orange-50 p-3 rounded-xl">
@@ -80,12 +80,12 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Taux de complétion</p>
+            <p class="text-quiet text-sm font-medium">Taux de complétion</p>
             <p class="text-3xl font-bold text-orange-600 mt-1">
-              {{ overview ? Math.round(overview.completion_rate * 100) : '—' }}%
+              {{ overview ? Math.round(overview.completion_rate * 100) : '-' }}%
             </p>
           </div>
           <div class="bg-orange-50 p-3 rounded-xl">
@@ -106,12 +106,12 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Certificats délivrés</p>
+            <p class="text-quiet text-sm font-medium">Certificats délivrés</p>
             <p class="text-3xl font-bold text-orange-600 mt-1">
-              {{ overview?.certificates_issued_total ?? '—' }}
+              {{ overview?.certificates_issued_total ?? '-' }}
             </p>
           </div>
           <div class="bg-orange-50 p-3 rounded-xl">
@@ -132,12 +132,12 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
         <div class="flex justify-between items-start">
           <div>
-            <p class="text-gray-500 text-sm font-medium">ANO en attente</p>
+            <p class="text-quiet text-sm font-medium">ANO en attente</p>
             <p class="text-3xl font-bold text-orange-600 mt-1">{{ pendingAnoCount }}</p>
-            <p class="text-xs text-gray-500 mt-2 font-medium">Signature requise</p>
+            <p class="text-xs text-quiet mt-2 font-medium">Signature requise</p>
           </div>
           <div class="bg-orange-50 p-3 rounded-xl">
             <svg
@@ -159,19 +159,19 @@
     </div>
 
     <!-- GRAPHIQUE : lignes budgétaires réelles -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">
+    <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <h3 class="text-lg font-bold text-ink mb-4">
         Allocation et consommation par ligne budgétaire
       </h3>
       <div
         v-if="isBudgetPending"
-        class="h-64 flex items-center justify-center text-sm text-gray-500"
+        class="h-64 flex items-center justify-center text-sm text-quiet"
       >
         Chargement…
       </div>
       <div
         v-else-if="budgetLines.length === 0"
-        class="h-64 flex items-center justify-center text-sm text-gray-500"
+        class="h-64 flex items-center justify-center text-sm text-quiet"
       >
         Aucune ligne budgétaire créée pour l'instant.
       </div>
@@ -239,7 +239,7 @@ function formatAmount(amountMinor: number, currency: string): string {
 }
 
 // Couleurs de séries Chart.js : les options de config n'acceptent pas de
-// classes Tailwind — valeurs littérales calées sur la famille --color-primary.
+// classes Tailwind - valeurs littérales calées sur la famille --color-primary.
 const budgetChartData = computed(() => ({
   labels: budgetLines.value.map((line) => line.name),
   datasets: [

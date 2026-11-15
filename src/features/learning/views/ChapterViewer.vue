@@ -1,10 +1,10 @@
 <template>
   <div class="space-y-6">
     <!-- NAVIGATION RETOUR -->
-    <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+    <div class="flex items-center justify-between border-b border-line pb-4">
       <router-link
         :to="`/formations/${courseKey}`"
-        class="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-primary transition"
+        class="inline-flex items-center gap-2 text-xs font-semibold text-quiet hover:text-primary transition"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -17,52 +17,52 @@
         Retour au plan du cours
       </router-link>
 
-      <div v-if="courseOutline" class="text-xs text-gray-500 font-medium">
+      <div v-if="courseOutline" class="text-xs text-quiet font-medium">
         {{ courseOutline.title }}
       </div>
     </div>
 
     <!-- ÉTAT DE CHARGEMENT / ERREUR -->
-    <div v-if="isPending" class="text-center py-16 text-gray-500">Chargement du chapitre…</div>
+    <div v-if="isPending" class="text-center py-16 text-quiet">Chargement du chapitre…</div>
     <div v-else-if="isError" class="text-center py-16 text-red-600">
       {{ (error as ApiError)?.message ?? 'Impossible de charger ce chapitre.' }}
     </div>
 
     <template v-else-if="chapter">
       <!-- CORPS DU CHAPITRE -->
-      <div class="bg-white rounded-2xl border border-gray-200/80 p-6 sm:p-8 shadow-sm space-y-6">
-        <div class="space-y-2 border-b border-gray-100 pb-5">
+      <div class="bg-white rounded-2xl border border-line p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="space-y-2 border-b border-line pb-5">
           <div class="flex items-center gap-2">
             <span
               class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-primary/10 text-primary"
             >
               {{ chapter.type }}
             </span>
-            <span v-if="chapter.duration_seconds" class="text-xs text-gray-400">
+            <span v-if="chapter.duration_seconds" class="text-xs text-quiet">
               Durée estimée : {{ Math.round(chapter.duration_seconds / 60) }} min
             </span>
           </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900">{{ chapter.title }}</h1>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-ink">{{ chapter.title }}</h1>
         </div>
 
         <!-- CONTENU DU CHAPITRE -->
-        <div class="prose prose-sm max-w-none text-gray-800 leading-relaxed space-y-4">
+        <div class="prose prose-sm max-w-none text-ink leading-relaxed space-y-4">
           <div v-if="chapter.body" class="whitespace-pre-wrap">{{ chapter.body }}</div>
-          <div v-else class="text-gray-400 italic py-8 text-center bg-gray-50 rounded-xl">
+          <div v-else class="text-quiet italic py-8 text-center bg-canvas rounded-xl">
             Aucun texte supplémentaire pour cette ressource.
           </div>
         </div>
 
         <!-- RESSOURCES COMPLÉMENTAIRES -->
-        <div v-if="chapter.resources.length > 0" class="pt-6 border-t border-gray-100 space-y-3">
-          <h3 class="text-sm font-bold text-gray-800">Supports et ressources associées</h3>
+        <div v-if="chapter.resources.length > 0" class="pt-6 border-t border-line space-y-3">
+          <h3 class="text-sm font-bold text-ink">Supports et ressources associées</h3>
           <div class="grid gap-2">
             <div
               v-for="res in chapter.resources"
               :key="res.key"
               class="border rounded-xl p-3 flex items-center justify-between text-xs transition"
               :class="
-                res.locked ? 'bg-gray-50 text-gray-400' : 'bg-white hover:bg-gray-50 text-gray-700'
+                res.locked ? 'bg-canvas text-quiet' : 'bg-white hover:bg-canvas text-ink'
               "
             >
               <div class="flex items-center gap-2">
@@ -88,13 +88,13 @@
 
       <!-- PIED DE NAVIGATION & PROGRESSION -->
       <div
-        class="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4"
+        class="bg-white rounded-2xl border border-line p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4"
       >
         <div>
           <router-link
             v-if="prevChapter"
             :to="`/formations/${courseKey}/chapitres/${prevChapter.key}`"
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-semibold hover:bg-gray-200 transition"
+            class="px-4 py-2 bg-gray-100 text-ink rounded-xl text-xs font-semibold hover:bg-gray-200 transition"
           >
             &larr; Chapitre précédent
           </router-link>

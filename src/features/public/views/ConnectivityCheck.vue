@@ -6,7 +6,7 @@ import { useApiPing } from '../composables/useApiPing'
 
 // First real proof that the dockerized frontend talks to the dockerized
 // backend (VITE_API_BASE_URL) over the actual network, Axios interceptors,
-// Vue Query and the whole stack together — not just that each piece boots
+// Vue Query and the whole stack together - not just that each piece boots
 // on its own. Demonstrates all four required states (FE-005): loading,
 // error, empty is N/A here, success.
 const { data, isPending, isError, error, refetch, isFetching } = useApiPing()

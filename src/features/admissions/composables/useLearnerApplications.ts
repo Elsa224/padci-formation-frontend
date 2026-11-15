@@ -2,25 +2,41 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { apiMeta, http } from '@/api/http'
 import type { ApiPaginationMeta } from '@/api/types'
 
-export interface ApplicationEquipmentPayload {
-  has_computer: boolean
-  cpu?: string
-  ram_gb?: number
-  storage_gb?: number
-  evidence_media_key?: string
+export interface EquipmentDeclaration {
+  device_type: string
+  cpu_model: string
+  cpu_cores?: number
+  ram_gb: number
+  storage_total_gb: number
+  storage_free_gb?: number
+  os_name: string
+  os_version?: string
+  virtualization_supported?: boolean
+  notes?: string
 }
 
 export interface ApplicationPayload {
-  equipment?: ApplicationEquipmentPayload
   [key: string]: unknown
+}
+
+export interface EquipmentReview {
+  id: number
+  key: string
+  status: 'not_required' | 'pending' | 'needs_info' | 'approved' | 'rejected'
+  requirements_snapshot: Record<string, unknown> | null
+  declaration: EquipmentDeclaration | null
+  reason: string | null
+  submitted_at: string | null
+  decided_at: string | null
 }
 
 export interface LearnerApplication {
   id: number
   key: string
-  status: 'submitted' | 'under_review' | 'accepted' | 'waitlisted' | 'rejected' | 'withdrawn'
+  status: 'submitted' | 'in_review' | 'accepted' | 'waitlisted' | 'rejected' | 'withdrawn'
   motivation: string | null
   payload: ApplicationPayload | null
+  equipment_review?: EquipmentReview | null
   pathway?: {
     id: number
     key: string
@@ -49,7 +65,24 @@ export interface SubmitApplicationDto {
   pathway_key: string
   cohort_key: string
   motivation?: string
-  payload?: ApplicationPayload
+  equipment?: EquipmentDeclaration
+}
+
+export function useRespondToEquipmentReview() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ applicationKey, equipment }: { applicationKey: string; equipment: EquipmentDeclaration }) => {
+      const { data } = await http.patch<EquipmentReview>(
+        `/applications/${applicationKey}/equipment-review`,
+        { equipment },
+      )
+      return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['learner-applications'] })
+    },
+  })
 }
 
 /**

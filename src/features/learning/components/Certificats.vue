@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col">
+  <div class="min-h-screen bg-canvas flex flex-col">
     <!-- CONTENU PRINCIPAL -->
     <section class="px-4 md:px-6 py-8 max-w-4xl mx-auto w-full">
       <!-- BLOC PADCI – Certificats en construction -->
@@ -73,11 +73,11 @@
               </div>
             </div>
 
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+            <h2 class="text-2xl font-bold text-ink mb-4">
               Les certificats PADCI arrivent bientôt !
             </h2>
 
-            <p class="text-gray-600 mb-6">
+            <p class="text-quiet mb-6">
               Le <span style="color: var(--color-primary); font-weight: 600">Programme PADCI</span>
               vous délivrera des attestations officielles pour chaque module validé. Un système
               sécurisé de certificats numériques est actuellement mis en place pour valoriser vos
@@ -100,8 +100,8 @@
                     <CheckIcon class="text-white" />
                   </div>
                   <div>
-                    <p class="font-medium text-gray-800">Certificats officiels</p>
-                    <p class="text-sm text-gray-600">Générés automatiquement après chaque module</p>
+                    <p class="font-medium text-ink">Certificats officiels</p>
+                    <p class="text-sm text-quiet">Générés automatiquement après chaque module</p>
                   </div>
                 </div>
 
@@ -110,8 +110,8 @@
                     <CheckIcon class="text-white" />
                   </div>
                   <div>
-                    <p class="font-medium text-gray-800">Téléchargement PDF</p>
-                    <p class="text-sm text-gray-600">Format imprimable et partageable</p>
+                    <p class="font-medium text-ink">Téléchargement PDF</p>
+                    <p class="text-sm text-quiet">Format imprimable et partageable</p>
                   </div>
                 </div>
 
@@ -120,8 +120,8 @@
                     <CheckIcon class="text-white" />
                   </div>
                   <div>
-                    <p class="font-medium text-gray-800">QR Code unique</p>
-                    <p class="text-sm text-gray-600">Pour vérifier l’authenticité</p>
+                    <p class="font-medium text-ink">QR Code unique</p>
+                    <p class="text-sm text-quiet">Pour vérifier l’authenticité</p>
                   </div>
                 </div>
 
@@ -130,8 +130,8 @@
                     <CheckIcon class="text-white" />
                   </div>
                   <div>
-                    <p class="font-medium text-gray-800">Historique complet</p>
-                    <p class="text-sm text-gray-600">Tous vos certificats en un endroit</p>
+                    <p class="font-medium text-ink">Historique complet</p>
+                    <p class="text-sm text-quiet">Tous vos certificats en un endroit</p>
                   </div>
                 </div>
               </div>
@@ -139,7 +139,7 @@
 
             <!-- Barre de progression -->
             <div class="max-w-md mx-auto mb-6">
-              <div class="flex justify-between text-sm text-gray-600 mb-2">
+              <div class="flex justify-between text-sm text-quiet mb-2">
                 <span>Développement des certificats</span>
                 <span class="font-bold" style="color: var(--color-primary)">80 %</span>
               </div>
@@ -164,7 +164,7 @@
               style="background: var(--color-quaternary)"
             >
               <CalendarDaysIcon :size="24" style="color: var(--color-primary)" />
-              <span class="text-gray-700">
+              <span class="text-ink">
                 <span class="font-bold">Lancement prévu :</span> 30 avril 2026
               </span>
             </div>
@@ -210,7 +210,7 @@
           </div>
 
           <!-- Note -->
-          <p class="text-center text-xs text-gray-500 mt-4">
+          <p class="text-center text-xs text-quiet mt-4">
             Les certificats seront disponibles pour tous les modules du programme PADCI
           </p>
         </div>
@@ -222,21 +222,21 @@
         style="border-color: var(--color-quaternary)"
       >
         <div class="text-center mb-4">
-          <span class="text-sm text-gray-500">APERÇU (MAQUETTE)</span>
+          <span class="text-sm text-quiet">APERÇU (MAQUETTE)</span>
         </div>
         <div
-          class="bg-gradient-to-br from-gray-50 to-white p-6 rounded-lg border border-gray-200 max-w-md mx-auto opacity-50"
+          class="bg-gradient-to-br from-gray-50 to-white p-6 rounded-lg border border-line max-w-md mx-auto opacity-50"
         >
           <div class="text-center">
             <CertificateIcon class="" style="color: var(--color-primary)" :size="48" />
             <div class="h-4 w-32 bg-gray-200 rounded mx-auto my-2"></div>
             <div class="h-3 w-48 bg-gray-200 rounded mx-auto"></div>
-            <div class="border-t border-gray-200 my-3"></div>
+            <div class="border-t border-line my-3"></div>
             <div class="h-2 w-40 bg-gray-200 rounded mx-auto"></div>
             <div class="h-2 w-32 bg-gray-200 rounded mx-auto mt-1"></div>
           </div>
           <div class="text-center mt-3">
-            <span class="text-xs text-gray-400">Exemple de design</span>
+            <span class="text-xs text-quiet">Exemple de design</span>
           </div>
         </div>
       </div>

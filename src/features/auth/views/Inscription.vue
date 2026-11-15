@@ -13,7 +13,7 @@
         <!-- Bouton Retour -->
         <router-link
           to="/"
-          class="inline-flex items-center gap-2 text-gray-600 hover:text-primary mb-4 transition group font-medium text-sm"
+          class="inline-flex items-center gap-2 text-quiet hover:text-primary mb-4 transition group font-medium text-sm"
         >
           <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -26,9 +26,9 @@
           <img :src="formLogo" alt="PADCI Formation" class="w-32 h-auto mb-3" />
 
           <template v-if="!accountCreated">
-            <h1 class="text-2xl font-bold text-gray-800">Créer un compte</h1>
-            <p class="text-gray-500 text-sm mt-1 text-center">
-              Un compte simple d'abord (nom, email, mot de passe) — la candidature
+            <h1 class="text-2xl font-bold text-ink">Créer un compte</h1>
+            <p class="text-quiet text-sm mt-1 text-center">
+              Un compte simple d'abord (nom, email, mot de passe) - la candidature
               se fait après la connexion.
             </p>
           </template>
@@ -40,10 +40,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h1 class="text-2xl font-bold text-gray-800">Compte créé !</h1>
-            <p class="text-gray-600 text-sm mt-2 text-center leading-relaxed">
+            <h1 class="text-2xl font-bold text-ink">Compte créé !</h1>
+            <p class="text-quiet text-sm mt-2 text-center leading-relaxed">
               Un e-mail de vérification a été envoyé à<br />
-              <strong class="text-gray-800">{{ form.email }}</strong>.<br />
+              <strong class="text-ink">{{ form.email }}</strong>.<br />
               Vous pourrez vous connecter après avoir vérifié votre adresse.
             </p>
 
@@ -56,8 +56,8 @@
               >
                 [dev] Vérifier l'adresse maintenant
               </a>
-              <p class="text-[11px] text-gray-400 mt-1 text-center">
-                Lien signé direct — présent uniquement dans l'environnement local.
+              <p class="text-[11px] text-quiet mt-1 text-center">
+                Lien signé direct - présent uniquement dans l'environnement local.
               </p>
             </div>
 
@@ -66,7 +66,7 @@
               type="button"
               :disabled="resendPending || resendDone"
               class="mt-5 text-sm font-medium text-primary hover:underline transition disabled:opacity-60 disabled:hover:no-underline"
-              :class="{ 'text-gray-500': resendDone }"
+              :class="{ 'text-quiet': resendDone }"
               @click="resend"
             >
               {{ resendDone ? 'E-mail renvoyé ✓' : resendPending ? 'Envoi en cours…' : 'Pas reçu ? Renvoyer l\'e-mail' }}
@@ -92,7 +92,7 @@
 
           <!-- Nom -->
           <div class="relative group">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
@@ -105,7 +105,7 @@
 
           <!-- Email -->
           <div class="relative group">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -118,7 +118,7 @@
 
           <!-- Mot de passe -->
           <div class="relative group">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -129,7 +129,7 @@
             <button
               type="button"
               @click="showPassword = !showPassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-quiet hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
               aria-label="Afficher ou masquer le mot de passe"
             >
               <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +148,7 @@
             class="relative group"
             :class="{ 'animate-shake mismatch': mismatch }"
           >
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
@@ -157,8 +157,8 @@
                    :class="inputClasses('password', 'pr-12')">
           </div>
 
-          <p class="text-[11px] text-gray-400 px-1">
-            Minimum 8 caractères — les règles exactes sont appliquées par le serveur.
+          <p class="text-[11px] text-quiet px-1">
+            Minimum 8 caractères - les règles exactes sont appliquées par le serveur.
           </p>
 
           <!-- Erreur générale (message API non spécifique à un champ) -->
@@ -186,15 +186,15 @@
             <span v-else>Création en cours…</span>
           </button>
 
-          <p class="text-sm text-gray-500 text-center">
+          <p class="text-sm text-quiet text-center">
             Déjà un compte ?
             <router-link to="/" class="text-primary hover:underline font-medium">Se connecter</router-link>
           </p>
         </form>
 
         <!-- Copyright -->
-        <p class="text-center text-gray-400 text-xs mt-10 tracking-wide">
-          PADCI Formation — Tous droits réservés © 2024
+        <p class="text-center text-quiet text-xs mt-10 tracking-wide">
+          PADCI Formation - Tous droits réservés © 2024
         </p>
       </div>
     </div>
@@ -271,11 +271,11 @@ function errorFor(field: string): string | null {
 function inputClasses(field: string, extras = ''): string {
   const invalid = errorFor(field) !== null
   return [
-    'w-full pl-12 pr-4 py-3 text-base border rounded-xl bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:outline-none transition-all duration-300',
+    'w-full pl-12 pr-4 py-3 text-base border rounded-xl bg-canvas text-ink placeholder:text-quiet focus:bg-white focus:ring-4 focus:outline-none transition-all duration-300',
     extras,
     invalid
       ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/15'
-      : 'border-gray-200 focus:ring-primary/15 focus:border-primary',
+      : 'border-line focus:ring-primary/15 focus:border-primary',
   ].join(' ')
 }
 
@@ -295,7 +295,7 @@ async function submit(): Promise<void> {
       password_confirmation: form.passwordConfirmation,
     })
     accountCreated.value = true
-    // Local/testing only (see AuthController::register) — absent in production.
+    // Local/testing only (see AuthController::register) - absent in production.
     verificationUrl.value = created.verification_url ?? null
   } catch (error) {
     if (error instanceof ApiError) {

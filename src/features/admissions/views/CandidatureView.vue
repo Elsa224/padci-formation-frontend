@@ -1,11 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50/50 py-10 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto space-y-8">
+  <section class="app-page max-w-4xl" aria-label="Déposer une candidature">
       <!-- RETOUR -->
       <div>
         <router-link
           :to="pathwayKey ? `/catalogue/${pathwayKey}` : '/catalogue'"
-          class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-primary transition font-medium"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-quiet transition hover:text-primary"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -22,10 +21,10 @@
       <!-- SUCCÈS -->
       <div
         v-if="isSuccess"
-        class="bg-white rounded-2xl border border-green-200 p-8 shadow-sm text-center space-y-4 animate-modal"
+        class="app-panel space-y-4 border-primary/30 p-8 text-center sm:p-10"
       >
-        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+          <svg class="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -34,22 +33,22 @@
             />
           </svg>
         </div>
-        <h2 class="text-2xl font-bold text-gray-900">Candidature enregistrée !</h2>
-        <p class="text-gray-600 text-sm max-w-md mx-auto leading-relaxed">
+        <h2 class="text-2xl font-bold text-ink">Candidature enregistrée</h2>
+        <p class="mx-auto max-w-md text-sm leading-6 text-quiet">
           Votre dossier pour la session
-          <strong class="text-gray-800">{{ selectedCohort?.name }}</strong> a été transmis à
+          <strong class="text-ink">{{ selectedCohort?.name }}</strong> a été transmis à
           l'équipe pédagogique. Vous pouvez suivre son statut en temps réel.
         </p>
         <div class="pt-4 flex flex-col sm:flex-row justify-center gap-3">
           <router-link
             to="/mes-candidatures"
-            class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition shadow-sm"
+            class="app-action-primary justify-center"
           >
             Voir mes candidatures
           </router-link>
           <router-link
             to="/catalogue"
-            class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition"
+            class="app-action-secondary justify-center"
           >
             Retour au catalogue
           </router-link>
@@ -57,89 +56,89 @@
       </div>
 
       <!-- FORMULAIRE DE CANDIDATURE (3 ÉTAPES) -->
-      <div v-else class="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+      <div v-else class="app-panel overflow-hidden p-0">
         <!-- INDICATEUR D'ÉTAPES -->
         <div
-          class="bg-gray-50 border-b border-gray-200/80 px-6 py-4 flex items-center justify-between"
+          class="flex items-center justify-between border-b border-line bg-canvas px-4 py-4 sm:px-6"
         >
           <div class="flex items-center gap-2">
             <span
               class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              :class="currentStep === 1 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'"
+              :class="currentStep === 1 ? 'bg-primary text-white' : 'bg-line text-quiet'"
             >
               1
             </span>
             <span
               class="text-xs sm:text-sm font-medium"
-              :class="currentStep === 1 ? 'text-primary font-bold' : 'text-gray-500'"
+              :class="currentStep === 1 ? 'text-primary font-bold' : 'text-quiet'"
             >
               Session &amp; Motivation
             </span>
           </div>
-          <div class="w-8 h-px bg-gray-300"></div>
+          <div class="hidden h-px w-8 bg-line sm:block"></div>
           <div class="flex items-center gap-2">
             <span
               class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              :class="currentStep === 2 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'"
+              :class="currentStep === 2 ? 'bg-primary text-white' : 'bg-line text-quiet'"
             >
               2
             </span>
             <span
               class="text-xs sm:text-sm font-medium"
-              :class="currentStep === 2 ? 'text-primary font-bold' : 'text-gray-500'"
+              :class="currentStep === 2 ? 'text-primary font-bold' : 'text-quiet'"
             >
               Équipement
             </span>
           </div>
-          <div class="w-8 h-px bg-gray-300"></div>
+          <div class="hidden h-px w-8 bg-line sm:block"></div>
           <div class="flex items-center gap-2">
             <span
               class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              :class="currentStep === 3 ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'"
+              :class="currentStep === 3 ? 'bg-primary text-white' : 'bg-line text-quiet'"
             >
               3
             </span>
             <span
               class="text-xs sm:text-sm font-medium"
-              :class="currentStep === 3 ? 'text-primary font-bold' : 'text-gray-500'"
+              :class="currentStep === 3 ? 'text-primary font-bold' : 'text-quiet'"
             >
               Confirmation
             </span>
           </div>
         </div>
 
-        <div class="p-6 sm:p-8 space-y-6">
+        <div class="space-y-6 p-6 sm:p-8">
           <!-- ÉTAPE 1 : SESSION ET MOTIVATION -->
           <div v-if="currentStep === 1" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900">Votre session de formation</h2>
-              <p class="text-xs sm:text-sm text-gray-500 mt-1">
+              <h2 class="text-xl font-bold text-ink">Votre session de formation</h2>
+              <p class="mt-1 text-xs text-quiet sm:text-sm">
                 Vérifiez la session choisie et exprimez brièvement vos motivations.
               </p>
             </div>
 
-            <div class="bg-primary/[0.03] border border-primary/20 rounded-xl p-4 space-y-2">
+            <div class="space-y-2 rounded-xl border border-primary/20 bg-primary/[0.035] p-4">
               <span class="text-xs font-bold uppercase text-primary tracking-wide">{{
                 pathway?.code
               }}</span>
-              <h3 class="text-base font-bold text-gray-800">{{ pathway?.name }}</h3>
-              <p v-if="selectedCohort" class="text-xs text-gray-600">
-                Session : <strong class="text-gray-800">{{ selectedCohort.name }}</strong> (du
+              <h3 class="text-base font-bold text-ink">{{ pathway?.name }}</h3>
+              <p v-if="selectedCohort" class="text-xs text-quiet">
+                Session : <strong class="text-ink">{{ selectedCohort.name }}</strong> (du
                 {{ selectedCohort.starts_at }} au {{ selectedCohort.ends_at }})
               </p>
               <p v-else class="text-xs text-amber-700">Aucune session valide n'a été spécifiée.</p>
             </div>
 
             <div class="space-y-2">
-              <label class="block text-sm font-semibold text-gray-700">
+              <label class="block text-sm font-semibold text-ink">
                 Lettre ou texte de motivation
-                <span class="text-gray-400 font-normal">(optionnel)</span>
+                <span class="font-normal text-quiet">(optionnel)</span>
               </label>
               <textarea
                 v-model="motivation"
                 rows="5"
                 placeholder="Expliquez votre parcours, vos objectifs professionnels et pourquoi vous souhaitez suivre cette formation..."
-                class="w-full border border-gray-200 rounded-xl p-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                class="app-input min-h-32 resize-y p-3.5"
               ></textarea>
             </div>
 
@@ -147,7 +146,7 @@
               <button
                 @click="nextToStep2"
                 :disabled="!selectedCohort"
-                class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition shadow-sm disabled:opacity-50"
+                class="app-action-primary disabled:opacity-50"
               >
                 Continuer vers l'équipement &rarr;
               </button>
@@ -157,8 +156,8 @@
           <!-- ÉTAPE 2 : ÉQUIPEMENT INFORMATIQUE -->
           <div v-if="currentStep === 2" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900">Équipement informatique requis</h2>
-              <p class="text-xs sm:text-sm text-gray-500 mt-1">
+              <h2 class="text-xl font-bold text-ink">Équipement informatique requis</h2>
+              <p class="mt-1 text-xs text-quiet sm:text-sm">
                 Les travaux pratiques exigent un matériel compatible avec les outils du programme.
               </p>
             </div>
@@ -166,9 +165,9 @@
             <!-- RAPPEL PRÉREQUIS FILIÈRE -->
             <div
               v-if="pathway?.equipment_requirements"
-              class="bg-gray-50 rounded-xl p-4 text-xs text-gray-600 border border-gray-200/80 space-y-1"
+              class="space-y-1 rounded-xl border border-line bg-canvas p-4 text-xs text-quiet"
             >
-              <p class="font-bold text-gray-800">
+              <p class="font-bold text-ink">
                 Spécifications recommandées pour {{ pathway.name }} :
               </p>
               <p>
@@ -188,12 +187,19 @@
             </div>
 
             <div class="space-y-4">
+              <p
+                v-if="submitError"
+                class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-danger-ink"
+                role="alert"
+              >
+                {{ submitError }}
+              </p>
               <div class="space-y-2">
-                <label class="block text-sm font-semibold text-gray-700">
+                <label class="block text-sm font-semibold text-ink">
                   Disposez-vous d'un ordinateur pour suivre la formation ? *
                 </label>
                 <div class="flex gap-4">
-                  <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                  <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
                     <input
                       type="radio"
                       :value="true"
@@ -202,7 +208,7 @@
                     />
                     Oui
                   </label>
-                  <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                  <label class="flex cursor-pointer items-center gap-2 text-sm text-ink">
                     <input
                       type="radio"
                       :value="false"
@@ -217,28 +223,28 @@
               <template v-if="hasComputer">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                   <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-gray-700"
+                    <label class="block text-xs font-semibold text-ink"
                       >Processeur (CPU)</label
                     >
                     <input
                       v-model="cpu"
                       type="text"
                       placeholder="Ex: Core i5, Ryzen 5, M1"
-                      class="w-full border border-gray-200 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      class="app-input"
                     />
                   </div>
                   <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-gray-700">RAM (en Go)</label>
+                    <label class="block text-xs font-semibold text-ink">RAM (en Go)</label>
                     <input
                       v-model.number="ramGb"
                       type="number"
                       min="1"
                       placeholder="Ex: 8 ou 16"
-                      class="w-full border border-gray-200 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      class="app-input"
                     />
                   </div>
                   <div class="space-y-1">
-                    <label class="block text-xs font-semibold text-gray-700"
+                    <label class="block text-xs font-semibold text-ink"
                       >Stockage (en Go)</label
                     >
                     <input
@@ -246,27 +252,48 @@
                       type="number"
                       min="1"
                       placeholder="Ex: 256 ou 512"
-                      class="w-full border border-gray-200 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      class="app-input"
                     />
                   </div>
                 </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div class="space-y-1">
+                    <label class="block text-xs font-semibold text-ink" for="device-type">Type d’appareil</label>
+                    <select id="device-type" v-model="deviceType" class="app-input">
+                      <option value="laptop">Ordinateur portable</option>
+                      <option value="desktop">Ordinateur de bureau</option>
+                    </select>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="block text-xs font-semibold text-ink" for="os-name">Système d’exploitation</label>
+                    <input id="os-name" v-model="osName" type="text" placeholder="Windows, Ubuntu…" class="app-input" />
+                  </div>
+                  <div class="space-y-1">
+                    <label class="block text-xs font-semibold text-ink" for="storage-free">Espace libre (Go)</label>
+                    <input id="storage-free" v-model.number="storageFreeGb" type="number" min="0" placeholder="Ex. 180" class="app-input" />
+                  </div>
+                </div>
+                <label class="flex items-center gap-2 rounded-xl bg-canvas px-3 py-2.5 text-xs text-ink">
+                  <input v-model="virtualizationSupported" type="checkbox" class="rounded border-line text-primary focus:ring-primary" />
+                  La virtualisation est disponible sur cet appareil
+                </label>
               </template>
               <div v-else class="p-3 bg-amber-50 text-amber-800 rounded-xl text-xs">
-                Note : Si vous ne disposez pas d'ordinateur personnel, votre candidature sera
-                examinée en fonction des places équipées disponibles en centre.
+                Votre candidature peut être déposée sans équipement personnel. L'équipe admissions
+                vous indiquera les modalités de la session si elle est retenue.
               </div>
             </div>
 
             <div class="flex justify-between pt-4">
               <button
                 @click="currentStep = 1"
-                class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition"
+                class="app-action-secondary"
               >
                 &larr; Retour
               </button>
               <button
-                @click="currentStep = 3"
-                class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition shadow-sm"
+                @click="nextToStep3"
+                class="app-action-primary"
               >
                 Vérifier et soumettre &rarr;
               </button>
@@ -276,48 +303,52 @@
           <!-- ÉTAPE 3 : CONFIRMATION & SOUMISSION -->
           <div v-if="currentStep === 3" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900">Récapitulatif de votre candidature</h2>
-              <p class="text-xs sm:text-sm text-gray-500 mt-1">
+              <h2 class="text-xl font-bold text-ink">Récapitulatif de votre candidature</h2>
+              <p class="mt-1 text-xs text-quiet sm:text-sm">
                 Relisez attentivement ces informations avant de confirmer l'envoi.
               </p>
             </div>
 
             <div
-              class="divide-y divide-gray-100 border border-gray-200/80 rounded-xl overflow-hidden text-sm"
+              class="divide-y divide-line overflow-hidden rounded-xl border border-line text-sm"
             >
-              <div class="p-4 bg-gray-50/50 flex justify-between">
-                <span class="text-gray-500">Filière</span>
-                <span class="font-bold text-gray-800">{{ pathway?.name }}</span>
+              <div class="flex justify-between bg-canvas p-4">
+                <span class="text-quiet">Filière</span>
+                <span class="font-bold text-ink">{{ pathway?.name }}</span>
               </div>
-              <div class="p-4 flex justify-between">
-                <span class="text-gray-500">Session choisie</span>
-                <span class="font-semibold text-gray-800">{{ selectedCohort?.name }}</span>
+              <div class="flex justify-between p-4">
+                <span class="text-quiet">Session choisie</span>
+                <span class="font-semibold text-ink">{{ selectedCohort?.name }}</span>
               </div>
-              <div class="p-4 bg-gray-50/50 flex justify-between">
-                <span class="text-gray-500">Dates</span>
-                <span class="text-gray-700"
+              <div class="flex justify-between bg-canvas p-4">
+                <span class="text-quiet">Dates</span>
+                <span class="text-ink"
                   >Du {{ selectedCohort?.starts_at }} au {{ selectedCohort?.ends_at }}</span
                 >
               </div>
-              <div class="p-4 flex justify-between">
-                <span class="text-gray-500">Possède un ordinateur</span>
-                <span class="font-medium text-gray-800">{{ hasComputer ? 'Oui' : 'Non' }}</span>
+              <div class="flex justify-between p-4">
+                <span class="text-quiet">Possède un ordinateur</span>
+                <span class="font-medium text-ink">{{ hasComputer ? 'Oui' : 'Non' }}</span>
               </div>
-              <div v-if="hasComputer" class="p-4 bg-gray-50/50 flex justify-between">
-                <span class="text-gray-500">Spécifications déclarées</span>
-                <span class="text-gray-700 font-medium"
+              <div v-if="hasComputer" class="flex justify-between bg-canvas p-4">
+                <span class="text-quiet">Spécifications déclarées</span>
+                <span class="text-ink font-medium"
                   >{{ cpu || 'CPU non précisé' }} · {{ ramGb }} Go RAM · {{ storageGb }} Go</span
                 >
               </div>
+              <div v-if="hasComputer" class="flex justify-between gap-4 p-4">
+                <span class="text-quiet">Environnement</span>
+                <span class="text-right text-ink font-medium">{{ deviceType === 'laptop' ? 'Portable' : 'Bureau' }} · {{ osName || 'Non précisé' }}</span>
+              </div>
               <div v-if="motivation" class="p-4 space-y-1">
-                <span class="text-gray-500 block text-xs">Motivation</span>
-                <p class="text-gray-700 text-xs italic whitespace-pre-wrap">{{ motivation }}</p>
+                <span class="text-quiet block text-xs">Motivation</span>
+                <p class="text-ink text-xs italic whitespace-pre-wrap">{{ motivation }}</p>
               </div>
             </div>
 
             <p
               v-if="submitError"
-              class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3"
+              class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-danger-ink"
             >
               {{ submitError }}
             </p>
@@ -325,14 +356,14 @@
             <div class="flex justify-between pt-4">
               <button
                 @click="currentStep = 2"
-                class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200 transition"
+                class="app-action-secondary"
               >
                 &larr; Retour
               </button>
               <button
                 @click="submit"
                 :disabled="submitMutation.isPending.value"
-                class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 transition shadow-sm disabled:opacity-50"
+                class="app-action-primary disabled:opacity-50"
               >
                 {{
                   submitMutation.isPending.value
@@ -344,8 +375,7 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -370,6 +400,10 @@ const hasComputer = ref(true)
 const cpu = ref('Core i5')
 const ramGb = ref(8)
 const storageGb = ref(256)
+const storageFreeGb = ref<number | undefined>()
+const deviceType = ref<'laptop' | 'desktop'>('laptop')
+const osName = ref('')
+const virtualizationSupported = ref(false)
 
 const submitError = ref<string | null>(null)
 const isSuccess = ref(false)
@@ -381,6 +415,19 @@ function nextToStep2() {
   }
 }
 
+function nextToStep3() {
+  if (pathway.value?.requires_equipment_validation && !hasComputer.value) {
+    submitError.value = 'Cette filière exige un ordinateur à faire valider. Indiquez votre équipement pour continuer.'
+    return
+  }
+  if (hasComputer.value && (!cpu.value.trim() || !ramGb.value || !storageGb.value || !osName.value.trim())) {
+    submitError.value = 'Complétez le processeur, la RAM, le stockage et le système d’exploitation.'
+    return
+  }
+  submitError.value = null
+  currentStep.value = 3
+}
+
 function submit() {
   if (!selectedCohort.value) return
   submitError.value = null
@@ -390,14 +437,17 @@ function submit() {
       pathway_key: pathwayKey.value,
       cohort_key: selectedCohort.value.key,
       motivation: motivation.value.trim() || undefined,
-      payload: {
-        equipment: {
-          has_computer: hasComputer.value,
-          cpu: hasComputer.value ? cpu.value.trim() : undefined,
-          ram_gb: hasComputer.value ? Number(ramGb.value) : undefined,
-          storage_gb: hasComputer.value ? Number(storageGb.value) : undefined,
-        },
-      },
+      equipment: hasComputer.value
+        ? {
+            device_type: deviceType.value,
+            cpu_model: cpu.value.trim(),
+            ram_gb: Number(ramGb.value),
+            storage_total_gb: Number(storageGb.value),
+            storage_free_gb: storageFreeGb.value ? Number(storageFreeGb.value) : undefined,
+            os_name: osName.value.trim(),
+            virtualization_supported: virtualizationSupported.value,
+          }
+        : undefined,
     },
     {
       onSuccess: () => {

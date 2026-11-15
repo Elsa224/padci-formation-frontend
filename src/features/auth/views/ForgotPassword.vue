@@ -13,7 +13,7 @@
         <!-- Bouton Retour -->
         <router-link
           to="/"
-          class="inline-flex items-center gap-2 text-gray-500 hover:text-primary mb-6 transition group font-medium text-sm"
+          class="inline-flex items-center gap-2 text-quiet hover:text-primary mb-6 transition group font-medium text-sm"
         >
           <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -27,8 +27,8 @@
 
           <!-- ÉTAT 1 : FORMULAIRE -->
           <template v-if="!isSubmitted">
-            <h1 class="text-2xl font-bold text-gray-800">Mot de passe oublié ?</h1>
-            <p class="text-gray-500 text-sm mt-2 text-center">
+            <h1 class="text-2xl font-bold text-ink">Mot de passe oublié ?</h1>
+            <p class="text-quiet text-sm mt-2 text-center">
               Entrez votre adresse email professionnelle. Nous vous enverrons un lien pour réinitialiser votre mot de passe.
             </p>
           </template>
@@ -40,10 +40,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h1 class="text-2xl font-bold text-gray-800">Email envoyé !</h1>
-            <p class="text-gray-500 text-sm mt-2 text-center">
+            <h1 class="text-2xl font-bold text-ink">Email envoyé !</h1>
+            <p class="text-quiet text-sm mt-2 text-center">
               Un lien de réinitialisation a été envoyé à <br/>
-              <strong class="text-gray-800">{{ email }}</strong>.
+              <strong class="text-ink">{{ email }}</strong>.
             </p>
           </template>
         </div>
@@ -52,7 +52,7 @@
         <form v-if="!isSubmitted" @submit.prevent="handleSubmit" class="space-y-5">
 
           <div class="relative group">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
@@ -62,7 +62,7 @@
               type="email"
               required
               placeholder="Email professionnel"
-              class="w-full pl-12 pr-5 py-3.5 text-base border border-gray-200 rounded-xl bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
+              class="w-full pl-12 pr-5 py-3.5 text-base border border-line rounded-xl bg-canvas text-ink placeholder:text-quiet focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
             />
           </div>
 
@@ -111,15 +111,15 @@
           <button
             type="button"
             @click="retry"
-            class="w-full text-center text-sm text-gray-500 hover:text-primary transition-colors"
+            class="w-full text-center text-sm text-quiet hover:text-primary transition-colors"
           >
             Vous n'avez pas reçu l'email ? Réessayer
           </button>
         </div>
 
         <!-- Copyright -->
-        <p class="text-center text-gray-400 text-xs mt-10 tracking-wide">
-          PADCI Formation — Tous droits réservés © 2024
+        <p class="text-center text-quiet text-xs mt-10 tracking-wide">
+          PADCI Formation - Tous droits réservés © 2024
         </p>
       </div>
     </div>
@@ -187,7 +187,7 @@ const handleSubmit = async () => {
   if (!email.value) return
   formError.value = null
 
-  // Le backend répond 202 que l'adresse existe ou non — jamais de branche
+  // Le backend répond 202 que l'adresse existe ou non - jamais de branche
   // "email inconnu" à afficher (voir PasswordResetController::forgot).
   try {
     await forgot.mutateAsync({ email: email.value })

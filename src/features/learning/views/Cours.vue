@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col">
+  <div class="min-h-screen bg-canvas flex flex-col">
     <!-- BANNIÈRE ENTIÈREMENT VISIBLE -->
     <section class="relative w-full bg-white overflow-hidden shadow-sm">
       <img :src="bannerImage" alt="Bannière PADCI Formation" class="w-full h-auto object-contain" />
@@ -20,7 +20,7 @@
 
       <!-- TITRE -->
       <div class="text-center mb-8">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 uppercase tracking-wide">
+        <h1 class="text-2xl md:text-3xl font-bold text-ink uppercase tracking-wide">
           Nos tableaux de nos formations
         </h1>
       </div>
@@ -30,7 +30,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse min-w-[800px]">
             <thead>
-              <tr class="border-b-2 border-primary bg-gray-50/80">
+              <tr class="border-b-2 border-primary bg-canvas/80">
                 <th class="py-4 px-6 text-primary font-bold text-sm md:text-base">N°</th>
                 <th class="py-4 px-6 text-primary font-bold text-sm md:text-base">Formation</th>
                 <th class="py-4 px-6 text-primary font-bold text-sm md:text-base">Cohorte</th>
@@ -47,10 +47,10 @@
               <tr
                 v-for="(item, index) in paginatedFormations"
                 :key="item.id"
-                class="border-b border-gray-200 hover:bg-gray-50 transition"
+                class="border-b border-line hover:bg-canvas transition"
               >
                 <!-- Numérotation globale (pas juste par page) -->
-                <td class="py-4 px-6 font-medium text-gray-500 text-sm md:text-base">
+                <td class="py-4 px-6 font-medium text-quiet text-sm md:text-base">
                   {{ (currentPage - 1) * itemsPerPage + index + 1 }}
                 </td>
 
@@ -86,7 +86,7 @@
 
               <!-- Si aucune formation trouvée -->
               <tr v-if="paginatedFormations.length === 0">
-                <td colspan="7" class="py-10 text-center text-gray-500">
+                <td colspan="7" class="py-10 text-center text-quiet">
                   Aucune formation disponible.
                 </td>
               </tr>
@@ -96,18 +96,18 @@
 
         <!-- PAGINATION -->
         <div
-          class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4"
+          class="bg-canvas px-6 py-4 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-4"
         >
-          <span class="text-sm text-gray-600">
+          <span class="text-sm text-quiet">
             Affichage de
-            <span class="font-semibold text-gray-800">{{
+            <span class="font-semibold text-ink">{{
               (currentPage - 1) * itemsPerPage + 1
             }}</span>
             à
-            <span class="font-semibold text-gray-800">{{
+            <span class="font-semibold text-ink">{{
               Math.min(currentPage * itemsPerPage, formations.length)
             }}</span>
-            sur <span class="font-semibold text-gray-800">{{ formations.length }}</span> formations
+            sur <span class="font-semibold text-ink">{{ formations.length }}</span> formations
           </span>
 
           <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
@@ -115,7 +115,7 @@
             <button
               @click="prevPage"
               :disabled="currentPage === 1"
-              class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               <ChevronLeftIcon :size="18" />
             </button>
@@ -129,7 +129,7 @@
               :class="[
                 currentPage === page
                   ? 'z-10 bg-primary border-primary text-white'
-                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50',
+                  : 'bg-white border-line text-ink hover:bg-canvas',
               ]"
             >
               {{ page }}
@@ -139,7 +139,7 @@
             <button
               @click="nextPage"
               :disabled="currentPage === totalPages"
-              class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
               <ChevronRightIcon :size="18" />
             </button>
@@ -166,7 +166,7 @@
 
           <button
             @click="openModal = false"
-            class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold transition text-center"
+            class="bg-gray-100 hover:bg-gray-200 text-ink px-6 py-3 rounded-xl font-semibold transition text-center"
           >
             Fermer
           </button>

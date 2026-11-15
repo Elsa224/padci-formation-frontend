@@ -3,17 +3,17 @@
     <!-- EN-TÊTE -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Gestion des Accès</h1>
-        <p class="text-sm text-gray-500 mt-1">Rôles et statut des comptes de la plateforme.</p>
+        <h1 class="text-2xl font-bold text-ink">Gestion des Accès</h1>
+        <p class="text-sm text-quiet mt-1">Rôles et statut des comptes de la plateforme.</p>
       </div>
     </div>
 
     <!-- FILTRES -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <div class="bg-white rounded-xl shadow-sm border border-line p-4">
       <div class="flex flex-col md:flex-row gap-4">
         <div class="relative flex-1">
           <svg
-            class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"
+            class="w-5 h-5 text-quiet absolute left-3 top-1/2 -translate-y-1/2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -29,12 +29,12 @@
             v-model="searchQuery"
             type="text"
             placeholder="Rechercher un nom, un email..."
-            class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm"
+            class="w-full pl-10 pr-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm"
           />
         </div>
         <select
           v-model="filterRole"
-          class="px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm text-gray-700 bg-white min-w-[200px]"
+          class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm text-ink bg-white min-w-[200px]"
         >
           <option value="">Tous les rôles</option>
           <option v-for="role in roleOptions" :key="role.value" :value="role.value">
@@ -45,12 +45,12 @@
     </div>
 
     <!-- TABLEAU DES UTILISATEURS -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr
-              class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100"
+              class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
             >
               <th class="py-4 px-6">Utilisateur</th>
               <th class="py-4 px-6">Rôle</th>
@@ -59,9 +59,9 @@
               <th class="py-4 px-6 text-center">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-sm">
+          <tbody class="divide-y divide-line text-sm">
             <tr v-if="isPending">
-              <td colspan="5" class="py-10 text-center text-gray-500">
+              <td colspan="5" class="py-10 text-center text-quiet">
                 Chargement des utilisateurs…
               </td>
             </tr>
@@ -71,12 +71,12 @@
               </td>
             </tr>
             <tr v-else-if="users.length === 0">
-              <td colspan="5" class="py-10 text-center text-gray-500">
+              <td colspan="5" class="py-10 text-center text-quiet">
                 Aucun utilisateur ne correspond à vos critères.
               </td>
             </tr>
 
-            <tr v-for="user in users" :key="user.key" class="hover:bg-gray-50 transition">
+            <tr v-for="user in users" :key="user.key" class="hover:bg-canvas transition">
               <td class="py-4 px-6">
                 <div class="flex items-center gap-3">
                   <div
@@ -88,8 +88,8 @@
                     }}</span>
                   </div>
                   <div>
-                    <p class="font-bold text-gray-800">{{ user.name }}</p>
-                    <p class="text-xs text-gray-500">{{ user.email }}</p>
+                    <p class="font-bold text-ink">{{ user.name }}</p>
+                    <p class="text-xs text-quiet">{{ user.email }}</p>
                   </div>
                 </div>
               </td>
@@ -112,7 +112,7 @@
                 <span
                   class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
                   :class="
-                    user.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                    user.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-quiet'
                   "
                 >
                   <span
@@ -123,10 +123,10 @@
                 </span>
               </td>
 
-              <td class="py-4 px-6 text-gray-500">{{ formatDate(user.last_login_at) }}</td>
+              <td class="py-4 px-6 text-quiet">{{ formatDate(user.last_login_at) }}</td>
 
               <td class="py-4 px-6 text-center">
-                <span v-if="isSelf(user)" class="text-xs italic text-gray-400">(C'est vous)</span>
+                <span v-if="isSelf(user)" class="text-xs italic text-quiet">(C'est vous)</span>
                 <button
                   v-else
                   @click="toggleActive(user)"
@@ -149,18 +149,18 @@
       <!-- PAGINATION -->
       <div
         v-if="pagination"
-        class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4"
+        class="bg-canvas px-6 py-4 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-4"
       >
-        <span class="text-sm text-gray-600">
-          Affichage de <span class="font-semibold text-gray-800">{{ pagination.from ?? 0 }}</span> à
-          <span class="font-semibold text-gray-800">{{ pagination.to ?? 0 }}</span> sur
-          <span class="font-semibold text-gray-800">{{ pagination.total ?? 0 }}</span> utilisateurs
+        <span class="text-sm text-quiet">
+          Affichage de <span class="font-semibold text-ink">{{ pagination.from ?? 0 }}</span> à
+          <span class="font-semibold text-ink">{{ pagination.to ?? 0 }}</span> sur
+          <span class="font-semibold text-ink">{{ pagination.total ?? 0 }}</span> utilisateurs
         </span>
         <nav class="inline-flex rounded-md shadow-sm -space-x-px">
           <button
             @click="page > 1 && page--"
             :disabled="page === 1"
-            class="px-3 py-2 border border-gray-300 bg-white text-gray-500 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            class="px-3 py-2 border border-line bg-white text-quiet rounded-l-md hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -172,14 +172,14 @@
             </svg>
           </button>
           <span
-            class="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700"
+            class="px-4 py-2 border-t border-b border-line bg-white text-sm font-medium text-ink"
           >
             {{ pagination.current_page }} / {{ pagination.last_page ?? 1 }}
           </span>
           <button
             @click="page < (pagination.last_page ?? 1) && page++"
             :disabled="page === (pagination.last_page ?? 1)"
-            class="px-3 py-2 border border-gray-300 bg-white text-gray-500 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            class="px-3 py-2 border border-line bg-white text-quiet rounded-r-md hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -192,7 +192,7 @@
           </button>
         </nav>
       </div>
-      <p v-if="actionError" class="px-6 py-3 text-sm text-red-600 border-t border-gray-100">
+      <p v-if="actionError" class="px-6 py-3 text-sm text-red-600 border-t border-line">
         {{ actionError }}
       </p>
     </div>
@@ -250,7 +250,7 @@ function roleColors(role: AppRole): { bg: string; text: string } {
     case 'formateur':
       return { bg: 'bg-primary/10', text: 'text-primary' }
     default:
-      return { bg: 'bg-gray-100', text: 'text-gray-600' }
+      return { bg: 'bg-gray-100', text: 'text-quiet' }
   }
 }
 

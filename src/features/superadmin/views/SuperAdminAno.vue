@@ -3,11 +3,11 @@
     <!-- EN-TÊTE -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Validation des ANO</h1>
-        <p class="text-sm text-gray-500 mt-1">Avis de Non-Objection (UCP / Banque Mondiale)</p>
+        <h1 class="text-2xl font-bold text-ink">Validation des ANO</h1>
+        <p class="text-sm text-quiet mt-1">Avis de Non-Objection (UCP / Banque Mondiale)</p>
       </div>
-      <div class="flex items-center gap-2 text-sm text-gray-500">
-        <span class="font-medium text-gray-700">{{ pendingCount }}</span> dossier(s) en attente de
+      <div class="flex items-center gap-2 text-sm text-quiet">
+        <span class="font-medium text-ink">{{ pendingCount }}</span> dossier(s) en attente de
         signature
       </div>
     </div>
@@ -19,11 +19,11 @@
       Seul un super administrateur peut signer ou rejeter une ANO. Vous pouvez consulter la liste.
     </p>
 
-    <div v-if="isPending" class="text-center text-gray-500 py-10">Chargement des ANO…</div>
+    <div v-if="isPending" class="text-center text-quiet py-10">Chargement des ANO…</div>
     <div v-else-if="isError" class="text-center text-red-600 py-10">
       {{ (error as ApiError)?.message ?? 'Impossible de charger les ANO.' }}
     </div>
-    <div v-else-if="anos.length === 0" class="text-center text-gray-500 py-10">
+    <div v-else-if="anos.length === 0" class="text-center text-quiet py-10">
       Aucune ANO pour l'instant.
     </div>
 
@@ -40,9 +40,9 @@
             {{ badgeText(ano) }}
           </span>
 
-          <h3 class="text-lg font-bold text-gray-800 mt-1">{{ ano.title }}</h3>
-          <p class="text-sm text-gray-500 mt-1">
-            Soumis par {{ ano.submitter?.name ?? '—' }} le {{ formatDate(ano.submitted_at) }}
+          <h3 class="text-lg font-bold text-ink mt-1">{{ ano.title }}</h3>
+          <p class="text-sm text-quiet mt-1">
+            Soumis par {{ ano.submitter?.name ?? '-' }} le {{ formatDate(ano.submitted_at) }}
             <span v-if="ano.pathway">· Filière : {{ ano.pathway.name }}</span>
           </p>
           <p
@@ -71,7 +71,7 @@
               Signer l'ANO
             </button>
           </template>
-          <span v-else class="px-4 py-2 bg-gray-100 text-gray-500 rounded-lg text-sm font-medium">
+          <span v-else class="px-4 py-2 bg-gray-100 text-quiet rounded-lg text-sm font-medium">
             {{ ano.status === 'signed' ? 'Déjà validé' : 'Rejetée' }}
           </span>
         </div>
@@ -82,12 +82,12 @@
             v-model="rejectReason"
             rows="2"
             placeholder="Motif du rejet"
-            class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+            class="w-full border border-line rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
           ></textarea>
           <div class="flex gap-2 mt-2">
             <button
               @click="rejectingKey = null"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition"
+              class="px-4 py-2 bg-gray-100 text-ink rounded-lg text-sm font-medium hover:bg-gray-200 transition"
             >
               Annuler
             </button>
@@ -134,10 +134,10 @@
               />
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-800 mb-2">Confirmer la signature</h3>
-          <p class="text-sm text-gray-500 mb-6">
+          <h3 class="text-lg font-bold text-ink mb-2">Confirmer la signature</h3>
+          <p class="text-sm text-quiet mb-6">
             Vous êtes sur le point de signer l'ANO pour :<br />
-            <strong class="text-gray-800">{{ selectedAno?.title }}</strong>
+            <strong class="text-ink">{{ selectedAno?.title }}</strong>
           </p>
           <p
             v-if="actionError"
@@ -149,7 +149,7 @@
           <div class="flex gap-3">
             <button
               @click="showConfirmModal = false"
-              class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition"
+              class="flex-1 px-4 py-2.5 bg-gray-100 text-ink rounded-xl font-medium hover:bg-gray-200 transition"
             >
               Annuler
             </button>
@@ -187,7 +187,7 @@ const anos = computed(() => data.value?.items ?? [])
 const pendingCount = computed(() => anos.value.filter((ano) => ano.status === 'pending').length)
 
 function formatDate(value: string | null): string {
-  if (!value) return '—'
+  if (!value) return '-'
   return new Date(value).toLocaleDateString('fr-FR')
 }
 
@@ -200,14 +200,14 @@ function badgeText(ano: AnoRequest): string {
 function badgeClass(ano: AnoRequest): string {
   if (ano.status === 'signed') return 'text-green-600'
   if (ano.status === 'rejected') return 'text-red-600'
-  return ano.priority === 'haute' ? 'text-orange-600' : 'text-gray-500'
+  return ano.priority === 'haute' ? 'text-orange-600' : 'text-quiet'
 }
 
 function cardBorderClass(ano: AnoRequest): string {
   if (ano.status === 'pending' && ano.priority === 'haute') return 'border-l-4 border-orange-500'
-  if (ano.status === 'signed') return 'border border-gray-100 opacity-75'
+  if (ano.status === 'signed') return 'border border-line opacity-75'
   if (ano.status === 'rejected') return 'border-l-4 border-red-300'
-  return 'border-l-4 border-gray-300'
+  return 'border-l-4 border-line'
 }
 
 const showConfirmModal = ref(false)

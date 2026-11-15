@@ -16,6 +16,7 @@ declare module 'vue-router' {
 function homeFor(roles: string[]): string {
   if (roles.includes('super_admin')) return '/superadmin/dashboard'
   if (roles.includes('admin')) return '/admin/dashboard'
+  if (roles.includes('moderateur')) return '/moderation/materiel'
   return '/formations/dashboard'
 }
 
@@ -75,7 +76,7 @@ const router = createRouter({
     {
       path: '/accueil',
       name: 'Accueil',
-      component: () => import('@/features/public/views/Accueil.vue'),
+      redirect: '/catalogue',
     },
     {
       path: '/connectivite',
@@ -86,45 +87,48 @@ const router = createRouter({
     // ==================== CATALOGUE PUBLIC (ADR-012) ====================
     {
       path: '/catalogue',
-      name: 'catalogue',
-      component: () => import('@/features/catalog/views/CatalogView.vue'),
-    },
-    {
-      path: '/catalogue/:key',
-      name: 'catalogue-pathway',
-      component: () => import('@/features/catalog/views/PathwayDetailView.vue'),
+      component: () => import('@/features/catalog/layouts/CatalogRouteLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'catalogue',
+          component: () => import('@/features/catalog/views/CatalogView.vue'),
+        },
+        {
+          path: ':key',
+          name: 'catalogue-pathway',
+          component: () => import('@/features/catalog/views/PathwayDetailView.vue'),
+        },
+      ],
     },
 
     // ==================== CANDIDATURES (ADR-012) ====================
     {
       path: '/candidature',
-      name: 'candidature',
-      component: () => import('@/features/admissions/views/CandidatureView.vue'),
+      component: () => import('@/features/learning/layouts/LearnerLayout.vue'),
       meta: { requiresAuth: true, roles: ['apprenant'] },
+      children: [{ path: '', name: 'candidature', component: () => import('@/features/admissions/views/CandidatureView.vue') }],
     },
     {
       path: '/mes-candidatures',
-      name: 'mes-candidatures',
-      component: () => import('@/features/admissions/views/MesCandidaturesView.vue'),
+      component: () => import('@/features/learning/layouts/LearnerLayout.vue'),
       meta: { requiresAuth: true, roles: ['apprenant'] },
+      children: [{ path: '', name: 'mes-candidatures', component: () => import('@/features/admissions/views/MesCandidaturesView.vue') }],
     },
 
-    // TODO(learning): /formation, /education-routiere, /cours are
-    // standalone pages with no sidebar layout today.
+    // Anciennes maquettes hors parcours LMS : on préserve les anciennes URLs
+    // mais on les ramène vers les parcours réellement maintenus.
     {
       path: '/formation',
-      name: 'formation',
-      component: () => import('@/features/learning/views/Formation.vue'),
+      redirect: '/formations/dashboard',
     },
     {
       path: '/education-routiere',
-      name: 'education-routiere',
-      component: () => import('@/features/learning/views/EducationRoutiere.vue'),
+      redirect: '/catalogue',
     },
     {
       path: '/cours',
-      name: 'cours',
-      component: () => import('@/features/learning/views/Cours.vue'),
+      redirect: '/formations/dashboard',
     },
 
     // ==================== APPRENANT (learning feature dynamique) ====================
@@ -159,6 +163,17 @@ const router = createRouter({
           name: 'parametres-apprenant',
           component: () => import('@/features/profile/views/ParametresApprenant.vue'),
         },
+      ],
+    },
+
+    {
+      path: '/moderation',
+      component: () => import('@/features/moderation/layouts/ModeratorLayout.vue'),
+      redirect: '/moderation/materiel',
+      meta: { requiresAuth: true, roles: ['moderateur', 'super_admin'] },
+      children: [
+        { path: 'materiel', name: 'moderation-equipment', component: () => import('@/features/moderation/views/EquipmentReviews.vue') },
+        { path: 'cours', name: 'moderation-courses', component: () => import('@/features/moderation/views/CourseReviews.vue') },
       ],
     },
 
@@ -237,7 +252,7 @@ const router = createRouter({
       ],
     },
 
-    // TODO(roles): no routes yet for `formateur`/`moderateur` — the real
+    // TODO(roles): no routes yet for `formateur` — the real
     // backend has 5 roles, this frontend only covers 3. Tracked, not built
     // here (see the audit report / plan).
   ],

@@ -3,12 +3,12 @@
     <!-- EN-TÊTE -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Supervision des Cohortes</h1>
-        <p class="text-sm text-gray-500 mt-1">Vue consolidée des 5 filières (Lecture seule)</p>
+        <h1 class="text-2xl font-bold text-ink">Supervision des Cohortes</h1>
+        <p class="text-sm text-quiet mt-1">Vue consolidée des 5 filières (Lecture seule)</p>
       </div>
 
       <!-- Légende des statuts -->
-      <div class="flex items-center gap-4 text-xs font-medium text-gray-600">
+      <div class="flex items-center gap-4 text-xs font-medium text-quiet">
         <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span> En cours</div>
         <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Terminé</div>
         <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> À venir</div>
@@ -16,11 +16,11 @@
     </div>
 
     <!-- TABLEAU DE SUPERVISION -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line">
               <th class="py-4 px-6">Filière</th>
               <th class="py-4 px-6">Inscrits</th>
               <th class="py-4 px-6">Taux de femmes</th>
@@ -29,14 +29,14 @@
               <th class="py-4 px-6 text-center">Détails</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-sm">
-            <tr v-for="cohorte in cohortes" :key="cohorte.id" class="hover:bg-gray-50 transition">
+          <tbody class="divide-y divide-line text-sm">
+            <tr v-for="cohorte in cohortes" :key="cohorte.id" class="hover:bg-canvas transition">
               <!-- Filière -->
-              <td class="py-4 px-6 font-medium text-gray-800">{{ cohorte.filiere }}</td>
+              <td class="py-4 px-6 font-medium text-ink">{{ cohorte.filiere }}</td>
 
               <!-- Inscrits -->
-              <td class="py-4 px-6 text-gray-600">
-                <span class="font-semibold text-gray-800">{{ cohorte.inscrits }}</span> / {{ cohorte.objectif }}
+              <td class="py-4 px-6 text-quiet">
+                <span class="font-semibold text-ink">{{ cohorte.inscrits }}</span> / {{ cohorte.objectif }}
               </td>
 
               <!-- Taux de femmes (Avec alerte si sous la cible) -->
@@ -49,15 +49,15 @@
                 >
                   {{ cohorte.tauxFemmes }}%
                 </span>
-                <span v-else class="text-gray-400">-</span>
+                <span v-else class="text-quiet">-</span>
               </td>
 
               <!-- Taux de certification -->
-              <td class="py-4 px-6 text-gray-600">
+              <td class="py-4 px-6 text-quiet">
                 <span v-if="cohorte.tauxCertification !== null" class="font-medium">
                   {{ cohorte.tauxCertification }}%
                 </span>
-                <span v-else class="text-gray-400">-</span>
+                <span v-else class="text-quiet">-</span>
               </td>
 
               <!-- Statut -->
@@ -159,13 +159,13 @@ const getStatutClass = (statut: StatutCohorte): string => {
     case 'En cours':
       return 'bg-blue-100 text-blue-700'
     case 'Terminé':
-      return 'bg-gray-100 text-gray-600'
+      return 'bg-gray-100 text-quiet'
     case 'À venir':
       return 'bg-amber-100 text-amber-700'
     case 'Non démarré':
-      return 'bg-gray-100 text-gray-500'
+      return 'bg-gray-100 text-quiet'
     default:
-      return 'bg-gray-100 text-gray-600'
+      return 'bg-gray-100 text-quiet'
   }
 }
 

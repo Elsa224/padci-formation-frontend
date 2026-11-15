@@ -13,8 +13,8 @@
         <!-- Logo + Titre -->
         <div class="flex flex-col items-center mb-8">
           <img :src="formLogo" alt="PADCI Formation" class="w-40 h-auto mb-4" />
-          <h1 class="text-2xl font-bold text-gray-800">Bienvenue</h1>
-          <p class="text-gray-500 text-sm mt-1">Connectez-vous à votre espace</p>
+          <h1 class="text-2xl font-bold text-ink">Bienvenue</h1>
+          <p class="text-quiet text-sm mt-1">Connectez-vous à votre espace</p>
         </div>
 
         <p
@@ -32,7 +32,7 @@
           v-if="emailVerified"
           class="mb-4 rounded-lg bg-green-50 border border-primary/30 text-primary text-sm px-4 py-3"
         >
-          Adresse vérifiée ✓ — vous pouvez vous connecter.
+          Adresse vérifiée ✓ - vous pouvez vous connecter.
         </p>
 
         <!-- Lien de vérification consommé mais invalide ou expiré
@@ -55,7 +55,7 @@
           role="alert"
           class="mb-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3"
         >
-          <p>Adresse email non vérifiée — consultez votre boîte mail.</p>
+          <p>Adresse email non vérifiée - consultez votre boîte mail.</p>
           <button
             v-if="!resendDone"
             type="button"
@@ -73,7 +73,7 @@
 
           <!-- Email -->
           <div class="relative group">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -87,14 +87,14 @@
               autocomplete="email"
               required
               placeholder="Email professionnel"
-              class="w-full pl-12 pr-5 py-3.5 text-base border border-gray-200 rounded-xl bg-gray-50 text-gray-800 placeholder:text-gray-400
+              class="w-full pl-12 pr-5 py-3.5 text-base border border-line rounded-xl bg-canvas text-ink placeholder:text-quiet
                      focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
             />
           </div>
 
           <!-- Mot de passe -->
           <div class="relative group">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -108,14 +108,14 @@
               autocomplete="current-password"
               required
               placeholder="Mot de passe"
-              class="w-full pl-12 pr-12 py-3.5 text-base border border-gray-200 rounded-xl bg-gray-50 text-gray-800 placeholder:text-gray-400
+              class="w-full pl-12 pr-12 py-3.5 text-base border border-line rounded-xl bg-canvas text-ink placeholder:text-quiet
                      focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
             />
             <button
               type="button"
               @click="togglePassword"
               :aria-label="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-quiet hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
             >
               <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -130,7 +130,7 @@
           </div>
 
           <!-- Options -->
-          <div class="flex items-center justify-between text-sm text-gray-600">
+          <div class="flex items-center justify-between text-sm text-quiet">
             <router-link to="/mot-de-passe-oublie" class="text-primary font-medium hover:underline transition-colors">
               Mot de passe oublié ?
             </router-link>
@@ -157,7 +157,7 @@
 
         <!-- ================= ÉTAPE MFA ================= -->
         <form v-else class="space-y-5" @submit.prevent="submitMfaCode">
-          <p class="text-sm text-gray-600">
+          <p class="text-sm text-quiet">
             Saisissez le code à 6 chiffres de votre application d'authentification,
             ou un de vos codes de récupération.
           </p>
@@ -171,7 +171,7 @@
               autocomplete="one-time-code"
               required
               placeholder="123456"
-              class="w-full px-5 py-3.5 text-center text-lg tracking-widest border border-gray-200 rounded-xl bg-gray-50 text-gray-800
+              class="w-full px-5 py-3.5 text-center text-lg tracking-widest border border-line rounded-xl bg-canvas text-ink
                      focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
             />
           </div>
@@ -189,15 +189,15 @@
 
         <!-- Lien inscription -->
         <p class="text-center text-sm mt-6">
-          <span class="text-gray-600">Vous n'avez pas de compte ?</span>
+          <span class="text-quiet">Vous n'avez pas de compte ?</span>
           <router-link to="/inscription" class="text-primary font-semibold hover:underline ml-1">
             Inscrivez-vous
           </router-link>
         </p>
 
         <!-- Copyright -->
-        <p class="text-center text-gray-400 text-xs mt-8 tracking-wide">
-          PADCI Formation — Tous droits réservés © 2024
+        <p class="text-center text-quiet text-xs mt-8 tracking-wide">
+          PADCI Formation - Tous droits réservés © 2024
         </p>
       </div>
     </div>
@@ -292,7 +292,7 @@ async function resendLink(): Promise<void> {
   }
 }
 
-// Set once a 428 AUTH_MFA_REQUIRED comes back from useLogin — switches the
+// Set once a 428 AUTH_MFA_REQUIRED comes back from useLogin - switches the
 // form to the "enter your 6-digit code" step instead of a second meaning
 // for the same fields.
 const challengeToken = ref<string | null>(null)

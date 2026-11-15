@@ -1,22 +1,23 @@
 <template>
-  <div class="space-y-6">
+  <section class="app-page" aria-labelledby="admin-applications-title">
     <!-- ================= EN-TÊTE ================= -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Gestion des Candidatures</h1>
-        <p class="text-sm text-gray-500 mt-1">
+        <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Admissions</p>
+        <h1 id="admin-applications-title" class="app-page-title mt-2">File de candidatures</h1>
+        <p class="app-page-copy">
           File d'admission : revue et décision sur les candidatures soumises par les apprenants.
         </p>
       </div>
-    </div>
+    </header>
 
     <!-- ================= BARRE D'OUTILS (Filtres) ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-      <div class="flex flex-col md:flex-row gap-4">
+    <div class="app-panel p-4 sm:p-5">
+      <div class="flex flex-col gap-3 md:flex-row">
         <!-- Recherche -->
         <div class="relative flex-1">
           <svg
-            class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"
+            class="w-5 h-5 text-quiet absolute left-3 top-1/2 -translate-y-1/2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -32,14 +33,14 @@
             v-model="searchQuery"
             type="text"
             placeholder="Rechercher un nom, un email..."
-            class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+            class="app-input pl-10"
           />
         </div>
 
         <!-- Filtre Filière (filières réelles du catalogue) -->
         <select
           v-model="filterPathwayKey"
-          class="px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-gray-700 bg-white min-w-[200px]"
+          class="app-input min-w-[200px]"
         >
           <option value="">Toutes les filières</option>
           <option v-for="pathway in pathways" :key="pathway.key" :value="pathway.key">
@@ -50,7 +51,7 @@
         <!-- Filtre Statut -->
         <select
           v-model="filterStatus"
-          class="px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-gray-700 bg-white min-w-[170px]"
+          class="app-input min-w-[170px]"
         >
           <option value="">Tous les statuts</option>
           <option v-for="status in statusOptions" :key="status.value" :value="status.value">
@@ -61,12 +62,12 @@
     </div>
 
     <!-- ================= TABLEAU DES CANDIDATURES ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="app-panel overflow-hidden p-0">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr
-              class="bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+              class="border-b border-line bg-canvas text-xs font-semibold uppercase tracking-[0.1em] text-quiet"
             >
               <th class="py-4 px-6">Candidat</th>
               <th class="py-4 px-6">Filière</th>
@@ -76,21 +77,21 @@
               <th class="py-4 px-6 text-center">Action</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-sm">
+          <tbody class="divide-y divide-line text-sm">
             <tr v-if="isPending">
-              <td colspan="6" class="py-10 text-center text-gray-500">
+              <td colspan="6" class="py-10 text-center text-quiet">
                 Chargement des candidatures…
               </td>
             </tr>
 
             <tr v-else-if="isError">
-              <td colspan="6" class="py-10 text-center text-red-600">
+              <td colspan="6" class="py-10 text-center text-danger-ink">
                 {{ (error as ApiError)?.message ?? 'Impossible de charger les candidatures.' }}
               </td>
             </tr>
 
             <tr v-else-if="applications.length === 0">
-              <td colspan="6" class="py-10 text-center text-gray-500">
+              <td colspan="6" class="py-10 text-center text-quiet">
                 Aucune candidature ne correspond à vos critères.
               </td>
             </tr>
@@ -98,28 +99,28 @@
             <tr
               v-for="application in applications"
               :key="application.key"
-              class="hover:bg-gray-50 transition"
+              class="transition hover:bg-primary/[0.025]"
             >
               <td class="py-4 px-6">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0"
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-sm font-bold text-primary"
                   >
                     {{ initialsOf(application.user?.name) }}
                   </div>
                   <div>
-                    <p class="font-bold text-gray-800">{{ application.user?.name ?? '—' }}</p>
-                    <p class="text-xs text-gray-500">{{ application.user?.email ?? '—' }}</p>
+                    <p class="font-bold text-ink">{{ application.user?.name ?? '-' }}</p>
+                    <p class="text-xs text-quiet">{{ application.user?.email ?? '-' }}</p>
                   </div>
                 </div>
               </td>
-              <td class="py-4 px-6 text-gray-700 font-medium">
-                {{ application.pathway?.name ?? '—' }}
+              <td class="px-6 py-4 font-medium text-ink">
+                {{ application.pathway?.name ?? '-' }}
               </td>
-              <td class="py-4 px-6 text-gray-500">
-                {{ application.cohort?.code ?? '—' }}
+              <td class="px-6 py-4 text-quiet">
+                {{ application.cohort?.code ?? '-' }}
               </td>
-              <td class="py-4 px-6 text-gray-500">
+              <td class="px-6 py-4 text-quiet">
                 {{ formatDate(application.submitted_at) }}
               </td>
               <td class="py-4 px-6">
@@ -133,11 +134,17 @@
                   ></span>
                   {{ statusLabel(application.status) }}
                 </span>
+                <p
+                  v-if="application.equipment_review && !equipmentAllowsAdmission(application.equipment_review.status)"
+                  class="mt-1 text-xs font-medium text-warning-ink"
+                >
+                  Matériel : {{ equipmentReviewLabel(application.equipment_review.status) }}
+                </p>
               </td>
               <td class="py-4 px-6 text-center">
                 <button
                   @click="openModal(application.key)"
-                  class="text-primary hover:bg-primary/10 p-2 rounded-lg transition"
+                  class="rounded-lg p-2 text-primary transition hover:bg-primary/10"
                   title="Voir le dossier"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,18 +171,18 @@
       <!-- PAGINATION (réelle, meta.pagination du backend) -->
       <div
         v-if="pagination"
-        class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4"
+        class="flex flex-col items-center justify-between gap-4 border-t border-line bg-canvas px-6 py-4 sm:flex-row"
       >
-        <span class="text-sm text-gray-600">
-          Affichage de <span class="font-semibold text-gray-800">{{ pagination.from ?? 0 }}</span> à
-          <span class="font-semibold text-gray-800">{{ pagination.to ?? 0 }}</span> sur
-          <span class="font-semibold text-gray-800">{{ pagination.total ?? 0 }}</span> candidatures
+        <span class="text-sm text-quiet">
+          Affichage de <span class="font-semibold text-ink">{{ pagination.from ?? 0 }}</span> à
+          <span class="font-semibold text-ink">{{ pagination.to ?? 0 }}</span> sur
+          <span class="font-semibold text-ink">{{ pagination.total ?? 0 }}</span> candidatures
         </span>
         <nav class="inline-flex rounded-md shadow-sm -space-x-px">
           <button
             @click="page > 1 && page--"
             :disabled="page === 1"
-            class="px-3 py-2 border border-gray-300 bg-white text-gray-500 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            class="rounded-l-lg border border-line bg-white px-3 py-2 text-quiet transition hover:bg-canvas disabled:cursor-not-allowed disabled:opacity-50"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -187,14 +194,14 @@
             </svg>
           </button>
           <span
-            class="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700"
+            class="border-y border-line bg-white px-4 py-2 text-sm font-medium text-ink"
           >
             {{ pagination.current_page }} / {{ pagination.last_page ?? 1 }}
           </span>
           <button
             @click="page < (pagination.last_page ?? 1) && page++"
             :disabled="page === (pagination.last_page ?? 1)"
-            class="px-3 py-2 border border-gray-300 bg-white text-gray-500 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            class="rounded-r-lg border border-line bg-white px-3 py-2 text-quiet transition hover:bg-canvas disabled:cursor-not-allowed disabled:opacity-50"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -214,10 +221,10 @@
       v-if="selectedKey"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
     >
-      <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden animate-modal">
+      <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl animate-modal">
         <!-- En-tête Modale -->
         <div
-          class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center"
+          class="flex items-center justify-between border-b border-line bg-canvas px-6 py-4"
         >
           <div class="flex items-center gap-3">
             <div
@@ -226,13 +233,13 @@
               {{ initialsOf(detail?.user?.name) }}
             </div>
             <div>
-              <h3 class="text-lg font-bold text-gray-800">{{ detail?.user?.name ?? '—' }}</h3>
-              <p class="text-sm text-gray-500">{{ detail?.user?.email ?? '—' }}</p>
+              <h3 class="text-lg font-bold text-ink">{{ detail?.user?.name ?? '-' }}</h3>
+              <p class="text-sm text-quiet">{{ detail?.user?.email ?? '-' }}</p>
             </div>
           </div>
           <button
             @click="closeModal"
-            class="text-gray-400 hover:text-red-500 transition p-1 rounded-lg hover:bg-red-50"
+            class="text-quiet hover:text-red-500 transition p-1 rounded-lg hover:bg-red-50"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -247,7 +254,7 @@
 
         <!-- Contenu Modale -->
         <div class="p-6 space-y-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
-          <div v-if="isDetailPending" class="text-sm text-gray-500 text-center py-6">
+          <div v-if="isDetailPending" class="text-sm text-quiet text-center py-6">
             Chargement du dossier…
           </div>
           <div v-else-if="isDetailError" class="text-sm text-red-600 text-center py-6">
@@ -267,28 +274,28 @@
                 ></span>
                 {{ statusLabel(detail.status) }}
               </span>
-              <span class="text-xs text-gray-500"
+              <span class="text-xs text-quiet"
                 >Déposée le {{ formatDate(detail.submitted_at) }}</span
               >
             </div>
 
             <!-- Filière et session -->
             <div>
-              <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">
+              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
                 Filière &amp; session
               </h4>
-              <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl text-sm">
+              <div class="grid grid-cols-2 gap-4 bg-canvas p-4 rounded-xl text-sm">
                 <div>
-                  <span class="text-gray-500">Filière :</span>
-                  <span class="font-medium text-gray-800">{{ detail.pathway?.name ?? '—' }}</span>
+                  <span class="text-quiet">Filière :</span>
+                  <span class="font-medium text-ink">{{ detail.pathway?.name ?? '-' }}</span>
                 </div>
                 <div>
-                  <span class="text-gray-500">Session :</span>
-                  <span class="font-medium text-gray-800">{{ detail.cohort?.code ?? '—' }}</span>
+                  <span class="text-quiet">Session :</span>
+                  <span class="font-medium text-ink">{{ detail.cohort?.code ?? '-' }}</span>
                 </div>
                 <div v-if="detail.cohort">
-                  <span class="text-gray-500">Dates :</span>
-                  <span class="font-medium text-gray-800"
+                  <span class="text-quiet">Dates :</span>
+                  <span class="font-medium text-ink"
                     >{{ formatDate(detail.cohort.starts_at) }} →
                     {{ formatDate(detail.cohort.ends_at) }}</span
                   >
@@ -298,27 +305,40 @@
 
             <!-- Motivation -->
             <div v-if="detail.motivation">
-              <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">
+              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
                 Motivation
               </h4>
-              <p class="bg-gray-50 p-4 rounded-xl text-sm text-gray-700 whitespace-pre-wrap">
+              <p class="bg-canvas p-4 rounded-xl text-sm text-ink whitespace-pre-wrap">
                 {{ detail.motivation }}
               </p>
             </div>
 
+            <div v-if="detail.equipment_review">
+              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">Éligibilité matériel</h4>
+              <div class="rounded-xl border border-line bg-canvas p-4 text-sm space-y-2">
+                <p :class="equipmentAllowsAdmission(detail.equipment_review.status) ? 'text-green-700' : 'text-amber-700'" class="font-semibold">
+                  {{ equipmentReviewLabel(detail.equipment_review.status) }}
+                </p>
+                <p v-if="detail.equipment_review.reason" class="text-ink">Motif : {{ detail.equipment_review.reason }}</p>
+                <p v-if="!equipmentAllowsAdmission(detail.equipment_review.status)" class="text-xs text-quiet">
+                  L'acceptation est bloquée tant que cette revue n'est pas approuvée. Vous pouvez néanmoins classer ou rejeter le dossier.
+                </p>
+              </div>
+            </div>
+
             <!-- Payload libre (équipement, disponibilité...) -->
             <div v-if="detail.payload && Object.keys(detail.payload).length > 0">
-              <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wide mb-3">
+              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
                 Informations complémentaires
               </h4>
-              <div class="bg-gray-50 p-4 rounded-xl text-sm space-y-1.5">
+              <div class="bg-canvas p-4 rounded-xl text-sm space-y-1.5">
                 <div
                   v-for="(value, key) in detail.payload"
                   :key="key"
                   class="flex justify-between gap-4"
                 >
-                  <span class="text-gray-500">{{ key }}</span>
-                  <span class="font-medium text-gray-800 text-right">{{
+                  <span class="text-quiet">{{ key }}</span>
+                  <span class="font-medium text-ink text-right">{{
                     formatPayloadValue(value)
                   }}</span>
                 </div>
@@ -326,27 +346,27 @@
             </div>
 
             <!-- Décision déjà prise -->
-            <div v-if="detail.decided_at" class="bg-gray-50 p-4 rounded-xl text-sm space-y-1">
+            <div v-if="detail.decided_at" class="bg-canvas p-4 rounded-xl text-sm space-y-1">
               <p>
-                <span class="text-gray-500">Décidée par :</span>
-                <span class="font-medium text-gray-800">{{ detail.decided_by?.name ?? '—' }}</span>
+                <span class="text-quiet">Décidée par :</span>
+                <span class="font-medium text-ink">{{ detail.decided_by?.name ?? '-' }}</span>
                 le {{ formatDate(detail.decided_at) }}
               </p>
               <p v-if="detail.reason">
-                <span class="text-gray-500">Motif :</span>
-                <span class="font-medium text-gray-800">{{ detail.reason }}</span>
+                <span class="text-quiet">Motif :</span>
+                <span class="font-medium text-ink">{{ detail.reason }}</span>
               </p>
             </div>
 
             <!-- Saisie du motif de rejet -->
             <div v-if="pendingDecision === 'rejected'">
-              <label class="text-sm font-medium text-gray-700 mb-1 block"
+              <label class="text-sm font-medium text-ink mb-1 block"
                 >Motif du rejet (obligatoire)</label
               >
               <textarea
                 v-model="rejectReason"
                 rows="3"
-                class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                class="w-full border border-line rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               ></textarea>
               <p v-if="decideError" class="text-xs text-red-600 mt-1">{{ decideError }}</p>
             </div>
@@ -356,13 +376,13 @@
         <!-- Pied de Modale (Actions) -->
         <div
           v-if="detail"
-          class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-wrap justify-end gap-3"
+          class="bg-canvas px-6 py-4 border-t border-line flex flex-wrap justify-end gap-3"
         >
           <button
             v-if="detail.status === 'submitted'"
             @click="startReview"
             :disabled="startReviewMutation.isPending.value"
-            class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-100 transition text-sm disabled:opacity-50"
+            class="px-5 py-2.5 bg-white border border-line text-ink rounded-xl font-semibold hover:bg-gray-100 transition text-sm disabled:opacity-50"
           >
             Démarrer la revue
           </button>
@@ -392,7 +412,8 @@
             </button>
             <button
               @click="decide('accepted')"
-              :disabled="decideMutation.isPending.value"
+              :disabled="decideMutation.isPending.value || !canAccept"
+              :title="canAccept ? 'Accepter la candidature' : 'La revue matériel doit être approuvée avant l’admission'"
               class="px-5 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-primary-shade transition shadow-md shadow-primary/30 text-sm disabled:opacity-50"
             >
               Accepter
@@ -401,7 +422,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -464,7 +485,7 @@ function statusBadgeClass(status: string): string {
     case 'rejected':
       return 'bg-red-100 text-red-700'
     default:
-      return 'bg-gray-100 text-gray-700'
+      return 'bg-gray-100 text-ink'
   }
 }
 
@@ -483,7 +504,7 @@ function statusDotClass(status: string): string {
 }
 
 function initialsOf(name: string | undefined): string {
-  if (!name) return '—'
+  if (!name) return '-'
   return name
     .split(' ')
     .filter(Boolean)
@@ -493,12 +514,12 @@ function initialsOf(name: string | undefined): string {
 }
 
 function formatDate(value: string | null | undefined): string {
-  if (!value) return '—'
+  if (!value) return '-'
   return new Date(value).toLocaleDateString('fr-FR')
 }
 
 function formatPayloadValue(value: unknown): string {
-  if (value === null || value === undefined) return '—'
+  if (value === null || value === undefined) return '-'
   if (typeof value === 'object') return JSON.stringify(value)
   return String(value)
 }
@@ -522,6 +543,29 @@ const canDecide = computed(
     detail.value !== null &&
     ['submitted', 'in_review', 'waitlisted'].includes(detail.value.status),
 )
+
+const canAccept = computed(() =>
+  detail.value !== undefined &&
+  detail.value !== null &&
+  (detail.value.equipment_review === undefined ||
+    detail.value.equipment_review === null ||
+    equipmentAllowsAdmission(detail.value.equipment_review.status)),
+)
+
+function equipmentAllowsAdmission(status: string): boolean {
+  return status === 'not_required' || status === 'approved'
+}
+
+function equipmentReviewLabel(status: string): string {
+  const labels: Record<string, string> = {
+    not_required: 'Aucune revue nécessaire',
+    pending: 'Revue matériel en attente',
+    needs_info: 'Informations complémentaires demandées',
+    approved: 'Matériel validé',
+    rejected: 'Matériel non validé',
+  }
+  return labels[status] ?? status
+}
 
 function openModal(key: string) {
   selectedKey.value = key

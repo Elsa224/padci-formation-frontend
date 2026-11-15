@@ -18,6 +18,7 @@ export interface Pathway {
   slug: string
   description: string | null
   equipment_requirements: EquipmentRequirements | null
+  requires_equipment_validation: boolean
   icon: string | null
   position: number
   is_active: boolean

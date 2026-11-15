@@ -3,8 +3,8 @@
     <!-- EN-TÊTE -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Rapports & Conformité</h1>
-        <p class="text-sm text-gray-500 mt-1">Suivi des KPIs et des mesures environnementales & sociales (E&S)</p>
+        <h1 class="text-2xl font-bold text-ink">Rapports & Conformité</h1>
+        <p class="text-sm text-quiet mt-1">Suivi des KPIs et des mesures environnementales & sociales (E&S)</p>
       </div>
       <button
         @click="telechargerRapportFinal"
@@ -19,15 +19,15 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- INDICATEURS DE PERFORMANCE (TDR) -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">Indicateurs de Performance (TDR)</h3>
+      <div class="bg-white rounded-xl shadow-sm border border-line p-6">
+        <h3 class="text-lg font-bold text-ink mb-4">Indicateurs de Performance (TDR)</h3>
         <div class="space-y-5">
           <div v-for="kpi in kpis" :key="kpi.nom">
             <div class="flex justify-between text-sm mb-1">
-              <span class="text-gray-600">{{ kpi.nom }}</span>
-              <span class="font-bold text-gray-800">
+              <span class="text-quiet">{{ kpi.nom }}</span>
+              <span class="font-bold text-ink">
                 {{ kpi.valeur }}%
-                <span class="text-gray-400 font-normal">(Cible: {{ kpi.cible }})</span>
+                <span class="text-quiet font-normal">(Cible: {{ kpi.cible }})</span>
               </span>
             </div>
             <div class="w-full bg-gray-100 rounded-full h-2">
@@ -42,14 +42,14 @@
       </div>
 
       <!-- CONFORMITÉ E&S -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+      <div class="bg-white rounded-xl shadow-sm border border-line p-6">
+        <h3 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
           <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
           </svg>
           Mesures de sauvegarde (CES)
         </h3>
-        <ul class="space-y-3 text-sm text-gray-600">
+        <ul class="space-y-3 text-sm text-quiet">
           <li v-for="(mesure, index) in mesuresES" :key="index" class="flex items-start gap-2">
             <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
@@ -57,7 +57,7 @@
             <span>{{ mesure }}</span>
           </li>
         </ul>
-        <div class="mt-6 pt-4 border-t border-gray-100">
+        <div class="mt-6 pt-4 border-t border-line">
           <div class="flex items-center gap-2 text-xs font-bold text-green-600 bg-green-50 px-3 py-2 rounded-lg w-fit">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Conformité validée par la Banque Mondiale
@@ -67,17 +67,17 @@
     </div>
 
     <!-- LIVRABLES ATTENDUS -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Livrables du Projet (TDR)</h3>
+    <div class="bg-white rounded-xl shadow-sm border border-line p-6">
+      <h3 class="text-lg font-bold text-ink mb-4">Livrables du Projet (TDR)</h3>
       <div class="space-y-3">
         <div
           v-for="livrable in livrables"
           :key="livrable.id"
           class="flex flex-col md:flex-row md:items-center justify-between p-3 rounded-lg border gap-3 transition"
           :class="{
-            'bg-gray-50 border-gray-100': livrable.statut === 'valide',
+            'bg-canvas border-line': livrable.statut === 'valide',
             'bg-orange-50 border-orange-100': livrable.statut === 'en_attente',
-            'bg-white border-gray-200': livrable.statut === 'a_venir'
+            'bg-white border-line': livrable.statut === 'a_venir'
           }"
         >
           <div class="flex items-center gap-3">
@@ -87,23 +87,23 @@
               :class="{
                 'bg-green-100 text-green-600': livrable.statut === 'valide',
                 'bg-orange-200 text-orange-700': livrable.statut === 'en_attente',
-                'bg-gray-200 text-gray-400': livrable.statut === 'a_venir'
+                'bg-gray-200 text-quiet': livrable.statut === 'a_venir'
               }"
             >
               <svg v-if="livrable.statut === 'valide'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
               <span v-else-if="livrable.statut === 'en_attente'">!</span>
               <span v-else>-</span>
             </div>
-            <span class="text-sm font-medium text-gray-800">{{ livrable.nom }}</span>
+            <span class="text-sm font-medium text-ink">{{ livrable.nom }}</span>
           </div>
 
           <div class="flex items-center gap-3 ml-auto">
             <span
               class="text-xs font-medium"
               :class="{
-                'text-gray-500': livrable.statut === 'valide',
+                'text-primary': livrable.statut === 'valide',
                 'text-orange-600 font-bold': livrable.statut === 'en_attente',
-                'text-gray-400': livrable.statut === 'a_venir'
+                'text-quiet': livrable.statut === 'a_venir'
               }"
             >
               {{ getStatutText(livrable.statut) }}
@@ -113,7 +113,7 @@
             <button
               v-if="livrable.statut === 'valide'"
               @click="telechargerLivrable(livrable)"
-              class="p-1.5 text-gray-400 hover:text-orange-500 hover:bg-white rounded-lg transition"
+              class="p-1.5 text-quiet hover:text-orange-500 hover:bg-white rounded-lg transition"
               title="Télécharger"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>

@@ -18,7 +18,7 @@
         <router-link
           v-if="!isSuccess"
           to="/"
-          class="inline-flex items-center gap-2 text-gray-500 hover:text-primary mb-6 transition group font-medium text-sm"
+          class="inline-flex items-center gap-2 text-quiet hover:text-primary mb-6 transition group font-medium text-sm"
         >
           <svg
             class="w-5 h-5 group-hover:-translate-x-1 transition-transform"
@@ -42,8 +42,8 @@
 
           <!-- ÉTAT 1 : FORMULAIRE -->
           <template v-if="!isSuccess">
-            <h1 class="text-2xl font-bold text-gray-800">Nouveau mot de passe</h1>
-            <p class="text-gray-500 text-sm mt-2 text-center">
+            <h1 class="text-2xl font-bold text-ink">Nouveau mot de passe</h1>
+            <p class="text-quiet text-sm mt-2 text-center">
               Créez un nouveau mot de passe sécurisé pour votre compte.
             </p>
           </template>
@@ -67,8 +67,8 @@
                 />
               </svg>
             </div>
-            <h1 class="text-2xl font-bold text-gray-800">Mot de passe modifié !</h1>
-            <p class="text-gray-500 text-sm mt-2 text-center">
+            <h1 class="text-2xl font-bold text-ink">Mot de passe modifié !</h1>
+            <p class="text-quiet text-sm mt-2 text-center">
               Votre mot de passe a été réinitialisé avec succès.<br />Vous pouvez maintenant vous
               connecter.
             </p>
@@ -80,7 +80,7 @@
           <!-- Nouveau mot de passe -->
           <div class="relative group">
             <span
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -96,12 +96,12 @@
               :type="showPassword ? 'text' : 'password'"
               required
               placeholder="Nouveau mot de passe"
-              class="w-full pl-12 pr-12 py-3.5 text-base border border-gray-200 rounded-xl bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
+              class="w-full pl-12 pr-12 py-3.5 text-base border border-line rounded-xl bg-canvas text-ink placeholder:text-quiet focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
             />
             <button
               type="button"
               @click="showPassword = !showPassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-quiet hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
             >
               <svg
                 v-if="!showPassword"
@@ -137,7 +137,7 @@
           <!-- Confirmer mot de passe -->
           <div class="relative group">
             <span
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"
+              class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -153,13 +153,13 @@
               :type="showConfirmPassword ? 'text' : 'password'"
               required
               placeholder="Confirmer le mot de passe"
-              class="w-full pl-12 pr-12 py-3.5 text-base border border-gray-200 rounded-xl bg-gray-50 text-gray-800 placeholder:text-gray-400 focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
+              class="w-full pl-12 pr-12 py-3.5 text-base border border-line rounded-xl bg-canvas text-ink placeholder:text-quiet focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
               :class="{ 'border-red-300 focus:border-red-500 focus:ring-red-500/15': mismatch }"
             />
             <button
               type="button"
               @click="showConfirmPassword = !showConfirmPassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-quiet hover:text-primary transition-colors p-1 rounded-lg hover:bg-primary/10"
             >
               <svg
                 v-if="!showConfirmPassword"
@@ -273,8 +273,8 @@
         </div>
 
         <!-- Copyright -->
-        <p class="text-center text-gray-400 text-xs mt-10 tracking-wide">
-          PADCI Formation — Tous droits réservés © 2024
+        <p class="text-center text-quiet text-xs mt-10 tracking-wide">
+          PADCI Formation - Tous droits réservés © 2024
         </p>
       </div>
     </div>

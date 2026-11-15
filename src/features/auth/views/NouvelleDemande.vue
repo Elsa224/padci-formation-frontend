@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col">
+  <div class="min-h-screen bg-canvas flex flex-col">
     <!-- HEADER / BANNIÈRE ENTIÈREMENT VISIBLE -->
     <section class="relative w-full bg-white overflow-hidden shadow-sm">
       <img :src="bannerImage" alt="Bannière PADCI Formation" class="w-full h-auto object-contain" />
