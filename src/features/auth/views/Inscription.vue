@@ -294,8 +294,12 @@
             </button>
           </div>
 
-          <p class="text-[11px] text-quiet px-1">
-            Minimum 8 caractères - les règles exactes sont appliquées par le serveur.
+          <!-- Règles du mot de passe -->
+          <ChecklistMotDePasse :mot-de-passe="form.password" />
+
+          <!-- Alerte non concordance -->
+          <p v-if="mismatch" class="text-xs text-red-600 px-1">
+            Les deux mots de passe ne correspondent pas.
           </p>
 
           <!-- Erreur générale (message API non spécifique à un champ) -->
@@ -317,7 +321,7 @@
           <!-- Bouton Créer le compte -->
           <button
             type="submit"
-            :disabled="isPending"
+            :disabled="isPending || !peutEnvoyer"
             class="group w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary text-white py-3.5 rounded-xl font-semibold text-base shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <svg
@@ -400,6 +404,8 @@ import formLogo from '@/assets/images/logoemsp.png'
 import loginImage from '@/assets/images/photodecybersecurite.jpg'
 import { useRegister } from '../composables/useRegister'
 import { useResendVerification } from '../composables/useResendVerification'
+import ChecklistMotDePasse from '../components/ChecklistMotDePasse.vue'
+import { peutEnvoyerMotDePasse } from '../utils/passwordRules'
 
 const register = useRegister()
 const resendVerification = useResendVerification()
@@ -428,6 +434,14 @@ const mismatch = computed(() => {
 
 const isPending = computed(() => register.isPending.value)
 
+const peutEnvoyer = computed(() => {
+  return (
+    form.name.trim().length > 0 &&
+    form.email.trim().length > 0 &&
+    peutEnvoyerMotDePasse(form.password, form.passwordConfirmation)
+  )
+})
+
 /** First field-level message from the backend, or null. */
 function errorFor(field: string): string | null {
   const first = fieldErrors[field]?.[0]
@@ -451,6 +465,11 @@ async function submit(): Promise<void> {
 
   if (mismatch.value) {
     formError.value = 'Les mots de passe ne correspondent pas.'
+    return
+  }
+
+  if (!peutEnvoyerMotDePasse(form.password, form.passwordConfirmation)) {
+    formError.value = 'Veuillez respecter l’ensemble des critères du mot de passe.'
     return
   }
 
