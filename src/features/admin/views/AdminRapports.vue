@@ -1,6 +1,5 @@
 <template>
   <div class="space-y-6">
-
     <!-- ================= EN-TÊTE ================= -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -11,9 +10,16 @@
       </div>
 
       <!-- Bouton de génération de rapport global -->
-      <button class="flex items-center justify-center gap-2 bg-primary hover:bg-primary-shade text-white px-4 py-2.5 rounded-xl font-medium transition-colors shadow-sm text-sm">
+      <button
+        class="flex items-center justify-center gap-2 bg-primary hover:bg-primary-shade text-white px-4 py-2.5 rounded-xl font-medium transition-colors shadow-sm text-sm"
+      >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
         </svg>
         Générer le rapport final (PDF)
       </button>
@@ -24,7 +30,12 @@
       <div class="px-6 py-5 border-b border-line">
         <h2 class="text-lg font-bold text-ink flex items-center gap-2">
           <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
           </svg>
           Indicateurs de performance (Cibles TDR)
         </h2>
@@ -32,7 +43,9 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line">
+            <tr
+              class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
+            >
               <th class="py-3 px-6">Indicateur</th>
               <th class="py-3 px-6 text-center">Cible (TDR)</th>
               <th class="py-3 px-6 text-center">Réalisé</th>
@@ -84,7 +97,9 @@
             </tr>
             <!-- Ligne 4 -->
             <tr class="hover:bg-canvas transition">
-              <td class="py-4 px-6 font-medium text-ink">Taux de satisfaction (évaluation à chaud)</td>
+              <td class="py-4 px-6 font-medium text-ink">
+                Taux de satisfaction (évaluation à chaud)
+              </td>
               <td class="py-4 px-6 text-center text-quiet">≥ 85%</td>
               <td class="py-4 px-6 text-center font-bold text-primary">89%</td>
               <td class="py-4 px-6">
@@ -131,11 +146,17 @@
 
     <!-- ================= GRAPHIQUES ET ANALYSES ================= -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
       <!-- Graphique 1 : Répartition Hommes / Femmes par filière -->
       <div class="bg-white rounded-xl shadow-sm border border-line p-6">
         <h3 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
           Répartition par Genre (Parité)
         </h3>
         <div class="h-64">
@@ -146,7 +167,14 @@
       <!-- Graphique 2 : Taux de réussite par filière -->
       <div class="bg-white rounded-xl shadow-sm border border-line p-6">
         <h3 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+            />
+          </svg>
           Taux de réussite (Certification) par Filière
         </h3>
         <div class="h-64">
@@ -161,23 +189,45 @@
         <h3 class="text-lg font-bold text-ink">Documents & Rapports générés</h3>
       </div>
       <ul class="divide-y divide-line">
-        <li v-for="(doc, index) in rapports" :key="index" class="p-4 sm:px-6 hover:bg-canvas transition flex items-center justify-between gap-4">
+        <li
+          v-for="(doc, index) in rapports"
+          :key="index"
+          class="p-4 sm:px-6 hover:bg-canvas transition flex items-center justify-between gap-4"
+        >
           <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center shrink-0">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+            <div
+              class="w-10 h-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center shrink-0"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                />
+              </svg>
             </div>
             <div>
               <p class="font-bold text-ink text-sm">{{ doc.nom }}</p>
               <p class="text-xs text-quiet mt-0.5">Généré le {{ doc.date }} · {{ doc.taille }}</p>
             </div>
           </div>
-          <button class="text-primary hover:bg-primary/10 p-2 rounded-lg transition" title="Télécharger">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+          <button
+            class="text-primary hover:bg-primary/10 p-2 rounded-lg transition"
+            title="Télécharger"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
           </button>
         </li>
       </ul>
     </div>
-
   </div>
 </template>
 
@@ -185,8 +235,13 @@
 import { ref } from 'vue'
 import { Bar } from 'vue-chartjs'
 import {
-  Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale,
-  LinearScale
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
 } from 'chart.js'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
@@ -204,7 +259,7 @@ const genderChartData = {
       backgroundColor: '#198341',
       borderRadius: 4,
       barPercentage: 0.6,
-      categoryPercentage: 0.6
+      categoryPercentage: 0.6,
     },
     {
       label: 'Femmes',
@@ -212,9 +267,9 @@ const genderChartData = {
       backgroundColor: '#9ca3af', // Gris pour contraster
       borderRadius: 4,
       barPercentage: 0.6,
-      categoryPercentage: 0.6
-    }
-  ]
+      categoryPercentage: 0.6,
+    },
+  ],
 }
 
 // ==================== DONNÉES TAUX DE RÉUSSITE ====================
@@ -227,9 +282,9 @@ const successRateData = {
       backgroundColor: 'rgba(25, 131, 65, 0.8)',
       borderColor: '#198341',
       borderWidth: 1,
-      borderRadius: 4
-    }
-  ]
+      borderRadius: 4,
+    },
+  ],
 }
 
 // ==================== OPTIONS GRAPHIQUES ====================
@@ -237,12 +292,12 @@ const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } },
   },
   scales: {
     y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
-    x: { grid: { display: false } }
-  }
+    x: { grid: { display: false } },
+  },
 }
 
 // ==================== DONNÉES DES RAPPORTS ====================

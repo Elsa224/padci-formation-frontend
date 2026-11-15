@@ -24,9 +24,12 @@ export function useProfilePhoto() {
     queryKey: ['profile-photo', auth.user?.key],
     enabled: computed(() => Boolean(auth.token)),
     queryFn: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8070/api/v1'}/profile/photo`, {
-        headers: { Authorization: `Bearer ${auth.token}`, Accept: 'image/*' },
-      })
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8070/api/v1'}/profile/photo`,
+        {
+          headers: { Authorization: `Bearer ${auth.token}`, Accept: 'image/*' },
+        },
+      )
       if (response.status === 404) return null
       if (!response.ok) throw new Error('Impossible de charger la photo.')
       return URL.createObjectURL(await response.blob())
@@ -38,13 +41,23 @@ export function useProfilePhoto() {
     void queryClient.invalidateQueries({ queryKey: ['profile-photo'] })
     void queryClient.invalidateQueries({ queryKey: ['profile'] })
   }
-  const upload = useMutation({ mutationFn: async (file: File) => {
-    const form = new FormData()
-    form.append('photo', file)
-    await http.post('/profile/photo', form)
-  }, onSuccess: invalidate })
-  const remove = useMutation({ mutationFn: async () => { await http.delete('/profile/photo') }, onSuccess: invalidate })
-  onScopeDispose(() => { if (photo.data.value) URL.revokeObjectURL(photo.data.value) })
+  const upload = useMutation({
+    mutationFn: async (file: File) => {
+      const form = new FormData()
+      form.append('photo', file)
+      await http.post('/profile/photo', form)
+    },
+    onSuccess: invalidate,
+  })
+  const remove = useMutation({
+    mutationFn: async () => {
+      await http.delete('/profile/photo')
+    },
+    onSuccess: invalidate,
+  })
+  onScopeDispose(() => {
+    if (photo.data.value) URL.revokeObjectURL(photo.data.value)
+  })
   return { photo, upload, remove }
 }
 

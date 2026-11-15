@@ -72,7 +72,13 @@ export function useRespondToEquipmentReview() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ applicationKey, equipment }: { applicationKey: string; equipment: EquipmentDeclaration }) => {
+    mutationFn: async ({
+      applicationKey,
+      equipment,
+    }: {
+      applicationKey: string
+      equipment: EquipmentDeclaration
+    }) => {
       const { data } = await http.patch<EquipmentReview>(
         `/applications/${applicationKey}/equipment-review`,
         { equipment },

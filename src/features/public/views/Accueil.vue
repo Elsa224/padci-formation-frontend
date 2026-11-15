@@ -1,13 +1,8 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-10">
-
     <!-- HEADER / BANNIÈRE ENTIÈREMENT VISIBLE -->
     <section class="relative w-full bg-white overflow-hidden shadow-sm">
-      <img
-        :src="bannerImage"
-        alt="Bannière PADCI Formation"
-        class="w-full h-auto object-contain"
-      />
+      <img :src="bannerImage" alt="Bannière PADCI Formation" class="w-full h-auto object-contain" />
     </section>
 
     <!-- TROIS BOUTONS ALIGNÉS SOUS LA BANNIÈRE -->
@@ -38,7 +33,10 @@
         @click="updateData"
         class="flex-1 min-w-[150px] bg-primary text-white font-bold py-3 px-4 rounded-full shadow hover:bg-primary/90 hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group"
       >
-        <RefreshCwIcon class="group-hover:rotate-180 transition-transform duration-500" :size="18" />
+        <RefreshCwIcon
+          class="group-hover:rotate-180 transition-transform duration-500"
+          :size="18"
+        />
         <span>Actualisé</span>
       </button>
     </div>
@@ -50,7 +48,10 @@
         to="/nouvelle-demande"
         class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg shadow transition-all duration-300 flex items-center justify-center gap-2 group"
       >
-        <CirclePlusIcon class="group-hover:rotate-90 transition-transform duration-300" :size="18" />
+        <CirclePlusIcon
+          class="group-hover:rotate-90 transition-transform duration-300"
+          :size="18"
+        />
         <span>Ajouter une nouvelle demande</span>
       </router-link>
 
@@ -62,7 +63,7 @@
           v-model="searchQuery"
           placeholder="Rechercher..."
           class="w-full pl-9 pr-3 py-2 rounded-lg border border-line focus:border-primary focus:outline-none shadow-sm transition-all duration-300 text-sm"
-        >
+        />
       </div>
     </div>
 
@@ -72,16 +73,28 @@
         <table class="w-full">
           <thead class="bg-secondary">
             <tr>
-              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">Nom de formation</th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">Spécificité de la formation</th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">Date de début</th>
-              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">Nombre de place</th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">
+                Nom de formation
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">
+                Spécificité de la formation
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">
+                Date de début
+              </th>
+              <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">
+                Nombre de place
+              </th>
               <th class="px-4 py-3 text-left text-xs font-bold text-primary uppercase">Cours</th>
             </tr>
           </thead>
 
           <tbody class="divide-y divide-line">
-            <tr v-for="(app, index) in paginatedApplications" :key="index" class="hover:bg-yellow-50 transition-colors duration-200">
+            <tr
+              v-for="(app, index) in paginatedApplications"
+              :key="index"
+              class="hover:bg-yellow-50 transition-colors duration-200"
+            >
               <td class="px-4 py-3 text-sm text-ink">
                 {{ app.service }}
               </td>
@@ -115,19 +128,35 @@
             Page {{ currentPage }} sur {{ totalPages }}
           </div>
           <div class="flex justify-center sm:justify-end">
-            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-              <button @click="prevPage" :disabled="currentPage === 1" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed">
+            <nav
+              class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+              aria-label="Pagination"
+            >
+              <button
+                @click="prevPage"
+                :disabled="currentPage === 1"
+                class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <ChevronLeftIcon :size="18" />
               </button>
-              <button v-for="page in displayedPages" :key="page" @click="goToPage(page)" :class="[
-                'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
-                currentPage === page
-                  ? 'z-10 bg-primary border-primary text-white'
-                  : 'bg-white border-line text-ink hover:bg-canvas'
-              ]">
+              <button
+                v-for="page in displayedPages"
+                :key="page"
+                @click="goToPage(page)"
+                :class="[
+                  'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
+                  currentPage === page
+                    ? 'z-10 bg-primary border-primary text-white'
+                    : 'bg-white border-line text-ink hover:bg-canvas',
+                ]"
+              >
                 {{ page }}
               </button>
-              <button @click="nextPage" :disabled="currentPage === totalPages" class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed">
+              <button
+                @click="nextPage"
+                :disabled="currentPage === totalPages"
+                class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-line bg-white text-sm font-medium text-quiet hover:bg-canvas disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <ChevronRightIcon :size="18" />
               </button>
             </nav>
@@ -162,7 +191,7 @@ export default {
         { code: 'MAR', name: 'Marcory' },
         { code: 'KOU', name: 'Koumassi' },
         { code: 'POR', name: 'Port-Bouët' },
-        { code: 'BIN', name: 'Bingerville' }
+        { code: 'BIN', name: 'Bingerville' },
       ],
 
       postalAgencies: [
@@ -170,7 +199,7 @@ export default {
         { code: 'KOU2', name: 'Koumassi - Campement' },
         { code: 'KOU3', name: 'Koumassi - Remblais' },
         { code: 'KOU4', name: 'Koumassi - Nord' },
-        { code: 'KOU5', name: 'Koumassi - Sud' }
+        { code: 'KOU5', name: 'Koumassi - Sud' },
       ],
 
       applications: [
@@ -179,37 +208,37 @@ export default {
           subservice: 'Formation avancée',
           date: '2024-01-21',
           status: '2/50',
-          route: '/formations/network/dashboard'
+          route: '/formations/network/dashboard',
         },
         {
           service: 'Data Analytics',
           subservice: 'Analyse de données',
           date: '2024-01-15',
           status: '2/60',
-          route: '/formations/network/dashboard'
+          route: '/formations/network/dashboard',
         },
         {
           service: 'IT Support',
           subservice: 'Assistance technique',
           date: '2024-01-16',
           status: '3/60',
-          route: '/formations/network/dashboard'
+          route: '/formations/network/dashboard',
         },
         {
           service: 'Network Specialist',
           subservice: 'Administration réseau',
           date: '2024-01-17',
           status: '5/60',
-          route: '/formations/network/dashboard'
+          route: '/formations/network/dashboard',
         },
         {
           service: 'Artificial Intelligence',
           subservice: 'Apprentissage automatique',
           date: '2024-01-18',
           status: '30/60',
-          route: '/formations/network/dashboard'
-        }
-      ]
+          route: '/formations/network/dashboard',
+        },
+      ],
     }
   },
 
@@ -219,9 +248,9 @@ export default {
         return this.applications
       }
       const query = this.searchQuery.toLowerCase()
-      return this.applications.filter(app =>
-        app.service.toLowerCase().includes(query) ||
-        app.subservice.toLowerCase().includes(query)
+      return this.applications.filter(
+        (app) =>
+          app.service.toLowerCase().includes(query) || app.subservice.toLowerCase().includes(query),
       )
     },
 
@@ -249,24 +278,26 @@ export default {
         pages.push(i)
       }
       return pages
-    }
+    },
   },
 
   watch: {
     searchQuery() {
       this.currentPage = 1
-    }
+    },
   },
 
   methods: {
     getCityName(code) {
-      const city = this.cities.find(c => c.code === code)
+      const city = this.cities.find((c) => c.code === code)
       return city ? city.name : 'Abidjan'
     },
 
     updateData() {
       if (this.selectedCity && this.selectedPostalAgency) {
-        alert(`Actualisation pour ${this.getCityName(this.selectedCity)} - ${this.selectedPostalAgency}`)
+        alert(
+          `Actualisation pour ${this.getCityName(this.selectedCity)} - ${this.selectedPostalAgency}`,
+        )
       } else if (this.selectedCity) {
         alert(`Actualisation pour ${this.getCityName(this.selectedCity)}`)
       } else {
@@ -277,10 +308,10 @@ export default {
     getStatusClass(status) {
       const classes = {
         'En cours': 'bg-primary text-secondary',
-        'Soumis': 'bg-primary text-white',
-        'Validé': 'bg-primary text-secondary',
+        Soumis: 'bg-primary text-white',
+        Validé: 'bg-primary text-secondary',
         'En attente': 'bg-yellow-100 text-yellow-800',
-        'Disponible': 'bg-blue-100 text-blue-800'
+        Disponible: 'bg-blue-100 text-blue-800',
       }
       return classes[status] || 'bg-gray-100 text-ink'
     },
@@ -299,8 +330,8 @@ export default {
 
     goToPage(page) {
       this.currentPage = page
-    }
-  }
+    },
+  },
 }
 </script>
 

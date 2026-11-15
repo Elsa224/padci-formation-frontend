@@ -41,7 +41,14 @@ export function useDashboardByPathway() {
   })
 }
 
-const APPLICATION_STATUSES = ['submitted', 'in_review', 'accepted', 'waitlisted', 'rejected', 'withdrawn'] as const
+const APPLICATION_STATUSES = [
+  'submitted',
+  'in_review',
+  'accepted',
+  'waitlisted',
+  'rejected',
+  'withdrawn',
+] as const
 
 /**
  * No dedicated stats endpoint exists for application status counts
@@ -57,7 +64,9 @@ export function useApplicationStatusCounts() {
     queryFn: async () => {
       const results = await Promise.all(
         APPLICATION_STATUSES.map(async (status) => {
-          const response = await http.get('/admin/applications', { params: { status, per_page: 1 } })
+          const response = await http.get('/admin/applications', {
+            params: { status, per_page: 1 },
+          })
           return [status, apiMeta(response)?.pagination?.total ?? 0] as const
         }),
       )

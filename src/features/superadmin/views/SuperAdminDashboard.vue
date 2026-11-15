@@ -12,9 +12,7 @@
         class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-line"
       >
         <div class="w-2 h-2 rounded-full bg-orange-300 animate-pulse"></div>
-        <span class="text-sm font-medium text-quiet"
-          >Financement : Banque Mondiale (ADR-011)</span
-        >
+        <span class="text-sm font-medium text-quiet">Financement : Banque Mondiale (ADR-011)</span>
       </div>
     </div>
 
@@ -163,10 +161,7 @@
       <h3 class="text-lg font-bold text-ink mb-4">
         Allocation et consommation par ligne budgétaire
       </h3>
-      <div
-        v-if="isBudgetPending"
-        class="h-64 flex items-center justify-center text-sm text-quiet"
-      >
+      <div v-if="isBudgetPending" class="h-64 flex items-center justify-center text-sm text-quiet">
         Chargement…
       </div>
       <div

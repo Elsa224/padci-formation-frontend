@@ -163,9 +163,7 @@
             </svg>
           </div>
           <h3 class="text-lg font-bold text-ink mb-2">Confirmer le décaissement</h3>
-          <p class="text-sm text-quiet mb-1">
-            Vous êtes sur le point de valider le paiement de :
-          </p>
+          <p class="text-sm text-quiet mb-1">Vous êtes sur le point de valider le paiement de :</p>
           <p class="text-base font-bold text-ink mb-6">
             {{
               selectedDisbursement

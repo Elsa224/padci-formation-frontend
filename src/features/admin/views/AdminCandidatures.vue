@@ -38,10 +38,7 @@
         </div>
 
         <!-- Filtre Filière (filières réelles du catalogue) -->
-        <select
-          v-model="filterPathwayKey"
-          class="app-input min-w-[200px]"
-        >
+        <select v-model="filterPathwayKey" class="app-input min-w-[200px]">
           <option value="">Toutes les filières</option>
           <option v-for="pathway in pathways" :key="pathway.key" :value="pathway.key">
             {{ pathway.name }}
@@ -49,10 +46,7 @@
         </select>
 
         <!-- Filtre Statut -->
-        <select
-          v-model="filterStatus"
-          class="app-input min-w-[170px]"
-        >
+        <select v-model="filterStatus" class="app-input min-w-[170px]">
           <option value="">Tous les statuts</option>
           <option v-for="status in statusOptions" :key="status.value" :value="status.value">
             {{ status.label }}
@@ -79,9 +73,7 @@
           </thead>
           <tbody class="divide-y divide-line text-sm">
             <tr v-if="isPending">
-              <td colspan="6" class="py-10 text-center text-quiet">
-                Chargement des candidatures…
-              </td>
+              <td colspan="6" class="py-10 text-center text-quiet">Chargement des candidatures…</td>
             </tr>
 
             <tr v-else-if="isError">
@@ -135,7 +127,10 @@
                   {{ statusLabel(application.status) }}
                 </span>
                 <p
-                  v-if="application.equipment_review && !equipmentAllowsAdmission(application.equipment_review.status)"
+                  v-if="
+                    application.equipment_review &&
+                    !equipmentAllowsAdmission(application.equipment_review.status)
+                  "
                   class="mt-1 text-xs font-medium text-warning-ink"
                 >
                   Matériel : {{ equipmentReviewLabel(application.equipment_review.status) }}
@@ -193,9 +188,7 @@
               />
             </svg>
           </button>
-          <span
-            class="border-y border-line bg-white px-4 py-2 text-sm font-medium text-ink"
-          >
+          <span class="border-y border-line bg-white px-4 py-2 text-sm font-medium text-ink">
             {{ pagination.current_page }} / {{ pagination.last_page ?? 1 }}
           </span>
           <button
@@ -223,9 +216,7 @@
     >
       <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl animate-modal">
         <!-- En-tête Modale -->
-        <div
-          class="flex items-center justify-between border-b border-line bg-canvas px-6 py-4"
-        >
+        <div class="flex items-center justify-between border-b border-line bg-canvas px-6 py-4">
           <div class="flex items-center gap-3">
             <div
               class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg shadow-md"
@@ -305,23 +296,36 @@
 
             <!-- Motivation -->
             <div v-if="detail.motivation">
-              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
-                Motivation
-              </h4>
+              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">Motivation</h4>
               <p class="bg-canvas p-4 rounded-xl text-sm text-ink whitespace-pre-wrap">
                 {{ detail.motivation }}
               </p>
             </div>
 
             <div v-if="detail.equipment_review">
-              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">Éligibilité matériel</h4>
+              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
+                Éligibilité matériel
+              </h4>
               <div class="rounded-xl border border-line bg-canvas p-4 text-sm space-y-2">
-                <p :class="equipmentAllowsAdmission(detail.equipment_review.status) ? 'text-green-700' : 'text-amber-700'" class="font-semibold">
+                <p
+                  :class="
+                    equipmentAllowsAdmission(detail.equipment_review.status)
+                      ? 'text-green-700'
+                      : 'text-amber-700'
+                  "
+                  class="font-semibold"
+                >
                   {{ equipmentReviewLabel(detail.equipment_review.status) }}
                 </p>
-                <p v-if="detail.equipment_review.reason" class="text-ink">Motif : {{ detail.equipment_review.reason }}</p>
-                <p v-if="!equipmentAllowsAdmission(detail.equipment_review.status)" class="text-xs text-quiet">
-                  L'acceptation est bloquée tant que cette revue n'est pas approuvée. Vous pouvez néanmoins classer ou rejeter le dossier.
+                <p v-if="detail.equipment_review.reason" class="text-ink">
+                  Motif : {{ detail.equipment_review.reason }}
+                </p>
+                <p
+                  v-if="!equipmentAllowsAdmission(detail.equipment_review.status)"
+                  class="text-xs text-quiet"
+                >
+                  L'acceptation est bloquée tant que cette revue n'est pas approuvée. Vous pouvez
+                  néanmoins classer ou rejeter le dossier.
                 </p>
               </div>
             </div>
@@ -413,7 +417,11 @@
             <button
               @click="decide('accepted')"
               :disabled="decideMutation.isPending.value || !canAccept"
-              :title="canAccept ? 'Accepter la candidature' : 'La revue matériel doit être approuvée avant l’admission'"
+              :title="
+                canAccept
+                  ? 'Accepter la candidature'
+                  : 'La revue matériel doit être approuvée avant l’admission'
+              "
               class="px-5 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-primary-shade transition shadow-md shadow-primary/30 text-sm disabled:opacity-50"
             >
               Accepter
@@ -544,12 +552,13 @@ const canDecide = computed(
     ['submitted', 'in_review', 'waitlisted'].includes(detail.value.status),
 )
 
-const canAccept = computed(() =>
-  detail.value !== undefined &&
-  detail.value !== null &&
-  (detail.value.equipment_review === undefined ||
-    detail.value.equipment_review === null ||
-    equipmentAllowsAdmission(detail.value.equipment_review.status)),
+const canAccept = computed(
+  () =>
+    detail.value !== undefined &&
+    detail.value !== null &&
+    (detail.value.equipment_review === undefined ||
+      detail.value.equipment_review === null ||
+      equipmentAllowsAdmission(detail.value.equipment_review.status)),
 )
 
 function equipmentAllowsAdmission(status: string): boolean {

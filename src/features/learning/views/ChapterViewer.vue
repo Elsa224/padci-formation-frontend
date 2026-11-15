@@ -61,9 +61,7 @@
               v-for="res in chapter.resources"
               :key="res.key"
               class="border rounded-xl p-3 flex items-center justify-between text-xs transition"
-              :class="
-                res.locked ? 'bg-canvas text-quiet' : 'bg-white hover:bg-canvas text-ink'
-              "
+              :class="res.locked ? 'bg-canvas text-quiet' : 'bg-white hover:bg-canvas text-ink'"
             >
               <div class="flex items-center gap-2">
                 <span>{{ res.type === 'link' ? '🔗' : '📄' }}</span>

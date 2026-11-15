@@ -79,9 +79,7 @@
           :key="module.key"
           class="bg-white rounded-2xl border border-line overflow-hidden shadow-sm"
         >
-          <div
-            class="bg-canvas px-6 py-4 border-b border-line flex items-center justify-between"
-          >
+          <div class="bg-canvas px-6 py-4 border-b border-line flex items-center justify-between">
             <div>
               <span class="text-xs font-bold text-quiet uppercase tracking-wide"
                 >Module {{ module.position }}</span

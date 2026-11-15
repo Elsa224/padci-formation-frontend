@@ -5,33 +5,37 @@
       <div>
         <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Espace apprenant</p>
         <h1 id="dashboard-title" class="app-page-title mt-2">Ma formation</h1>
-        <p class="app-page-copy">Retrouvez vos cours actifs, vos sessions et le suivi de vos admissions.</p>
+        <p class="app-page-copy">
+          Retrouvez vos cours actifs, vos sessions et le suivi de vos admissions.
+        </p>
       </div>
       <div class="flex items-center gap-3">
-        <router-link
-          to="/mes-candidatures"
-          class="app-action-secondary text-xs"
-        >
+        <router-link to="/mes-candidatures" class="app-action-secondary text-xs">
           Suivi de mes candidatures
         </router-link>
-        <router-link
-          to="/catalogue"
-          class="app-action-primary text-xs"
-        >
+        <router-link to="/catalogue" class="app-action-primary text-xs">
           Catalogue &rarr;
         </router-link>
       </div>
     </header>
 
     <!-- ÉTAT DE CHARGEMENT / ERREUR -->
-    <div v-if="isPending" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"><div v-for="index in 3" :key="index" class="app-panel space-y-5"><div class="app-skeleton h-5 w-1/3" /><div class="app-skeleton h-7 w-3/4" /><div class="app-skeleton h-11 w-full" /></div></div>
-    <div v-else-if="isError" class="app-panel py-12 text-center"><p class="font-semibold text-danger-ink">Vos formations ne sont pas disponibles.</p><p class="mt-2 text-sm text-quiet">{{ (error as ApiError)?.message ?? 'Réessayez dans quelques instants.' }}</p></div>
+    <div v-if="isPending" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div v-for="index in 3" :key="index" class="app-panel space-y-5">
+        <div class="app-skeleton h-5 w-1/3" />
+        <div class="app-skeleton h-7 w-3/4" />
+        <div class="app-skeleton h-11 w-full" />
+      </div>
+    </div>
+    <div v-else-if="isError" class="app-panel py-12 text-center">
+      <p class="font-semibold text-danger-ink">Vos formations ne sont pas disponibles.</p>
+      <p class="mt-2 text-sm text-quiet">
+        {{ (error as ApiError)?.message ?? 'Réessayez dans quelques instants.' }}
+      </p>
+    </div>
 
     <!-- AUCUNE FORMATION -->
-    <div
-      v-else-if="enrollments.length === 0"
-      class="app-panel p-8 text-center sm:p-10"
-    >
+    <div v-else-if="enrollments.length === 0" class="app-panel p-8 text-center sm:p-10">
       <div
         class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"
       >
@@ -50,10 +54,7 @@
         déposez votre candidature pour rejoindre une session.
       </p>
       <div class="pt-5">
-        <router-link
-          to="/catalogue"
-          class="app-action-primary inline-flex"
-        >
+        <router-link to="/catalogue" class="app-action-primary inline-flex">
           Découvrir le catalogue des sessions
         </router-link>
       </div>

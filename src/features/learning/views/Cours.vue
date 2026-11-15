@@ -100,9 +100,7 @@
         >
           <span class="text-sm text-quiet">
             Affichage de
-            <span class="font-semibold text-ink">{{
-              (currentPage - 1) * itemsPerPage + 1
-            }}</span>
+            <span class="font-semibold text-ink">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
             à
             <span class="font-semibold text-ink">{{
               Math.min(currentPage * itemsPerPage, formations.length)

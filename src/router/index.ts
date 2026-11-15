@@ -112,13 +112,25 @@ const router = createRouter({
       path: '/candidature',
       component: () => import('@/features/learning/layouts/LearnerLayout.vue'),
       meta: { requiresAuth: true, roles: ['apprenant'] },
-      children: [{ path: '', name: 'candidature', component: () => import('@/features/admissions/views/CandidatureView.vue') }],
+      children: [
+        {
+          path: '',
+          name: 'candidature',
+          component: () => import('@/features/admissions/views/CandidatureView.vue'),
+        },
+      ],
     },
     {
       path: '/mes-candidatures',
       component: () => import('@/features/learning/layouts/LearnerLayout.vue'),
       meta: { requiresAuth: true, roles: ['apprenant'] },
-      children: [{ path: '', name: 'mes-candidatures', component: () => import('@/features/admissions/views/MesCandidaturesView.vue') }],
+      children: [
+        {
+          path: '',
+          name: 'mes-candidatures',
+          component: () => import('@/features/admissions/views/MesCandidaturesView.vue'),
+        },
+      ],
     },
 
     // Anciennes maquettes hors parcours LMS : on préserve les anciennes URLs
@@ -177,8 +189,16 @@ const router = createRouter({
       redirect: '/moderation/materiel',
       meta: { requiresAuth: true, roles: ['moderateur', 'super_admin'] },
       children: [
-        { path: 'materiel', name: 'moderation-equipment', component: () => import('@/features/moderation/views/EquipmentReviews.vue') },
-        { path: 'cours', name: 'moderation-courses', component: () => import('@/features/moderation/views/CourseReviews.vue') },
+        {
+          path: 'materiel',
+          name: 'moderation-equipment',
+          component: () => import('@/features/moderation/views/EquipmentReviews.vue'),
+        },
+        {
+          path: 'cours',
+          name: 'moderation-courses',
+          component: () => import('@/features/moderation/views/CourseReviews.vue'),
+        },
       ],
     },
 

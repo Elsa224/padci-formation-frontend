@@ -9,9 +9,15 @@
 
       <!-- Légende des statuts -->
       <div class="flex items-center gap-4 text-xs font-medium text-quiet">
-        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span> En cours</div>
-        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Terminé</div>
-        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> À venir</div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-blue-500"></span> En cours
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-gray-400"></span> Terminé
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span> À venir
+        </div>
       </div>
     </div>
 
@@ -20,7 +26,9 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line">
+            <tr
+              class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
+            >
               <th class="py-4 px-6">Filière</th>
               <th class="py-4 px-6">Inscrits</th>
               <th class="py-4 px-6">Taux de femmes</th>
@@ -36,7 +44,8 @@
 
               <!-- Inscrits -->
               <td class="py-4 px-6 text-quiet">
-                <span class="font-semibold text-ink">{{ cohorte.inscrits }}</span> / {{ cohorte.objectif }}
+                <span class="font-semibold text-ink">{{ cohorte.inscrits }}</span> /
+                {{ cohorte.objectif }}
               </td>
 
               <!-- Taux de femmes (Avec alerte si sous la cible) -->
@@ -44,7 +53,11 @@
                 <span
                   v-if="cohorte.tauxFemmes !== null"
                   class="px-2 py-1 rounded font-bold text-xs"
-                  :class="cohorte.tauxFemmes >= 30 ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'"
+                  :class="
+                    cohorte.tauxFemmes >= 30
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-amber-100 text-amber-700'
+                  "
                   :title="cohorte.tauxFemmes < 30 ? 'En dessous de la cible de 30%' : ''"
                 >
                   {{ cohorte.tauxFemmes }}%
@@ -113,7 +126,7 @@ const cohortes = ref<Cohorte[]>([
     objectif: 40,
     tauxFemmes: 35,
     tauxCertification: 85,
-    statut: 'En cours'
+    statut: 'En cours',
   },
   {
     id: 2,
@@ -122,7 +135,7 @@ const cohortes = ref<Cohorte[]>([
     objectif: 40,
     tauxFemmes: 32,
     tauxCertification: 80,
-    statut: 'En cours'
+    statut: 'En cours',
   },
   {
     id: 3,
@@ -131,7 +144,7 @@ const cohortes = ref<Cohorte[]>([
     objectif: 40,
     tauxFemmes: 40,
     tauxCertification: 84,
-    statut: 'Terminé'
+    statut: 'Terminé',
   },
   {
     id: 4,
@@ -140,7 +153,7 @@ const cohortes = ref<Cohorte[]>([
     objectif: 40,
     tauxFemmes: 28, // Alerte : en dessous de 30%
     tauxCertification: null,
-    statut: 'À venir'
+    statut: 'À venir',
   },
   {
     id: 5,
@@ -149,8 +162,8 @@ const cohortes = ref<Cohorte[]>([
     objectif: 40,
     tauxFemmes: null,
     tauxCertification: null,
-    statut: 'Non démarré'
-  }
+    statut: 'Non démarré',
+  },
 ])
 
 // ==================== MÉTHODES ====================
@@ -171,6 +184,8 @@ const getStatutClass = (statut: StatutCohorte): string => {
 
 const voirDetails = (cohorte: Cohorte) => {
   // À remplacer par une modale de détails ou une redirection
-  alert(`Détails de la filière : ${cohorte.filiere}\nInscrits : ${cohorte.inscrits}/${cohorte.objectif}`)
+  alert(
+    `Détails de la filière : ${cohorte.filiere}\nInscrits : ${cohorte.inscrits}/${cohorte.objectif}`,
+  )
 }
 </script>

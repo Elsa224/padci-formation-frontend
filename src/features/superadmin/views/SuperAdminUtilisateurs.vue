@@ -61,9 +61,7 @@
           </thead>
           <tbody class="divide-y divide-line text-sm">
             <tr v-if="isPending">
-              <td colspan="5" class="py-10 text-center text-quiet">
-                Chargement des utilisateurs…
-              </td>
+              <td colspan="5" class="py-10 text-center text-quiet">Chargement des utilisateurs…</td>
             </tr>
             <tr v-else-if="isError">
               <td colspan="5" class="py-10 text-center text-red-600">
@@ -111,9 +109,7 @@
               <td class="py-4 px-6">
                 <span
                   class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
-                  :class="
-                    user.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-quiet'
-                  "
+                  :class="user.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-quiet'"
                 >
                   <span
                     class="w-1.5 h-1.5 rounded-full"

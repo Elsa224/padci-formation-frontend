@@ -19,8 +19,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
       <CardHeader>
         <CardTitle>Connectivité API</CardTitle>
         <CardDescription>
-          Vérifie que ce frontend atteint bien PADCI-API
-          ({{ apiBaseUrl }}).
+          Vérifie que ce frontend atteint bien PADCI-API ({{ apiBaseUrl }}).
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">

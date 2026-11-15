@@ -1,26 +1,33 @@
 <template>
   <div class="space-y-6">
-
     <!-- ================= EN-TÊTE ================= -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold text-ink">Gestion des Cohortes</h1>
-        <p class="text-sm text-quiet mt-1">
-          Sessions par filière : effectifs, statut et dates.
-        </p>
+        <p class="text-sm text-quiet mt-1">Sessions par filière : effectifs, statut et dates.</p>
       </div>
     </div>
 
     <!-- ================= FILTRES ================= -->
     <div class="bg-white rounded-xl shadow-sm border border-line p-4">
       <div class="flex flex-col md:flex-row gap-4">
-        <select v-model="filterPathwayKey" class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[200px]">
+        <select
+          v-model="filterPathwayKey"
+          class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[200px]"
+        >
           <option value="">Toutes les filières</option>
-          <option v-for="pathway in pathways" :key="pathway.key" :value="pathway.key">{{ pathway.name }}</option>
+          <option v-for="pathway in pathways" :key="pathway.key" :value="pathway.key">
+            {{ pathway.name }}
+          </option>
         </select>
-        <select v-model="filterStatus" class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[170px]">
+        <select
+          v-model="filterStatus"
+          class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[170px]"
+        >
           <option value="">Tous les statuts</option>
-          <option v-for="status in statusOptions" :key="status.value" :value="status.value">{{ status.label }}</option>
+          <option v-for="status in statusOptions" :key="status.value" :value="status.value">
+            {{ status.label }}
+          </option>
         </select>
       </div>
     </div>
@@ -30,7 +37,12 @@
       <div class="bg-white rounded-xl shadow-sm p-5 border border-line flex items-center gap-4">
         <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
           <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
           </svg>
         </div>
         <div>
@@ -42,24 +54,40 @@
       <div class="bg-white rounded-xl shadow-sm p-5 border border-line flex items-center gap-4">
         <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
           <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
           </svg>
         </div>
         <div>
           <p class="text-sm text-quiet font-medium">Sessions actives</p>
-          <p class="text-2xl font-bold text-primary">{{ activeCount }} <span class="text-sm text-quiet font-normal">/ {{ cohorts.length }}</span></p>
+          <p class="text-2xl font-bold text-primary">
+            {{ activeCount }}
+            <span class="text-sm text-quiet font-normal">/ {{ cohorts.length }}</span>
+          </p>
         </div>
       </div>
 
       <div class="bg-white rounded-xl shadow-sm p-5 border border-line flex items-center gap-4">
         <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
           <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+            />
           </svg>
         </div>
         <div>
           <p class="text-sm text-quiet font-medium">Sessions terminées</p>
-          <p class="text-2xl font-bold text-ink">{{ completedCount }} <span class="text-sm text-quiet font-normal">/ {{ cohorts.length }}</span></p>
+          <p class="text-2xl font-bold text-ink">
+            {{ completedCount }}
+            <span class="text-sm text-quiet font-normal">/ {{ cohorts.length }}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -75,12 +103,17 @@
 
     <!-- ================= CARTES DES COHORTES ================= -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="cohort in cohorts" :key="cohort.key" class="bg-white rounded-xl shadow-sm border border-line overflow-hidden hover:shadow-md transition flex flex-col">
-
+      <div
+        v-for="cohort in cohorts"
+        :key="cohort.key"
+        class="bg-white rounded-xl shadow-sm border border-line overflow-hidden hover:shadow-md transition flex flex-col"
+      >
         <!-- En-tête de la carte -->
         <div class="p-5 border-b border-line flex justify-between items-start bg-canvas/50">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs shadow-sm shrink-0">
+            <div
+              class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs shadow-sm shrink-0"
+            >
               {{ cohort.code.slice(0, 4) }}
             </div>
             <div>
@@ -88,7 +121,10 @@
               <p class="text-xs text-quiet">{{ cohort.session ?? cohort.code }}</p>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0" :class="statusBadgeClass(cohort.status)">
+          <span
+            class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0"
+            :class="statusBadgeClass(cohort.status)"
+          >
             {{ statusLabel(cohort.status) }}
           </span>
         </div>
@@ -99,11 +135,18 @@
             <div class="flex justify-between text-sm mb-1">
               <span class="text-quiet font-medium">Effectif</span>
               <span class="font-bold text-ink">
-                {{ cohort.enrollments_count ?? 0 }}<span v-if="cohort.capacity"> / {{ cohort.capacity }}</span>
+                {{ cohort.enrollments_count ?? 0
+                }}<span v-if="cohort.capacity"> / {{ cohort.capacity }}</span>
               </span>
             </div>
             <div v-if="cohort.capacity" class="w-full bg-gray-100 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" :style="{ width: Math.min(100, ((cohort.enrollments_count ?? 0) / cohort.capacity) * 100) + '%' }"></div>
+              <div
+                class="bg-primary h-2 rounded-full"
+                :style="{
+                  width:
+                    Math.min(100, ((cohort.enrollments_count ?? 0) / cohort.capacity) * 100) + '%',
+                }"
+              ></div>
             </div>
           </div>
 
@@ -125,7 +168,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -179,9 +221,17 @@ function formatDate(value: string | null): string {
   return new Date(value).toLocaleDateString('fr-FR')
 }
 
-const totalEnrolled = computed(() => cohorts.value.reduce((sum, cohort) => sum + (cohort.enrollments_count ?? 0), 0))
-const activeCount = computed(() => cohorts.value.filter((cohort) => cohort.status === 'open' || cohort.status === 'running').length)
-const completedCount = computed(() => cohorts.value.filter((cohort) => cohort.status === 'completed').length)
+const totalEnrolled = computed(() =>
+  cohorts.value.reduce((sum, cohort) => sum + (cohort.enrollments_count ?? 0), 0),
+)
+const activeCount = computed(
+  () =>
+    cohorts.value.filter((cohort) => cohort.status === 'open' || cohort.status === 'running')
+      .length,
+)
+const completedCount = computed(
+  () => cohorts.value.filter((cohort) => cohort.status === 'completed').length,
+)
 </script>
 
 <style scoped>
