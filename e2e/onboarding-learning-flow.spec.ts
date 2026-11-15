@@ -3,7 +3,7 @@ import { execSync } from 'node:child_process'
 
 function getLearnerToken(): string {
   const output = execSync(
-    `docker exec padci_app php artisan tinker --execute="\\$u = \\App\\Modules\\Identity\\Models\\User::where('email', 'user@example.com')->first(); echo \\$u->createToken('playwright-learner')->plainTextToken;"`,
+    `docker exec emsp_app php artisan tinker --execute="\\$u = \\App\\Modules\\Identity\\Models\\User::where('email', 'user@example.com')->first(); echo \\$u->createToken('playwright-learner')->plainTextToken;"`,
     { encoding: 'utf-8', timeout: 15000 },
   )
   const match = output.trim().match(/([0-9]+\|[A-Za-z0-9]+)/)

@@ -5,7 +5,7 @@ import { execSync } from 'node:child_process'
 // cache Laravel (Redis) : on le purge avant la suite, sinon le 2e run est
 // bloqué à 429 "Trop de requêtes" pour une raison de tests, pas d'usage.
 test.beforeAll(() => {
-  execSync('docker exec padci_app php artisan cache:clear', {
+  execSync('docker exec emsp_app php artisan cache:clear', {
     stdio: 'inherit',
     timeout: 15000,
   })
@@ -13,9 +13,9 @@ test.beforeAll(() => {
 
 /**
  * Cycle d'authentification complet, en conditions réelles : le backend est
- * le conteneur `padci_app` (docker compose, env local → le register renvoie
+ * le conteneur `emsp_app` (docker compose, env local → le register renvoie
  * un `verification_url` signé), et les emails sont lus via l'API REST de
- * Mailpit (`padci_mailpit`), jamais mockés.
+ * Mailpit (`emsp_mailpit`), jamais mockés.
  */
 const MAILPIT_API = 'http://localhost:8071/api/v1'
 

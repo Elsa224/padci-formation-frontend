@@ -83,6 +83,11 @@ const router = createRouter({
       name: 'connectivity-check',
       component: () => import('@/features/public/views/ConnectivityCheck.vue'),
     },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('@/features/public/views/Contact.vue'),
+    },
 
     // ==================== CATALOGUE PUBLIC (ADR-012) ====================
     {
