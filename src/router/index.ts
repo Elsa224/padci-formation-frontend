@@ -68,6 +68,11 @@ const router = createRouter({
       component: () => import('@/features/auth/views/Inscription.vue'),
     },
     {
+      path: '/invitation',
+      name: 'invitation',
+      component: () => import('@/features/auth/views/Invitation.vue'),
+    },
+    {
       path: '/mfa/configuration',
       name: 'mfa-setup',
       component: () => import('@/features/auth/views/MfaSetup.vue'),
