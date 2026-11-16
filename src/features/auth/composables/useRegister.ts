@@ -3,7 +3,11 @@ import { http } from '@/api/http'
 import type { SessionUser } from '@/stores/auth'
 
 interface RegisterPayload {
-  name: string
+  first_name?: string
+  last_name?: string
+  nom?: string
+  prenoms?: string
+  name?: string
   email: string
   password: string
   password_confirmation: string

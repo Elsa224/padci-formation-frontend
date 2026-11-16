@@ -118,32 +118,72 @@
 
         <!-- FORMULAIRE (disparait une fois le compte créé) -->
         <form v-if="!accountCreated" @submit.prevent="submit" class="space-y-4" novalidate>
-          <!-- Nom -->
-          <div class="relative group">
-            <span
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+          <!-- Nom et Prénoms séparés -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Nom -->
+            <div>
+              <div class="relative group">
+                <span
+                  class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </span>
+                <input
+                  v-model="form.lastName"
+                  type="text"
+                  required
+                  placeholder="Nom *"
+                  :class="inputClasses('last_name')"
+                  @input="clearFieldError('last_name')"
                 />
-              </svg>
-            </span>
-            <input
-              v-model="form.name"
-              type="text"
-              required
-              placeholder="Nom complet *"
-              :class="inputClasses('name')"
-              @input="fieldErrors.name = []"
-            />
+              </div>
+              <p
+                v-if="errorFor('last_name') || errorFor('nom')"
+                class="text-xs text-red-600 mt-1 px-1"
+              >
+                {{ errorFor('last_name') || errorFor('nom') }}
+              </p>
+            </div>
+
+            <!-- Prénoms -->
+            <div>
+              <div class="relative group">
+                <span
+                  class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </span>
+                <input
+                  v-model="form.firstName"
+                  type="text"
+                  required
+                  placeholder="Prénoms *"
+                  :class="inputClasses('first_name')"
+                  @input="clearFieldError('first_name')"
+                />
+              </div>
+              <p
+                v-if="errorFor('first_name') || errorFor('prenoms')"
+                class="text-xs text-red-600 mt-1 px-1"
+              >
+                {{ errorFor('first_name') || errorFor('prenoms') }}
+              </p>
+            </div>
           </div>
-          <p v-if="errorFor('name')" class="text-xs text-red-600 mt-1 px-1">
-            {{ errorFor('name') }}
-          </p>
 
           <!-- Email -->
           <div class="relative group">
@@ -411,7 +451,8 @@ const register = useRegister()
 const resendVerification = useResendVerification()
 
 const form = reactive({
-  name: '',
+  lastName: '',
+  firstName: '',
   email: '',
   password: '',
   passwordConfirmation: '',
@@ -436,11 +477,18 @@ const isPending = computed(() => register.isPending.value)
 
 const peutEnvoyer = computed(() => {
   return (
-    form.name.trim().length > 0 &&
+    form.lastName.trim().length > 0 &&
+    form.firstName.trim().length > 0 &&
     form.email.trim().length > 0 &&
     peutEnvoyerMotDePasse(form.password, form.passwordConfirmation)
   )
 })
+
+function clearFieldError(field: string): void {
+  fieldErrors[field] = []
+  if (field === 'last_name') fieldErrors.nom = []
+  if (field === 'first_name') fieldErrors.prenoms = []
+}
 
 /** First field-level message from the backend, or null. */
 function errorFor(field: string): string | null {
@@ -474,9 +522,15 @@ async function submit(): Promise<void> {
   }
 
   try {
+    const lastName = form.lastName.trim()
+    const firstName = form.firstName.trim()
     const created = await register.mutateAsync({
-      name: form.name,
-      email: form.email,
+      last_name: lastName,
+      first_name: firstName,
+      nom: lastName,
+      prenoms: firstName,
+      name: `${firstName} ${lastName}`.trim(),
+      email: form.email.trim(),
       password: form.password,
       password_confirmation: form.passwordConfirmation,
     })
@@ -488,7 +542,8 @@ async function submit(): Promise<void> {
       if (error.code === 'VALIDATION_FAILED') {
         fieldErrors.email = error.fieldErrors.email ?? []
         fieldErrors.password = error.fieldErrors.password ?? []
-        fieldErrors.name = error.fieldErrors.name ?? []
+        fieldErrors.last_name = error.fieldErrors.last_name ?? error.fieldErrors.nom ?? []
+        fieldErrors.first_name = error.fieldErrors.first_name ?? error.fieldErrors.prenoms ?? []
       } else {
         formError.value = error.message
       }
