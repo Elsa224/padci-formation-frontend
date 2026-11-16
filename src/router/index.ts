@@ -230,6 +230,11 @@ const router = createRouter({
           component: () => import('@/features/admin/views/AdminCohortes.vue'),
         },
         {
+          path: 'utilisateurs',
+          name: 'admin-utilisateurs',
+          component: () => import('@/features/superadmin/views/SuperAdminUtilisateurs.vue'),
+        },
+        {
           path: 'rapports',
           name: 'admin-rapports',
           component: () => import('@/features/admin/views/AdminRapports.vue'),
