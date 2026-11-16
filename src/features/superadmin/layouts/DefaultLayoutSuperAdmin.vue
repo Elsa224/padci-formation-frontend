@@ -1,7 +1,7 @@
 <template>
   <WorkspaceShell
     workspace="Supervision"
-    title="Gouvernance PADCI"
+    title="Gouvernance EMSP"
     home="/superadmin/dashboard"
     :navigation="navigation"
   >
@@ -25,12 +25,13 @@ import {
 import WorkspaceShell, {
   type WorkspaceNavGroup,
 } from '@/features/shared/components/WorkspaceShell.vue'
+
 const navigation: WorkspaceNavGroup[] = [
   {
     label: 'Supervision',
     items: [
       { label: 'Tableau de bord', to: '/superadmin/dashboard', icon: LayoutDashboardIcon },
-      { label: 'Utilisateurs', to: '/superadmin/utilisateurs', icon: UsersIcon },
+      { label: 'Utilisateurs & Accès', to: '/superadmin/utilisateurs', icon: UsersIcon },
       { label: 'Cohortes', to: '/superadmin/cohortes', icon: CalendarIcon },
     ],
   },
