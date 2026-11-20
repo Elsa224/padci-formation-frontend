@@ -202,7 +202,11 @@ export default {
           subservice: 'Assistance technique',
           date: '2024-01-16',
           status: '3/60',
+<<<<<<< Updated upstream
           route: '/passeport'
+=======
+          route: '/formations/itsupport/dashboard'
+>>>>>>> Stashed changes
         },
         {
           service: 'Network Specialist',
