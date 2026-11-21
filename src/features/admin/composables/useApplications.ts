@@ -9,6 +9,13 @@ export interface ApplicationPathway {
   code: string
   name: string
   slug: string
+  requires_equipment_validation?: boolean
+  equipment_requirements?: {
+    min_cpu?: string
+    min_ram_gb?: number
+    min_storage_gb?: number
+    notes?: string
+  } | null
 }
 
 export interface ApplicationCohort {
@@ -17,6 +24,9 @@ export interface ApplicationCohort {
   code: string
   name: string
   session: string | null
+  capacity?: number | null
+  enrolled_count?: number
+  available_seats?: number
   starts_at: string | null
   ends_at: string | null
   status: string
@@ -27,13 +37,24 @@ export interface ApplicationUser {
   key: string
   name: string
   email: string
+  phone?: string | null
 }
 
 export interface ApplicationEquipmentReview {
   key: string
   status: 'not_required' | 'pending' | 'needs_info' | 'approved' | 'rejected'
   declaration: Record<string, unknown> | null
+  requirements_snapshot?: Record<string, unknown> | null
   reason: string | null
+  proof_media?: {
+    id: number
+    key: string
+    original_name: string
+    mime_detected: string
+    size_bytes: number
+    download_url: string
+  } | null
+  proof_media_url?: string | null
   reviewed_by?: { key: string; name: string } | null
 }
 
@@ -41,10 +62,18 @@ export interface ApplicationEquipmentReview {
 export interface Application {
   id: number
   key: string
-  status: 'submitted' | 'in_review' | 'accepted' | 'waitlisted' | 'rejected' | 'withdrawn'
+  status:
+    | 'submitted'
+    | 'in_review'
+    | 'accepted'
+    | 'waitlisted'
+    | 'rejected'
+    | 'withdrawn'
+    | 'standby'
   motivation: string | null
   payload: Record<string, unknown> | null
   equipment_review?: ApplicationEquipmentReview | null
+  proof_media_url?: string | null
   user?: ApplicationUser
   pathway?: ApplicationPathway
   cohort?: ApplicationCohort | null

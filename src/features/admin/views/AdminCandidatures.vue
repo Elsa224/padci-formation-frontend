@@ -110,7 +110,7 @@
                 {{ application.pathway?.name ?? '-' }}
               </td>
               <td class="px-6 py-4 text-quiet">
-                {{ application.cohort?.code ?? '-' }}
+                {{ application.cohort?.code ?? application.cohort?.session ?? 'Standby / Ouverte' }}
               </td>
               <td class="px-6 py-4 text-quiet">
                 {{ formatDate(application.submitted_at) }}
@@ -209,30 +209,54 @@
       </div>
     </div>
 
-    <!-- ================= MODALE DE DÉTAIL CANDIDAT ================= -->
+    <!-- ================= VOLET LATÉRAL / TIROIR DE DÉTAIL CANDIDAT ================= -->
     <div
       v-if="selectedKey"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+      class="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+      data-testid="candidate-drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="drawer-candidate-title"
     >
-      <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl animate-modal">
-        <!-- En-tête Modale -->
+      <div
+        class="flex h-full w-full max-w-2xl flex-col bg-white shadow-2xl animate-drawer sm:max-w-3xl"
+      >
+        <!-- En-tête Volet -->
         <div class="flex items-center justify-between border-b border-line bg-canvas px-6 py-4">
           <div class="flex items-center gap-3">
             <div
-              class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-lg shadow-md"
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white shadow-md shadow-primary/20"
             >
               {{ initialsOf(detail?.user?.name) }}
             </div>
             <div>
-              <h3 class="text-lg font-bold text-ink">{{ detail?.user?.name ?? '-' }}</h3>
-              <p class="text-sm text-quiet">{{ detail?.user?.email ?? '-' }}</p>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-primary"
+                  >Dossier candidat</span
+                >
+                <span
+                  v-if="detail"
+                  class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                  :class="statusBadgeClass(detail.status)"
+                >
+                  <span
+                    class="h-1.5 w-1.5 rounded-full"
+                    :class="statusDotClass(detail.status)"
+                  ></span>
+                  {{ statusLabel(detail.status) }}
+                </span>
+              </div>
+              <h3 id="drawer-candidate-title" class="text-xl font-bold text-ink">
+                {{ detail?.user?.name ?? 'Chargement…' }}
+              </h3>
             </div>
           </div>
           <button
             @click="closeModal"
-            class="text-quiet hover:text-red-500 transition p-1 rounded-lg hover:bg-red-50"
+            class="rounded-lg p-2 text-quiet transition hover:bg-red-50 hover:text-red-500"
+            title="Fermer"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -243,191 +267,569 @@
           </button>
         </div>
 
-        <!-- Contenu Modale -->
-        <div class="p-6 space-y-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
-          <div v-if="isDetailPending" class="text-sm text-quiet text-center py-6">
-            Chargement du dossier…
+        <!-- Corps du volet défilable -->
+        <div class="flex-1 space-y-6 overflow-y-auto p-6 custom-scrollbar">
+          <div v-if="isDetailPending" class="py-12 text-center text-sm text-quiet">
+            Chargement du dossier complet du candidat…
           </div>
-          <div v-else-if="isDetailError" class="text-sm text-red-600 text-center py-6">
+          <div v-else-if="isDetailError" class="py-12 text-center text-sm text-red-600">
             {{ (detailError as ApiError)?.message ?? 'Impossible de charger ce dossier.' }}
           </div>
 
           <template v-else-if="detail">
-            <!-- Statut actuel -->
-            <div class="flex items-center justify-between">
-              <span
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-                :class="statusBadgeClass(detail.status)"
-              >
-                <span
-                  class="w-1.5 h-1.5 rounded-full"
-                  :class="statusDotClass(detail.status)"
-                ></span>
-                {{ statusLabel(detail.status) }}
-              </span>
-              <span class="text-xs text-quiet"
-                >Déposée le {{ formatDate(detail.submitted_at) }}</span
-              >
-            </div>
-
-            <!-- Filière et session -->
-            <div>
-              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
-                Filière &amp; session
+            <!-- 1. Profil Candidat -->
+            <section class="rounded-2xl border border-line bg-canvas/60 p-5">
+              <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-quiet">
+                Profil du candidat
               </h4>
-              <div class="grid grid-cols-2 gap-4 bg-canvas p-4 rounded-xl text-sm">
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 text-sm">
                 <div>
-                  <span class="text-quiet">Filière :</span>
-                  <span class="font-medium text-ink">{{ detail.pathway?.name ?? '-' }}</span>
+                  <p class="text-xs text-quiet">Nom complet</p>
+                  <p class="font-semibold text-ink">{{ detail.user?.name ?? '-' }}</p>
                 </div>
                 <div>
-                  <span class="text-quiet">Session :</span>
-                  <span class="font-medium text-ink">{{ detail.cohort?.code ?? '-' }}</span>
+                  <p class="text-xs text-quiet">Adresse email</p>
+                  <p class="font-semibold text-ink">{{ detail.user?.email ?? '-' }}</p>
                 </div>
-                <div v-if="detail.cohort">
-                  <span class="text-quiet">Dates :</span>
-                  <span class="font-medium text-ink"
-                    >{{ formatDate(detail.cohort.starts_at) }} →
-                    {{ formatDate(detail.cohort.ends_at) }}</span
-                  >
+                <div>
+                  <p class="text-xs text-quiet">Numéro de téléphone</p>
+                  <p class="font-semibold text-ink">{{ candidatePhone }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-quiet">Date de soumission</p>
+                  <p class="font-semibold text-ink">{{ formatDate(detail.submitted_at) }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-quiet">Filière choisie</p>
+                  <p class="font-semibold text-primary">{{ detail.pathway?.name ?? '-' }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-quiet">Session demandée</p>
+                  <p class="font-semibold text-ink">
+                    {{ detail.cohort?.name ?? detail.cohort?.code ?? 'Session flexible / Standby' }}
+                  </p>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <!-- Motivation -->
-            <div v-if="detail.motivation">
-              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">Motivation</h4>
-              <p class="bg-canvas p-4 rounded-xl text-sm text-ink whitespace-pre-wrap">
-                {{ detail.motivation }}
-              </p>
-            </div>
+            <!-- 2. Destination Preview Badge -->
+            <section
+              class="rounded-2xl border p-4 transition"
+              :class="
+                detail.cohort
+                  ? 'border-primary/20 bg-primary/[0.04]'
+                  : 'border-amber-200 bg-amber-50/60'
+              "
+              data-testid="admission-destination-preview"
+            >
+              <div class="flex items-start gap-3">
+                <div
+                  class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
+                  :class="detail.cohort ? 'bg-primary text-white' : 'bg-amber-500 text-white'"
+                >
+                  <svg
+                    v-if="detail.cohort"
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                  <svg v-else class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    class="text-xs font-bold uppercase tracking-wider"
+                    :class="detail.cohort ? 'text-primary' : 'text-amber-800'"
+                  >
+                    Destination prévue en cas d'admission
+                  </p>
+                  <p v-if="detail.cohort" class="mt-0.5 text-sm font-semibold text-ink">
+                    Affectation immédiate : Cohorte
+                    <span class="font-bold text-primary">{{
+                      detail.cohort.name || detail.cohort.code
+                    }}</span>
+                    <span v-if="detail.cohort.code" class="text-quiet text-xs font-normal">
+                      ({{ detail.cohort.code }})</span
+                    >
+                  </p>
+                  <p v-else class="mt-0.5 text-sm font-semibold text-ink">
+                    File d'attente (Standby) : Intégration automatique FIFO dès l'ouverture d'une
+                    nouvelle session.
+                  </p>
+                </div>
+              </div>
+            </section>
 
-            <div v-if="detail.equipment_review">
-              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
-                Éligibilité matériel
-              </h4>
-              <div class="rounded-xl border border-line bg-canvas p-4 text-sm space-y-2">
-                <p
-                  :class="
-                    equipmentAllowsAdmission(detail.equipment_review.status)
-                      ? 'text-green-700'
-                      : 'text-amber-700'
-                  "
-                  class="font-semibold"
+            <!-- 3. Comparatif Matériel : Spécifications Requises vs Déclarées -->
+            <section
+              v-if="hasHardwareInfo"
+              class="rounded-2xl border border-line bg-white p-5 shadow-sm"
+              data-testid="hardware-comparison-card"
+            >
+              <div class="mb-4 flex items-center justify-between border-b border-line pb-3">
+                <div class="flex items-center gap-2">
+                  <svg
+                    class="h-5 w-5 text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <h4 class="text-sm font-bold uppercase tracking-wider text-ink">
+                    Vérification du matériel informatique
+                  </h4>
+                </div>
+                <span
+                  v-if="detail.equipment_review"
+                  class="rounded-full px-2.5 py-1 text-xs font-semibold"
+                  :class="equipmentBadgeClass(detail.equipment_review.status)"
                 >
                   {{ equipmentReviewLabel(detail.equipment_review.status) }}
-                </p>
-                <p v-if="detail.equipment_review.reason" class="text-ink">
-                  Motif : {{ detail.equipment_review.reason }}
-                </p>
-                <p
-                  v-if="!equipmentAllowsAdmission(detail.equipment_review.status)"
-                  class="text-xs text-quiet"
-                >
-                  L'acceptation est bloquée tant que cette revue n'est pas approuvée. Vous pouvez
-                  néanmoins classer ou rejeter le dossier.
-                </p>
+                </span>
               </div>
-            </div>
 
-            <!-- Payload libre (équipement, disponibilité...) -->
-            <div v-if="detail.payload && Object.keys(detail.payload).length > 0">
-              <h4 class="text-sm font-bold text-ink uppercase tracking-wide mb-3">
-                Informations complémentaires
-              </h4>
-              <div class="bg-canvas p-4 rounded-xl text-sm space-y-1.5">
+              <!-- Tableau comparatif -->
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <!-- Processeur / CPU -->
                 <div
-                  v-for="(value, key) in detail.payload"
-                  :key="key"
-                  class="flex justify-between gap-4"
+                  class="rounded-xl border p-3"
+                  :class="
+                    isCpuConform
+                      ? 'border-primary/30 bg-primary/[0.02]'
+                      : 'border-red-200 bg-red-50/30'
+                  "
                 >
-                  <span class="text-quiet">{{ key }}</span>
-                  <span class="font-medium text-ink text-right">{{
-                    formatPayloadValue(value)
-                  }}</span>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-quiet"
+                      >Processeur (CPU)</span
+                    >
+                    <span
+                      class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
+                      :class="
+                        isCpuConform ? 'bg-primary/20 text-primary' : 'bg-red-100 text-red-600'
+                      "
+                    >
+                      <svg
+                        v-if="isCpuConform"
+                        class="h-3.5 w-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span v-else>!</span>
+                    </span>
+                  </div>
+                  <p class="text-xs text-quiet">
+                    Requis :
+                    <span class="font-medium text-ink">{{
+                      requiredSpecs.min_cpu || 'Non spécifié'
+                    }}</span>
+                  </p>
+                  <p class="mt-1 text-sm font-bold text-ink">
+                    {{ declaredSpecs.cpu || declaredSpecs.cpu_model || 'Non renseigné' }}
+                  </p>
+                </div>
+
+                <!-- RAM -->
+                <div
+                  class="rounded-xl border p-3"
+                  :class="
+                    isRamConform
+                      ? 'border-primary/30 bg-primary/[0.02]'
+                      : 'border-red-200 bg-red-50/30'
+                  "
+                >
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-quiet"
+                      >Mémoire RAM</span
+                    >
+                    <span
+                      class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
+                      :class="
+                        isRamConform ? 'bg-primary/20 text-primary' : 'bg-red-100 text-red-600'
+                      "
+                    >
+                      <svg
+                        v-if="isRamConform"
+                        class="h-3.5 w-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span v-else>!</span>
+                    </span>
+                  </div>
+                  <p class="text-xs text-quiet">
+                    Requis :
+                    <span class="font-medium text-ink">{{
+                      requiredSpecs.min_ram_gb ? requiredSpecs.min_ram_gb + ' Go' : 'Non spécifié'
+                    }}</span>
+                  </p>
+                  <p class="mt-1 text-sm font-bold text-ink">
+                    {{ declaredSpecs.ram_gb ? declaredSpecs.ram_gb + ' Go' : 'Non renseigné' }}
+                  </p>
+                </div>
+
+                <!-- Stockage -->
+                <div
+                  class="rounded-xl border p-3"
+                  :class="
+                    isStorageConform
+                      ? 'border-primary/30 bg-primary/[0.02]'
+                      : 'border-red-200 bg-red-50/30'
+                  "
+                >
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-quiet"
+                      >Stockage</span
+                    >
+                    <span
+                      class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
+                      :class="
+                        isStorageConform ? 'bg-primary/20 text-primary' : 'bg-red-100 text-red-600'
+                      "
+                    >
+                      <svg
+                        v-if="isStorageConform"
+                        class="h-3.5 w-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span v-else>!</span>
+                    </span>
+                  </div>
+                  <p class="text-xs text-quiet">
+                    Requis :
+                    <span class="font-medium text-ink">{{
+                      requiredSpecs.min_storage_gb
+                        ? requiredSpecs.min_storage_gb + ' Go'
+                        : 'Non spécifié'
+                    }}</span>
+                  </p>
+                  <p class="mt-1 text-sm font-bold text-ink">
+                    {{
+                      declaredSpecs.storage_gb || declaredSpecs.storage_total_gb
+                        ? (declaredSpecs.storage_gb || declaredSpecs.storage_total_gb) + ' Go'
+                        : 'Non renseigné'
+                    }}
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <!-- Décision déjà prise -->
-            <div v-if="detail.decided_at" class="bg-canvas p-4 rounded-xl text-sm space-y-1">
-              <p>
-                <span class="text-quiet">Décidée par :</span>
-                <span class="font-medium text-ink">{{ detail.decided_by?.name ?? '-' }}</span>
-                le {{ formatDate(detail.decided_at) }}
-              </p>
-              <p v-if="detail.reason">
-                <span class="text-quiet">Motif :</span>
-                <span class="font-medium text-ink">{{ detail.reason }}</span>
-              </p>
-            </div>
-
-            <!-- Saisie du motif de rejet -->
-            <div v-if="pendingDecision === 'rejected'">
-              <label class="text-sm font-medium text-ink mb-1 block"
-                >Motif du rejet (obligatoire)</label
+              <!-- Détails complémentaires matériel -->
+              <div
+                class="mt-3 flex flex-wrap gap-4 text-xs text-quiet pt-2 border-t border-line/60"
               >
+                <span v-if="declaredSpecs.os || declaredSpecs.os_name">
+                  Système :
+                  <strong class="text-ink">{{ declaredSpecs.os || declaredSpecs.os_name }}</strong>
+                </span>
+                <span v-if="declaredSpecs.device_type">
+                  Type d'appareil :
+                  <strong class="text-ink">{{ declaredSpecs.device_type }}</strong>
+                </span>
+                <span v-if="detail.equipment_review?.reason">
+                  Motif modérateur :
+                  <span class="italic text-ink">{{ detail.equipment_review.reason }}</span>
+                </span>
+              </div>
+            </section>
+
+            <!-- 4. Visionneuse de Justificatif Matériel (Proof Viewer) -->
+            <section
+              class="rounded-2xl border border-line bg-white p-5 shadow-sm"
+              data-testid="hardware-proof-viewer"
+            >
+              <div class="mb-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <svg
+                    class="h-5 w-5 text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <h4 class="text-sm font-bold uppercase tracking-wider text-ink">
+                    Justificatif matériel
+                  </h4>
+                </div>
+                <button
+                  v-if="proofUrl && isProofImage"
+                  @click="isProofZoomed = true"
+                  class="inline-flex items-center gap-1.5 rounded-lg border border-line bg-canvas px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-white hover:text-primary"
+                  data-testid="proof-zoom-toggle"
+                >
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                    />
+                  </svg>
+                  Agrandir / Plein écran
+                </button>
+              </div>
+
+              <!-- Affichage Image -->
+              <div
+                v-if="proofUrl && isProofImage"
+                class="relative overflow-hidden rounded-xl border border-line bg-canvas/30 p-2 text-center"
+              >
+                <img
+                  :src="proofUrl"
+                  alt="Justificatif matériel du candidat"
+                  class="max-h-72 w-full rounded-lg object-contain cursor-pointer transition hover:opacity-95"
+                  data-testid="proof-media-image"
+                  @click="isProofZoomed = true"
+                />
+                <p class="mt-2 text-xs text-quiet">
+                  Cliquez sur l'image pour l'afficher en haute résolution
+                </p>
+              </div>
+
+              <!-- Affichage Document / PDF -->
+              <div
+                v-else-if="proofUrl"
+                class="rounded-xl border border-line bg-canvas/40 p-4 text-center"
+              >
+                <div class="flex flex-col items-center justify-center gap-2">
+                  <div
+                    class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-red-600"
+                  >
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <p class="text-sm font-semibold text-ink">
+                    {{ proofMediaName || 'Document justificatif de matériel' }}
+                  </p>
+                  <a
+                    :href="proofUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-2 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-primary-shade transition"
+                  >
+                    Ouvrir le document dans un nouvel onglet
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Aucun justificatif -->
+              <div
+                v-else
+                class="rounded-xl border border-line/60 bg-canvas/30 p-4 text-center text-sm text-quiet"
+              >
+                Aucun justificatif matériel n'a été fourni pour cette candidature.
+              </div>
+            </section>
+
+            <!-- 5. Motivation -->
+            <section
+              v-if="detail.motivation"
+              class="rounded-2xl border border-line bg-canvas/50 p-5"
+            >
+              <h4 class="mb-2 text-xs font-bold uppercase tracking-wider text-quiet">
+                Lettre / Texte de motivation
+              </h4>
+              <p class="text-sm leading-relaxed text-ink whitespace-pre-wrap">
+                {{ detail.motivation }}
+              </p>
+            </section>
+
+            <!-- 6. Décision déjà actée -->
+            <section
+              v-if="detail.decided_at"
+              class="rounded-2xl border border-line bg-canvas p-4 text-sm space-y-1.5"
+            >
+              <p class="font-semibold text-ink">
+                Décision enregistrée le {{ formatDate(detail.decided_at) }}
+                <span v-if="detail.decided_by"> par {{ detail.decided_by.name }}</span>
+              </p>
+              <p v-if="detail.reason" class="text-quiet">
+                Motif communiqué : <span class="font-medium text-ink">{{ detail.reason }}</span>
+              </p>
+            </section>
+
+            <!-- 7. Saisie du motif de rejet -->
+            <section
+              v-if="pendingDecision === 'rejected'"
+              class="rounded-2xl border border-red-200 bg-red-50/40 p-4 space-y-2"
+            >
+              <label class="block text-sm font-semibold text-ink">
+                Motif du rejet (obligatoire)
+              </label>
               <textarea
                 v-model="rejectReason"
                 rows="3"
-                class="w-full border border-line rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                placeholder="Précisez la raison pour laquelle cette candidature est refusée…"
+                class="app-input w-full"
+                data-testid="reject-reason-input"
               ></textarea>
-              <p v-if="decideError" class="text-xs text-red-600 mt-1">{{ decideError }}</p>
-            </div>
+              <p v-if="decideError" class="text-xs font-semibold text-red-600">
+                {{ decideError }}
+              </p>
+            </section>
           </template>
         </div>
 
-        <!-- Pied de Modale (Actions) -->
+        <!-- Pied du Volet (Actions de Décision) -->
         <div
           v-if="detail"
-          class="bg-canvas px-6 py-4 border-t border-line flex flex-wrap justify-end gap-3"
+          class="flex flex-wrap items-center justify-end gap-3 border-t border-line bg-canvas px-6 py-4"
         >
           <button
             v-if="detail.status === 'submitted'"
             @click="startReview"
             :disabled="startReviewMutation.isPending.value"
-            class="px-5 py-2.5 bg-white border border-line text-ink rounded-xl font-semibold hover:bg-gray-100 transition text-sm disabled:opacity-50"
+            class="rounded-xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-100 disabled:opacity-50"
           >
             Démarrer la revue
           </button>
 
           <template v-if="canDecide">
-            <button
-              v-if="pendingDecision !== 'rejected'"
-              @click="pendingDecision = 'rejected'"
-              class="px-5 py-2.5 bg-white border border-red-200 text-red-600 rounded-xl font-semibold hover:bg-red-50 transition text-sm"
-            >
-              Rejeter
-            </button>
-            <button
-              v-else
-              @click="confirmReject"
-              :disabled="decideMutation.isPending.value"
-              class="px-5 py-2.5 bg-white border border-red-200 text-red-600 rounded-xl font-semibold hover:bg-red-50 transition text-sm disabled:opacity-50"
-            >
-              Confirmer le rejet
-            </button>
-            <button
-              @click="decide('waitlisted')"
-              :disabled="decideMutation.isPending.value"
-              class="px-5 py-2.5 bg-white border border-amber-200 text-amber-700 rounded-xl font-semibold hover:bg-amber-50 transition text-sm disabled:opacity-50"
-            >
-              Liste d'attente
-            </button>
-            <button
-              @click="decide('accepted')"
-              :disabled="decideMutation.isPending.value || !canAccept"
-              :title="
-                canAccept
-                  ? 'Accepter la candidature'
-                  : 'La revue matériel doit être approuvée avant l’admission'
-              "
-              class="px-5 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-primary-shade transition shadow-md shadow-primary/30 text-sm disabled:opacity-50"
-            >
-              Accepter
-            </button>
+            <template v-if="pendingDecision !== 'rejected'">
+              <button
+                @click="pendingDecision = 'rejected'"
+                class="rounded-xl border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                data-testid="btn-reject-trigger"
+              >
+                Rejeter
+              </button>
+              <button
+                @click="decide('waitlisted')"
+                :disabled="decideMutation.isPending.value"
+                class="rounded-xl border border-amber-200 bg-white px-5 py-2.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-50 disabled:opacity-50"
+              >
+                Liste d'attente
+              </button>
+              <button
+                @click="decide('accepted')"
+                :disabled="decideMutation.isPending.value || !canAccept"
+                :title="
+                  canAccept
+                    ? 'Approuver la candidature'
+                    : 'La revue matériel doit être approuvée avant l’admission'
+                "
+                class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-primary/30 transition hover:bg-primary-shade disabled:opacity-50"
+                data-testid="btn-approve-application"
+              >
+                Approuver la candidature
+              </button>
+            </template>
+            <template v-else>
+              <button
+                @click="cancelReject"
+                class="rounded-xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-100"
+              >
+                Annuler
+              </button>
+              <button
+                @click="confirmReject"
+                :disabled="decideMutation.isPending.value"
+                class="rounded-xl bg-red-600 px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700 disabled:opacity-50"
+                data-testid="btn-confirm-reject"
+              >
+                Confirmer le rejet
+              </button>
+            </template>
           </template>
         </div>
+      </div>
+    </div>
+
+    <!-- ================= VISIONNEUSE PLEIN ÉCRAN POUR LE JUSTIFICATIF ================= -->
+    <div
+      v-if="isProofZoomed && proofUrl"
+      class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 p-4 backdrop-blur-md"
+      data-testid="proof-fullscreen-overlay"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="mb-4 flex w-full max-w-5xl items-center justify-between text-white">
+        <span class="text-sm font-semibold">Justificatif matériel en haute résolution</span>
+        <button
+          @click="isProofZoomed = false"
+          class="rounded-lg bg-white/20 p-2 text-white transition hover:bg-white/30"
+          title="Fermer le plein écran"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="flex max-h-[85vh] max-w-5xl items-center justify-center overflow-auto">
+        <img
+          :src="proofUrl"
+          alt="Justificatif matériel en plein écran"
+          class="max-h-[80vh] max-w-full rounded-xl object-contain shadow-2xl"
+        />
       </div>
     </div>
   </section>
@@ -474,6 +876,7 @@ const statusOptions = [
   { value: 'submitted', label: 'Soumise' },
   { value: 'in_review', label: 'En revue' },
   { value: 'accepted', label: 'Acceptée' },
+  { value: 'standby', label: 'Standby' },
   { value: 'waitlisted', label: 'Liste d’attente' },
   { value: 'rejected', label: 'Rejetée' },
   { value: 'withdrawn', label: 'Retirée' },
@@ -489,6 +892,7 @@ function statusBadgeClass(status: string): string {
       return 'bg-primary/10 text-primary'
     case 'in_review':
     case 'waitlisted':
+    case 'standby':
       return 'bg-amber-100 text-amber-700'
     case 'rejected':
       return 'bg-red-100 text-red-700'
@@ -503,6 +907,7 @@ function statusDotClass(status: string): string {
       return 'bg-primary'
     case 'in_review':
     case 'waitlisted':
+    case 'standby':
       return 'bg-amber-500'
     case 'rejected':
       return 'bg-red-500'
@@ -526,17 +931,12 @@ function formatDate(value: string | null | undefined): string {
   return new Date(value).toLocaleDateString('fr-FR')
 }
 
-function formatPayloadValue(value: unknown): string {
-  if (value === null || value === undefined) return '-'
-  if (typeof value === 'object') return JSON.stringify(value)
-  return String(value)
-}
-
-// ==================== MODALE DE DÉTAIL ====================
+// ==================== VOLET LATÉRAL DE DÉTAIL ====================
 const selectedKey = ref<string | null>(null)
 const pendingDecision = ref<'rejected' | null>(null)
 const rejectReason = ref('')
 const decideError = ref<string | null>(null)
+const isProofZoomed = ref(false)
 
 const {
   data: detail,
@@ -545,11 +945,92 @@ const {
   error: detailError,
 } = useApplication(computed(() => selectedKey.value))
 
+const candidatePhone = computed(() => {
+  if (!detail.value) return '-'
+  const userPhone = detail.value.user?.phone
+  if (userPhone) return userPhone
+  const payload = detail.value.payload as Record<string, unknown> | null
+  if (payload) {
+    if (typeof payload.phone === 'string' && payload.phone) return payload.phone
+    if (typeof payload.telephone === 'string' && payload.telephone) return payload.telephone
+  }
+  return '-'
+})
+
+const requiredSpecs = computed(() => {
+  if (!detail.value) return {}
+  const snapshot = detail.value.equipment_review?.requirements_snapshot
+  if (snapshot && Object.keys(snapshot).length > 0) return snapshot as Record<string, any>
+  return (detail.value.pathway?.equipment_requirements ?? {}) as Record<string, any>
+})
+
+const declaredSpecs = computed(() => {
+  if (!detail.value) return {}
+  const dec = detail.value.equipment_review?.declaration
+  if (dec && Object.keys(dec).length > 0) return dec as Record<string, any>
+  const payload = detail.value.payload as Record<string, any> | null
+  if (payload?.equipment) return payload.equipment as Record<string, any>
+  return {}
+})
+
+const hasHardwareInfo = computed(() => {
+  return (
+    detail.value?.equipment_review !== undefined ||
+    Object.keys(requiredSpecs.value).length > 0 ||
+    Object.keys(declaredSpecs.value).length > 0
+  )
+})
+
+const isCpuConform = computed(() => {
+  const reqCpu = requiredSpecs.value.min_cpu
+  const declCpu = declaredSpecs.value.cpu || declaredSpecs.value.cpu_model
+  if (!reqCpu) return true
+  return Boolean(declCpu)
+})
+
+const isRamConform = computed(() => {
+  const minRam = Number(requiredSpecs.value.min_ram_gb) || 0
+  const declRam = Number(declaredSpecs.value.ram_gb) || 0
+  if (!minRam) return true
+  return declRam >= minRam
+})
+
+const isStorageConform = computed(() => {
+  const minStorage = Number(requiredSpecs.value.min_storage_gb) || 0
+  const declStorage =
+    Number(declaredSpecs.value.storage_gb) || Number(declaredSpecs.value.storage_total_gb) || 0
+  if (!minStorage) return true
+  return declStorage >= minStorage
+})
+
+const proofUrl = computed(() => {
+  if (!detail.value) return null
+  return (
+    detail.value.proof_media_url ||
+    detail.value.equipment_review?.proof_media?.download_url ||
+    detail.value.equipment_review?.proof_media_url ||
+    null
+  )
+})
+
+const proofMediaName = computed(() => {
+  return detail.value?.equipment_review?.proof_media?.original_name ?? null
+})
+
+const isProofImage = computed(() => {
+  if (!proofUrl.value) return false
+  const mime = detail.value?.equipment_review?.proof_media?.mime_detected
+  if (mime) {
+    return mime.startsWith('image/')
+  }
+  return !proofUrl.value.toLowerCase().endsWith('.pdf')
+})
+
 const canDecide = computed(
   () =>
     detail.value !== undefined &&
     detail.value !== null &&
-    ['submitted', 'in_review', 'waitlisted'].includes(detail.value.status),
+    ['submitted', 'in_review', 'waitlisted', 'standby'].includes(detail.value.status),
 )
 
 const canAccept = computed(
@@ -565,15 +1046,30 @@ function equipmentAllowsAdmission(status: string): boolean {
   return status === 'not_required' || status === 'approved'
 }
 
-function equipmentReviewLabel(status: string): string {
+function equipmentReviewLabel(status: string | undefined): string {
+  if (!status) return 'Aucune revue'
   const labels: Record<string, string> = {
     not_required: 'Aucune revue nécessaire',
     pending: 'Revue matériel en attente',
-    needs_info: 'Informations complémentaires demandées',
+    needs_info: 'Informations complémentaires',
     approved: 'Matériel validé',
     rejected: 'Matériel non validé',
   }
   return labels[status] ?? status
+}
+
+function equipmentBadgeClass(status: string | undefined): string {
+  switch (status) {
+    case 'approved':
+      return 'bg-primary/10 text-primary'
+    case 'pending':
+    case 'needs_info':
+      return 'bg-amber-100 text-amber-800'
+    case 'rejected':
+      return 'bg-red-100 text-red-700'
+    default:
+      return 'bg-gray-100 text-quiet'
+  }
 }
 
 function openModal(key: string) {
@@ -581,12 +1077,19 @@ function openModal(key: string) {
   pendingDecision.value = null
   rejectReason.value = ''
   decideError.value = null
+  isProofZoomed.value = false
 }
 
 function closeModal() {
   selectedKey.value = null
   pendingDecision.value = null
   rejectReason.value = ''
+  decideError.value = null
+  isProofZoomed.value = false
+}
+
+function cancelReject() {
+  pendingDecision.value = null
   decideError.value = null
 }
 
@@ -640,21 +1143,19 @@ function confirmReject() {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  /* --border : variable shadcn CSS réelle (équivalent de l'ancien #e5e7eb). */
-  background: var(--border);
+  background: var(--border, #e5e7eb);
+  border-radius: 4px;
 }
 
-@keyframes modalIn {
+@keyframes drawerIn {
   from {
-    opacity: 0;
-    transform: scale(0.95) translateY(10px);
+    transform: translateX(100%);
   }
   to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateX(0);
   }
 }
-.animate-modal {
-  animation: modalIn 0.25s ease-out both;
+.animate-drawer {
+  animation: drawerIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 </style>
