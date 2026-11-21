@@ -105,7 +105,7 @@ describe('CandidatureProofUpload', () => {
     expect(wrapper.find('[data-testid="proof-upload-dropzone"]').exists()).toBe(true)
 
     // Attempt to proceed to Step 3 without uploading proof
-    const step2NextBtn = wrapper.findAll('button.app-action-primary')[0]
+    const step2NextBtn = wrapper.findAll('button.app-action-primary')[0]!
     await step2NextBtn.trigger('click')
     await flushPromises()
 
@@ -164,7 +164,7 @@ describe('CandidatureProofUpload', () => {
     expect(wrapper.find('[data-testid="remove-proof-btn"]').exists()).toBe(true)
 
     // Now proceeding to Step 3 should succeed
-    const step2NextBtn = wrapper.findAll('button.app-action-primary')[0]
+    const step2NextBtn = wrapper.findAll('button.app-action-primary')[0]!
     await step2NextBtn.trigger('click')
     await flushPromises()
 
@@ -221,7 +221,7 @@ describe('CandidatureProofUpload', () => {
     expect(wrapper.find('[data-testid="proof-upload-dropzone"]').exists()).toBe(true)
 
     // Attempting step 3 should fail again
-    await wrapper.findAll('button.app-action-primary')[0].trigger('click')
+    await wrapper.findAll('button.app-action-primary')[0]!.trigger('click')
     await flushPromises()
 
     expect(wrapper.text()).toContain('justificatif matériel')
@@ -261,17 +261,17 @@ describe('CandidatureProofUpload', () => {
     expect(wrapper.find('h2').text()).toContain('Équipement')
 
     // Advance Step 2 -> Step 3
-    await wrapper.findAll('button.app-action-primary')[0].trigger('click')
+    await wrapper.findAll('button.app-action-primary')[0]!.trigger('click')
     await flushPromises()
     expect(wrapper.find('h2').text()).toContain('Récapitulatif')
 
     // Confirm submission
-    const submitBtn = wrapper.findAll('button.app-action-primary')[0]
+    const submitBtn = wrapper.findAll('button.app-action-primary')[0]!
     await submitBtn.trigger('click')
     await flushPromises()
 
     expect(mockMutate).toHaveBeenCalledTimes(1)
-    const payload = mockMutate.mock.calls[0][0]
+    const payload = mockMutate.mock.calls[0]![0]
     expect(payload.pathway_key).toBe('dev-web')
     expect(payload.cohort_key).toBeUndefined()
   })
@@ -311,13 +311,13 @@ describe('CandidatureProofUpload', () => {
     // Step 2: fill equipment details
     const inputs = wrapper.findAll('input[type="text"]')
     // CPU input is first text input
-    await inputs[0].setValue('Intel Core i7-12700H')
+    await inputs[0]!.setValue('Intel Core i7-12700H')
 
     const numberInputs = wrapper.findAll('input[type="number"]')
     // RAM is first number input
-    await numberInputs[0].setValue('16')
+    await numberInputs[0]!.setValue('16')
     // Storage is second number input
-    await numberInputs[1].setValue('512')
+    await numberInputs[1]!.setValue('512')
 
     // OS input is the second text input (or by label)
     const osInput = wrapper.find('input#os-name')
@@ -333,16 +333,16 @@ describe('CandidatureProofUpload', () => {
     await flushPromises()
 
     // Step 2 -> Step 3
-    await wrapper.findAll('button.app-action-primary')[0].trigger('click')
+    await wrapper.findAll('button.app-action-primary')[0]!.trigger('click')
     await flushPromises()
     expect(wrapper.find('h2').text()).toContain('Récapitulatif')
 
     // Submit
-    await wrapper.findAll('button.app-action-primary')[0].trigger('click')
+    await wrapper.findAll('button.app-action-primary')[0]!.trigger('click')
     await flushPromises()
 
     expect(mockMutate).toHaveBeenCalledTimes(1)
-    const payload = mockMutate.mock.calls[0][0]
+    const payload = mockMutate.mock.calls[0]![0]
     expect(payload.pathway_key).toBe('dev-web')
     expect(payload.cohort_key).toBe('dw-promo-1')
     expect(payload.motivation).toBe('Très motivé pour cette session!')
