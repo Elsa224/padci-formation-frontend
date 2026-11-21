@@ -693,6 +693,7 @@ function triggerFileInput() {
 function handleFileInputChange(event: Event) {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
+  target.value = ''
   if (file) {
     processFile(file)
   }
@@ -710,12 +711,17 @@ async function processFile(file: File) {
   const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.pdf']
   const fileExt = '.' + file.name.split('.').pop()?.toLowerCase()
   const isAllowedExt = allowedExtensions.includes(fileExt)
-  const isAllowedMime =
-    file.type.startsWith('image/') ||
-    file.type === 'application/pdf' ||
-    file.type === 'application/x-pdf'
 
-  if (!isAllowedExt && !isAllowedMime) {
+  const allowedMimes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'application/pdf',
+    'application/x-pdf',
+  ]
+  const isAllowedMime = file.type ? allowedMimes.includes(file.type) : isAllowedExt
+
+  if (!isAllowedExt || !isAllowedMime) {
     uploadError.value = 'Format non supporté. Veuillez choisir un fichier JPG, PNG, WEBP ou PDF.'
     return
   }
@@ -730,6 +736,12 @@ async function processFile(file: File) {
     isUploadingProof.value = true
     uploadError.value = null
     const response = await uploadMutation.mutateAsync(file)
+
+    // Revoke previous preview URL if present before assigning new one
+    if (proofPreviewUrl.value && typeof URL !== 'undefined' && URL.revokeObjectURL) {
+      URL.revokeObjectURL(proofPreviewUrl.value)
+      proofPreviewUrl.value = ''
+    }
 
     proofMediaKey.value = response.key
     proofFileName.value = file.name

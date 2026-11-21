@@ -449,4 +449,116 @@ describe('CandidatureProofUpload', () => {
     expect(wrapper.text()).toContain('Format non supporté')
     expect(wrapper.find('[data-testid="proof-preview"]').exists()).toBe(false)
   })
+
+  it('revokes previous object URL on replace and resets file input value', async () => {
+    vi.mocked(useCatalogModule.usePathway).mockReturnValue({
+      data: ref(mockPathwayData),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as any)
+
+    vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
+      data: ref(mockCohortsData),
+      isPending: ref(false),
+    } as any)
+
+    const createObjectURLSpy = vi
+      .spyOn(URL, 'createObjectURL')
+      .mockReturnValueOnce('blob:http://localhost/first-url')
+      .mockReturnValueOnce('blob:http://localhost/second-url')
+    const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+
+    mockUploadMutateAsync
+      .mockResolvedValueOnce({
+        key: 'media_first',
+        original_name: 'first.png',
+        mime_detected: 'image/png',
+        size_bytes: 1024,
+      })
+      .mockResolvedValueOnce({
+        key: 'media_second',
+        original_name: 'second.png',
+        mime_detected: 'image/png',
+        size_bytes: 2048,
+      })
+
+    const wrapper = mount(CandidatureView, {
+      global: {
+        stubs: { RouterLink: true },
+      },
+    })
+
+    // Advance to Step 2
+    await wrapper.find('button.app-action-primary').trigger('click')
+    await flushPromises()
+
+    const fileInput = wrapper.find('input[type="file"]')
+    const file1 = new File(['content1'], 'first.png', { type: 'image/png' })
+    Object.defineProperty(fileInput.element, 'files', {
+      value: [file1],
+      writable: true,
+    })
+    await fileInput.trigger('change')
+    await flushPromises()
+
+    expect(createObjectURLSpy).toHaveBeenCalledWith(file1)
+    expect((fileInput.element as HTMLInputElement).value).toBe('')
+
+    // Now replace with second file
+    const file2 = new File(['content2'], 'second.png', { type: 'image/png' })
+    Object.defineProperty(fileInput.element, 'files', {
+      value: [file2],
+      writable: true,
+    })
+    await fileInput.trigger('change')
+    await flushPromises()
+
+    // Must revoke previous URL
+    expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:http://localhost/first-url')
+    expect(createObjectURLSpy).toHaveBeenCalledWith(file2)
+    expect(wrapper.text()).toContain('second.png')
+
+    createObjectURLSpy.mockRestore()
+    revokeObjectURLSpy.mockRestore()
+  })
+
+  it('rejects image formats not in explicit allowlist like gif or svg', async () => {
+    vi.mocked(useCatalogModule.usePathway).mockReturnValue({
+      data: ref(mockPathwayData),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as any)
+
+    vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
+      data: ref(mockCohortsData),
+      isPending: ref(false),
+    } as any)
+
+    const wrapper = mount(CandidatureView, {
+      global: {
+        stubs: { RouterLink: true },
+      },
+    })
+
+    // Advance to Step 2
+    await wrapper.find('button.app-action-primary').trigger('click')
+    await flushPromises()
+
+    const dropzone = wrapper.find('[data-testid="proof-upload-dropzone"]')
+    const gifFile = new File(['gif-content'], 'animation.gif', {
+      type: 'image/gif',
+    })
+
+    await dropzone.trigger('drop', {
+      dataTransfer: {
+        files: [gifFile],
+      },
+    })
+    await flushPromises()
+
+    expect(mockUploadMutateAsync).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain('Format non supporté')
+  })
 })
