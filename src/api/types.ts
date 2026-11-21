@@ -83,6 +83,8 @@ export interface Cohort {
   is_full: boolean
   starts_at: string | null
   ends_at: string | null
+  offline_starts_at?: string | null
+  offline_ends_at?: string | null
   status?: string
   pathway_id?: number
   created_at?: string
@@ -101,6 +103,8 @@ export interface PublicCohort {
   is_full: boolean
   starts_at: string | null
   ends_at: string | null
+  offline_starts_at?: string | null
+  offline_ends_at?: string | null
   status?: string
   available: boolean
 }

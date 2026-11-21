@@ -24,6 +24,8 @@ export interface Cohort {
   is_full?: boolean
   starts_at: string | null
   ends_at: string | null
+  offline_starts_at?: string | null
+  offline_ends_at?: string | null
   status: 'planned' | 'open' | 'running' | 'completed' | 'cancelled'
   pathway?: { id: number; key: string; code: string; name: string }
   trainers?: CohortTrainer[]
@@ -65,12 +67,26 @@ export function useCohorts(filters: Ref<CohortListFilters>) {
 
 export interface CreateCohortPayload {
   pathway_key: string
-  code: string
-  name: string
+  code?: string
+  name?: string
   session?: string | null
   capacity?: number | null
-  starts_at?: string | null
-  ends_at?: string | null
+  starts_at: string
+  ends_at: string
+  offline_starts_at?: string
+  offline_ends_at?: string
+  status?: string
+}
+
+export interface UpdateCohortPayload {
+  name?: string
+  code?: string
+  session?: string | null
+  capacity?: number | null
+  starts_at?: string
+  ends_at?: string
+  offline_starts_at?: string | null
+  offline_ends_at?: string | null
   status?: string
 }
 

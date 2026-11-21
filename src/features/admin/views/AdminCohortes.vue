@@ -241,6 +241,28 @@
               <p class="font-medium text-ink">{{ formatDate(cohort.ends_at) }}</p>
             </div>
           </div>
+
+          <!-- Phase présentielle tag -->
+          <div
+            v-if="cohort.offline_starts_at"
+            class="mt-2.5 flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200/60 px-3 py-1.5 text-xs font-semibold text-emerald-800"
+            data-testid="cohort-offline-tag"
+          >
+            <svg
+              class="h-4 w-4 text-emerald-600 shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
+            <span>Présentiel : dès le {{ formatDate(cohort.offline_starts_at) }}</span>
+          </div>
         </div>
 
         <!-- Pied de la carte -->
@@ -343,60 +365,86 @@
             </div>
           </div>
 
-          <!-- Session & Capacité (défaut 100) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Session
-              </label>
-              <input
-                v-model="createForm.session"
-                type="text"
-                placeholder="Ex : 2026-P2"
-                class="app-input w-full"
-                data-testid="cohort-session-input"
-              />
-            </div>
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Capacité d'accueil *
-              </label>
-              <input
-                v-model.number="createForm.capacity"
-                type="number"
-                min="1"
-                max="100000"
-                required
-                class="app-input w-full"
-                data-testid="cohort-capacity-input"
-              />
-              <p class="text-[11px] text-quiet mt-1">Pré-rempli à 100 places par défaut.</p>
-            </div>
+          <!-- Capacité d'accueil (défaut 100) -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
+              Capacité d'accueil *
+            </label>
+            <input
+              v-model.number="createForm.capacity"
+              type="number"
+              min="1"
+              max="100000"
+              required
+              class="app-input w-full"
+              data-testid="cohort-capacity-input"
+            />
+            <p class="text-[11px] text-quiet mt-1">Pré-rempli à 100 places par défaut.</p>
           </div>
 
-          <!-- Dates -->
+          <!-- Dates en ligne (obligatoires) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Date de début
+                Date de début (en ligne) *
               </label>
               <input
                 v-model="createForm.starts_at"
                 type="date"
+                required
                 class="app-input w-full"
                 data-testid="cohort-starts-at-input"
               />
             </div>
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Date de fin
+                Date de fin (en ligne) *
               </label>
               <input
                 v-model="createForm.ends_at"
                 type="date"
+                required
                 class="app-input w-full"
                 data-testid="cohort-ends-at-input"
               />
+            </div>
+          </div>
+
+          <!-- Phase présentielle / Ateliers (optionnel) -->
+          <div class="rounded-xl border border-line bg-canvas/40 p-3.5 space-y-3">
+            <div>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-ink">
+                Phase présentielle / Ateliers (optionnel)
+              </h4>
+              <p class="text-[11px] text-quiet mt-0.5">
+                Généralement après les cours en ligne pour les ateliers pratiques.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-quiet mb-1">
+                  Début cours présentiels
+                </label>
+                <input
+                  v-model="createForm.offline_starts_at"
+                  type="date"
+                  class="app-input w-full"
+                  data-testid="cohort-offline-starts-at-input"
+                />
+                <p class="text-[10px] text-quiet mt-1">Généralement après les cours en ligne.</p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-quiet mb-1">
+                  Fin cours présentiels
+                </label>
+                <input
+                  v-model="createForm.offline_ends_at"
+                  type="date"
+                  class="app-input w-full"
+                  data-testid="cohort-offline-ends-at-input"
+                />
+                <p class="text-[10px] text-quiet mt-1">Non obligatoire.</p>
+              </div>
             </div>
           </div>
 
@@ -440,7 +488,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import type { ApiError } from '@/api/http'
 import { useCatalogPathways } from '@/features/public/composables/useCatalogPathways'
 import {
@@ -529,23 +577,49 @@ const createForm = reactive({
   pathway_key: '',
   code: '',
   name: '',
-  session: '',
   capacity: 100, // Pre-filled with 100 by default
   starts_at: '',
   ends_at: '',
+  offline_starts_at: '',
+  offline_ends_at: '',
   status: 'open',
 })
 
 const createMutation = useCreateCohort()
 
+watch(
+  () => createForm.pathway_key,
+  (newPathwayKey) => {
+    if (!newPathwayKey) return
+    const pathway = pathways.value?.find((p) => p.key === newPathwayKey)
+    if (!pathway) return
+
+    const currentYear = new Date().getFullYear()
+    const existingCount = cohorts.value.filter((c) => {
+      const matchesPathway = c.pathway?.key === newPathwayKey || c.pathway?.code === pathway.code
+      if (!matchesPathway) return false
+
+      const yearFromStart = c.starts_at ? new Date(c.starts_at).getFullYear() : null
+      const yearFromCreated = c.created_at ? new Date(c.created_at).getFullYear() : null
+      const yearInCode = c.code ? c.code.includes(`-${currentYear}-`) : false
+      return yearFromStart === currentYear || yearFromCreated === currentYear || yearInCode
+    }).length
+
+    const sequence = existingCount + 1
+    createForm.code = `${pathway.code}-${currentYear}-C${sequence}`
+    createForm.name = `${pathway.name} — Cohorte ${sequence}`
+  },
+)
+
 function openCreateModal() {
   createForm.pathway_key = ''
   createForm.code = ''
   createForm.name = ''
-  createForm.session = ''
   createForm.capacity = 100
   createForm.starts_at = ''
   createForm.ends_at = ''
+  createForm.offline_starts_at = ''
+  createForm.offline_ends_at = ''
   createForm.status = 'open'
   createError.value = null
   isCreateModalOpen.value = true
@@ -572,6 +646,35 @@ async function submitCreateCohort() {
     return
   }
 
+  if (!createForm.starts_at || !createForm.ends_at) {
+    createError.value = 'Veuillez renseigner les dates de début et de fin en ligne.'
+    return
+  }
+
+  if (createForm.ends_at < createForm.starts_at) {
+    createError.value = 'La date de fin doit être postérieure ou égale à la date de début.'
+    return
+  }
+
+  if (createForm.offline_starts_at && createForm.offline_starts_at < createForm.starts_at) {
+    createError.value =
+      'La date de début du présentiel doit être postérieure ou égale à la date de début de la cohorte.'
+    return
+  }
+
+  if (createForm.offline_ends_at) {
+    if (!createForm.offline_starts_at) {
+      createError.value =
+        'Veuillez renseigner une date de début du présentiel avant la date de fin.'
+      return
+    }
+    if (createForm.offline_ends_at < createForm.offline_starts_at) {
+      createError.value =
+        'La date de fin du présentiel doit être postérieure ou égale à la date de début du présentiel.'
+      return
+    }
+  }
+
   createError.value = null
 
   try {
@@ -579,10 +682,11 @@ async function submitCreateCohort() {
       pathway_key: createForm.pathway_key,
       code: createForm.code,
       name: createForm.name,
-      session: createForm.session || undefined,
       capacity: createForm.capacity ?? 100,
-      starts_at: createForm.starts_at || undefined,
-      ends_at: createForm.ends_at || undefined,
+      starts_at: createForm.starts_at,
+      ends_at: createForm.ends_at,
+      offline_starts_at: createForm.offline_starts_at || undefined,
+      offline_ends_at: createForm.offline_ends_at || undefined,
       status: createForm.status,
     })
 

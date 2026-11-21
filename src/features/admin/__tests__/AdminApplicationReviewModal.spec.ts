@@ -481,6 +481,8 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       await wrapper.find('[data-testid="cohort-pathway-select"]').setValue('dev-web')
       await wrapper.find('[data-testid="cohort-code-input"]').setValue('DW-2026-P2')
       await wrapper.find('[data-testid="cohort-name-input"]').setValue('Promo Web Mars')
+      await wrapper.find('[data-testid="cohort-starts-at-input"]').setValue('2026-03-01')
+      await wrapper.find('[data-testid="cohort-ends-at-input"]').setValue('2026-09-01')
 
       // Submit form
       const form = wrapper.find('form')
