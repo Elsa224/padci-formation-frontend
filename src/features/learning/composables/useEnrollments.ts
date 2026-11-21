@@ -9,6 +9,8 @@ export interface EnrollmentCohort {
   name: string
   session: string
   status: string
+  starts_at?: string | null
+  ends_at?: string | null
 }
 
 export interface EnrollmentCourse {

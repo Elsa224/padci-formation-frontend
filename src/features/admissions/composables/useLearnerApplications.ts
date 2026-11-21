@@ -36,7 +36,14 @@ export interface EquipmentReview {
 export interface LearnerApplication {
   id: number
   key: string
-  status: 'submitted' | 'in_review' | 'accepted' | 'waitlisted' | 'rejected' | 'withdrawn'
+  status:
+    | 'submitted'
+    | 'in_review'
+    | 'accepted'
+    | 'standby'
+    | 'waitlisted'
+    | 'rejected'
+    | 'withdrawn'
   motivation: string | null
   payload: ApplicationPayload | null
   equipment_review?: EquipmentReview | null

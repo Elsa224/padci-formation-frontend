@@ -201,13 +201,25 @@
             Compléter les informations
           </button>
           <button
-            v-if="app.status === 'submitted' || app.status === 'in_review'"
+            v-if="
+              app.status === 'submitted' || app.status === 'in_review' || app.status === 'standby'
+            "
             @click="withdraw(app)"
             :disabled="withdrawMutation.isPending.value"
             class="w-full rounded-xl border border-red-200 px-4 py-2 text-xs font-semibold text-danger-ink transition hover:bg-red-50 disabled:opacity-50 sm:w-auto"
           >
             Retirer ma candidature
           </button>
+          <div
+            v-if="app.status === 'standby'"
+            class="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs text-blue-900 sm:max-w-xs"
+          >
+            <p class="font-semibold text-blue-900">Liste prioritaire (Standby)</p>
+            <p class="mt-1 text-blue-800 leading-relaxed">
+              Dossier validé avec succès ! Vous êtes sur la liste prioritaire (Standby) et serez
+              automatiquement affecté dès l'ouverture de la prochaine session.
+            </p>
+          </div>
           <p
             v-if="app.status === 'accepted'"
             class="max-w-xs text-center text-xs font-medium text-primary"
@@ -249,6 +261,10 @@ const statusMap: Record<string, { label: string; class: string }> = {
   submitted: { label: 'Soumise, en attente d’examen', class: 'bg-sky-100 text-sky-800' },
   in_review: { label: 'En cours d’examen', class: 'bg-amber-100 text-amber-800' },
   accepted: { label: 'Candidature acceptée', class: 'bg-primary/10 text-primary' },
+  standby: {
+    label: 'En attente de cohorte (Standby)',
+    class: 'bg-blue-100 text-blue-800 border border-blue-200',
+  },
   waitlisted: { label: 'Sur liste d’attente', class: 'bg-violet-100 text-violet-800' },
   rejected: { label: 'Non retenue', class: 'bg-red-100 text-red-800' },
   withdrawn: { label: 'Candidature retirée', class: 'bg-slate-100 text-slate-700' },
