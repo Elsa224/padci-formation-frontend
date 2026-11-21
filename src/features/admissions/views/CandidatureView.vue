@@ -32,9 +32,10 @@
       </div>
       <h2 class="text-2xl font-bold text-ink">Candidature enregistrée</h2>
       <p class="mx-auto max-w-md text-sm leading-6 text-quiet">
-        Votre dossier pour la session
-        <strong class="text-ink">{{ selectedCohort?.name }}</strong> a été transmis à l'équipe
-        pédagogique. Vous pouvez suivre son statut en temps réel.
+        Votre dossier pour
+        <strong v-if="selectedCohort" class="text-ink">la session {{ selectedCohort.name }}</strong>
+        <strong v-else class="text-ink">la filière {{ pathway?.name }}</strong>
+        a été transmis à l'équipe pédagogique. Vous pouvez suivre son statut en temps réel.
       </p>
       <div class="pt-4 flex flex-col sm:flex-row justify-center gap-3">
         <router-link to="/mes-candidatures" class="app-action-primary justify-center">
@@ -102,22 +103,58 @@
         <!-- ÉTAPE 1 : SESSION ET MOTIVATION -->
         <div v-if="currentStep === 1" class="space-y-6">
           <div>
-            <h2 class="text-xl font-bold text-ink">Votre session de formation</h2>
+            <h2 class="text-xl font-bold text-ink">Votre filière &amp; session de formation</h2>
             <p class="mt-1 text-xs text-quiet sm:text-sm">
-              Vérifiez la session choisie et exprimez brièvement vos motivations.
+              Choisissez votre session ou postulez directement à la filière.
             </p>
           </div>
 
-          <div class="space-y-2 rounded-xl border border-primary/20 bg-primary/[0.035] p-4">
+          <div class="space-y-3 rounded-xl border border-primary/20 bg-primary/[0.035] p-4">
             <span class="text-xs font-bold uppercase text-primary tracking-wide">{{
               pathway?.code
             }}</span>
             <h3 class="text-base font-bold text-ink">{{ pathway?.name }}</h3>
-            <p v-if="selectedCohort" class="text-xs text-quiet">
-              Session : <strong class="text-ink">{{ selectedCohort.name }}</strong> (du
-              {{ selectedCohort.starts_at }} au {{ selectedCohort.ends_at }})
+            <p v-if="pathway?.description" class="text-xs text-quiet">
+              {{ pathway.description }}
             </p>
-            <p v-else class="text-xs text-amber-700">Aucune session valide n'a été spécifiée.</p>
+
+            <!-- SÉLECTION DE SESSION (OPTIONNELLE) -->
+            <div class="space-y-1.5 pt-2 border-t border-primary/10">
+              <label class="block text-xs font-semibold text-ink" for="cohort-select">
+                Session souhaitée <span class="font-normal text-quiet">(optionnel)</span>
+              </label>
+              <select
+                id="cohort-select"
+                v-model="chosenCohortKey"
+                class="app-input text-xs sm:text-sm"
+              >
+                <option value="">
+                  Candidature libre (sans session attribuée / liste d'attente)
+                </option>
+                <option
+                  v-for="cohort in cohorts"
+                  :key="cohort.key"
+                  :value="cohort.key"
+                  :disabled="cohort.is_full"
+                >
+                  {{ cohort.name }} {{ cohort.is_full ? '(Complète)' : '' }} — du
+                  {{ cohort.starts_at }} au {{ cohort.ends_at }}
+                  {{
+                    cohort.available_seats !== undefined ? `(${cohort.available_seats} places)` : ''
+                  }}
+                </option>
+              </select>
+
+              <p v-if="selectedCohort" class="text-xs text-quiet">
+                Session sélectionnée :
+                <strong class="text-ink">{{ selectedCohort.name }}</strong> (du
+                {{ selectedCohort.starts_at }} au {{ selectedCohort.ends_at }})
+              </p>
+              <p v-else class="text-xs text-primary font-medium">
+                Candidature directe : vous intégrez le vivier de la filière et serez affecté à la
+                prochaine cohorte ouverte ou mis en liste d'attente.
+              </p>
+            </div>
           </div>
 
           <div class="space-y-2">
@@ -136,7 +173,7 @@
           <div class="flex justify-end pt-4">
             <button
               @click="nextToStep2"
-              :disabled="!selectedCohort"
+              :disabled="!pathwayKey"
               class="app-action-primary disabled:opacity-50"
             >
               Continuer vers l'équipement &rarr;
@@ -144,7 +181,7 @@
           </div>
         </div>
 
-        <!-- ÉTAPE 2 : ÉQUIPEMENT INFORMATIQUE -->
+        <!-- ÉTAPE 2 : ÉQUIPEMENT INFORMATIQUE & JUSTIFICATIF -->
         <div v-if="currentStep === 2" class="space-y-6">
           <div>
             <h2 class="text-xl font-bold text-ink">Équipement informatique requis</h2>
@@ -183,6 +220,7 @@
             >
               {{ submitError }}
             </p>
+
             <div class="space-y-2">
               <label class="block text-sm font-semibold text-ink">
                 Disposez-vous d'un ordinateur pour suivre la formation ? *
@@ -212,16 +250,16 @@
             <template v-if="hasComputer">
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                 <div class="space-y-1">
-                  <label class="block text-xs font-semibold text-ink">Processeur (CPU)</label>
+                  <label class="block text-xs font-semibold text-ink">Processeur (CPU) *</label>
                   <input
                     v-model="cpu"
                     type="text"
-                    placeholder="Ex: Core i5, Ryzen 5, M1"
+                    placeholder="Ex: Core i5, Ryzen 5, Apple M1"
                     class="app-input"
                   />
                 </div>
                 <div class="space-y-1">
-                  <label class="block text-xs font-semibold text-ink">RAM (en Go)</label>
+                  <label class="block text-xs font-semibold text-ink">RAM (en Go) *</label>
                   <input
                     v-model.number="ramGb"
                     type="number"
@@ -231,7 +269,9 @@
                   />
                 </div>
                 <div class="space-y-1">
-                  <label class="block text-xs font-semibold text-ink">Stockage (en Go)</label>
+                  <label class="block text-xs font-semibold text-ink"
+                    >Stockage total (en Go) *</label
+                  >
                   <input
                     v-model.number="storageGb"
                     type="number"
@@ -253,13 +293,13 @@
                 </div>
                 <div class="space-y-1">
                   <label class="block text-xs font-semibold text-ink" for="os-name"
-                    >Système d’exploitation</label
+                    >Système d’exploitation *</label
                   >
                   <input
                     id="os-name"
                     v-model="osName"
                     type="text"
-                    placeholder="Windows, Ubuntu…"
+                    placeholder="Windows 11, Ubuntu 24.04, macOS..."
                     class="app-input"
                   />
                 </div>
@@ -287,7 +327,171 @@
                 />
                 La virtualisation est disponible sur cet appareil
               </label>
+
+              <!-- ZONE DE TÉLÉVERSEMENT DU JUSTIFICATIF MATÉRIEL -->
+              <div class="space-y-2 pt-2">
+                <div class="flex items-center justify-between">
+                  <label class="block text-sm font-semibold text-ink">
+                    Justificatif matériel
+                    <span
+                      v-if="pathway?.requires_equipment_validation"
+                      class="text-xs text-danger-ink font-bold"
+                    >
+                      * (obligatoire pour cette filière)
+                    </span>
+                    <span v-else class="text-xs font-normal text-quiet">(optionnel)</span>
+                  </label>
+                  <span class="text-[11px] text-quiet">
+                    Formats acceptés : JPG, PNG, WEBP, PDF (max 15 Mo)
+                  </span>
+                </div>
+
+                <input
+                  ref="fileInputRef"
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+                  class="hidden"
+                  @change="handleFileInputChange"
+                />
+
+                <!-- DROPZONE (QUAND AUCUN FICHIER TÉLÉVERSÉ) -->
+                <div
+                  v-if="!proofMediaKey && !isUploadingProof"
+                  data-testid="proof-upload-dropzone"
+                  class="relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 sm:p-8 text-center transition cursor-pointer"
+                  :class="
+                    isDragging
+                      ? 'border-primary bg-primary/[0.06] scale-[1.01]'
+                      : 'border-line bg-canvas hover:border-primary/50 hover:bg-canvas/80'
+                  "
+                  @dragover.prevent="isDragging = true"
+                  @dragleave.prevent="isDragging = false"
+                  @drop.prevent="handleDrop"
+                  @click="triggerFileInput"
+                >
+                  <div
+                    class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-3"
+                  >
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                  </div>
+                  <p class="text-sm font-semibold text-ink">
+                    Glissez-déposez votre capture d'écran ou justificatif ici, ou
+                    <span class="text-primary underline">parcourez vos fichiers</span>
+                  </p>
+                  <p class="text-xs text-quiet mt-1.5 max-w-md">
+                    Capture d'écran des spécifications système (Paramètres &gt; Système sous
+                    Windows, À propos de ce Mac sous macOS, ou lshw / néofetch sous Linux).
+                  </p>
+                </div>
+
+                <!-- EN COURS DE TÉLÉVERSEMENT -->
+                <div
+                  v-else-if="isUploadingProof"
+                  class="flex flex-col items-center justify-center rounded-xl border border-primary/20 bg-primary/[0.02] p-8 text-center"
+                >
+                  <div
+                    class="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent mb-3"
+                  ></div>
+                  <p class="text-sm font-semibold text-ink">
+                    Téléversement du justificatif en cours…
+                  </p>
+                  <p class="text-xs text-quiet mt-1">
+                    Vérification de sécurité et stockage sécurisé
+                  </p>
+                </div>
+
+                <!-- PRÉVISUALISATION DU FICHIER ENREGISTRÉ -->
+                <div
+                  v-else-if="proofMediaKey"
+                  data-testid="proof-preview"
+                  class="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-primary/30 bg-primary/[0.03] p-4 transition"
+                >
+                  <div class="flex items-center gap-4 min-w-0 w-full sm:w-auto">
+                    <!-- Thumbnail preview if image -->
+                    <div
+                      v-if="proofPreviewUrl"
+                      class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-line bg-canvas"
+                    >
+                      <img
+                        :src="proofPreviewUrl"
+                        :alt="proofFileName"
+                        class="h-full w-full object-cover"
+                      />
+                    </div>
+                    <!-- PDF / Doc icon -->
+                    <div
+                      v-else
+                      class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg border border-line bg-red-50 text-red-600"
+                    >
+                      <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+
+                    <div class="min-w-0">
+                      <p class="truncate text-sm font-bold text-ink">{{ proofFileName }}</p>
+                      <p class="text-xs text-quiet">
+                        {{ formatFileSize(proofFileSize) }} · Justificatif enregistré
+                      </p>
+                      <span
+                        class="inline-flex items-center gap-1 text-[11px] font-semibold text-primary mt-0.5"
+                      >
+                        <svg
+                          class="h-3.5 w-3.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2.5"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Prêt pour l'envoi
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
+                    <button
+                      type="button"
+                      data-testid="replace-proof-btn"
+                      @click="replaceProof"
+                      class="app-action-secondary text-xs px-3 py-1.5"
+                    >
+                      Remplacer
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="remove-proof-btn"
+                      @click="removeProof"
+                      class="rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-danger-ink hover:bg-red-100 transition"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+
+                <p v-if="uploadError" class="text-xs text-danger-ink font-medium mt-1">
+                  {{ uploadError }}
+                </p>
+              </div>
             </template>
+
             <div v-else class="p-3 bg-amber-50 text-amber-800 rounded-xl text-xs">
               Votre candidature peut être déposée sans équipement personnel. L'équipe admissions
               vous indiquera les modalités de la session si elle est retenue.
@@ -317,14 +521,24 @@
               <span class="font-bold text-ink">{{ pathway?.name }}</span>
             </div>
             <div class="flex justify-between p-4">
-              <span class="text-quiet">Session choisie</span>
-              <span class="font-semibold text-ink">{{ selectedCohort?.name }}</span>
+              <span class="text-quiet">Session souhaitée</span>
+              <span class="font-semibold text-ink">
+                {{
+                  selectedCohort
+                    ? selectedCohort.name
+                    : 'Candidature directe (sans session attribuée)'
+                }}
+              </span>
             </div>
             <div class="flex justify-between bg-canvas p-4">
               <span class="text-quiet">Dates</span>
-              <span class="text-ink"
-                >Du {{ selectedCohort?.starts_at }} au {{ selectedCohort?.ends_at }}</span
-              >
+              <span class="text-ink">
+                {{
+                  selectedCohort
+                    ? `Du ${selectedCohort.starts_at} au ${selectedCohort.ends_at}`
+                    : 'Attribution ultérieure / liste d’attente'
+                }}
+              </span>
             </div>
             <div class="flex justify-between p-4">
               <span class="text-quiet">Possède un ordinateur</span>
@@ -342,6 +556,29 @@
                 >{{ deviceType === 'laptop' ? 'Portable' : 'Bureau' }} ·
                 {{ osName || 'Non précisé' }}</span
               >
+            </div>
+            <div v-if="hasComputer" class="flex justify-between bg-canvas p-4">
+              <span class="text-quiet">Justificatif matériel</span>
+              <span
+                v-if="proofMediaKey"
+                class="text-ink font-medium inline-flex items-center gap-1.5"
+              >
+                <svg
+                  class="h-4 w-4 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                {{ proofFileName || 'Justificatif joint' }}
+              </span>
+              <span v-else class="text-quiet italic">Aucun justificatif fourni</span>
             </div>
             <div v-if="motivation" class="p-4 space-y-1">
               <span class="text-quiet block text-xs">Motivation</span>
@@ -377,20 +614,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onScopeDispose } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ApiError } from '@/api/http'
 import { usePathway, usePathwayCohorts } from '@/features/catalog/composables/useCatalog'
-import { useSubmitApplication } from '../composables/useLearnerApplications'
+import { useSubmitApplication, useUploadMedia } from '../composables/useCandidature'
 
 const route = useRoute()
 const pathwayKey = computed(() => String(route.query.pathway ?? ''))
-const cohortKey = computed(() => String(route.query.cohort ?? ''))
+const initialCohortKey = String(route.query.cohort ?? '')
 
 const { data: pathway } = usePathway(pathwayKey)
 const { data: cohortsData } = usePathwayCohorts(pathwayKey)
 const cohorts = computed(() => cohortsData.value ?? [])
-const selectedCohort = computed(() => cohorts.value.find((c) => c.key === cohortKey.value))
+
+const chosenCohortKey = ref(initialCohortKey)
+const selectedCohort = computed(() => cohorts.value.find((c) => c.key === chosenCohortKey.value))
 
 const currentStep = ref(1)
 const motivation = ref('')
@@ -400,15 +639,27 @@ const ramGb = ref(8)
 const storageGb = ref(256)
 const storageFreeGb = ref<number | undefined>()
 const deviceType = ref<'laptop' | 'desktop'>('laptop')
-const osName = ref('')
+const osName = ref('Windows 11')
 const virtualizationSupported = ref(false)
+
+// Justificatif matériel
+const fileInputRef = ref<HTMLInputElement | null>(null)
+const isDragging = ref(false)
+const isUploadingProof = ref(false)
+const uploadError = ref<string | null>(null)
+const proofMediaKey = ref('')
+const proofFileName = ref('')
+const proofFileSize = ref(0)
+const proofFileType = ref('')
+const proofPreviewUrl = ref('')
 
 const submitError = ref<string | null>(null)
 const isSuccess = ref(false)
 const submitMutation = useSubmitApplication()
+const uploadMutation = useUploadMedia()
 
 function nextToStep2() {
-  if (selectedCohort.value) {
+  if (pathwayKey.value) {
     currentStep.value = 2
   }
 }
@@ -426,27 +677,137 @@ function nextToStep3() {
     submitError.value = 'Complétez le processeur, la RAM, le stockage et le système d’exploitation.'
     return
   }
+  if (pathway.value?.requires_equipment_validation && !proofMediaKey.value) {
+    submitError.value =
+      'Un justificatif matériel (capture d’écran ou photo des spécifications système) est obligatoire pour cette filière.'
+    return
+  }
   submitError.value = null
   currentStep.value = 3
 }
 
+function triggerFileInput() {
+  fileInputRef.value?.click()
+}
+
+function handleFileInputChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (file) {
+    processFile(file)
+  }
+}
+
+function handleDrop(event: DragEvent) {
+  isDragging.value = false
+  const file = event.dataTransfer?.files?.[0]
+  if (file) {
+    processFile(file)
+  }
+}
+
+async function processFile(file: File) {
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.pdf']
+  const fileExt = '.' + file.name.split('.').pop()?.toLowerCase()
+  const isAllowedExt = allowedExtensions.includes(fileExt)
+  const isAllowedMime =
+    file.type.startsWith('image/') ||
+    file.type === 'application/pdf' ||
+    file.type === 'application/x-pdf'
+
+  if (!isAllowedExt && !isAllowedMime) {
+    uploadError.value = 'Format non supporté. Veuillez choisir un fichier JPG, PNG, WEBP ou PDF.'
+    return
+  }
+
+  const maxBytes = 15 * 1024 * 1024 // 15 Mo
+  if (file.size > maxBytes) {
+    uploadError.value = 'Le fichier est trop volumineux. La taille maximale autorisée est de 15 Mo.'
+    return
+  }
+
+  try {
+    isUploadingProof.value = true
+    uploadError.value = null
+    const response = await uploadMutation.mutateAsync(file)
+
+    proofMediaKey.value = response.key
+    proofFileName.value = file.name
+    proofFileSize.value = file.size
+    proofFileType.value = file.type || response.mime_detected || ''
+
+    if (file.type.startsWith('image/') && typeof URL !== 'undefined' && URL.createObjectURL) {
+      proofPreviewUrl.value = URL.createObjectURL(file)
+    } else {
+      proofPreviewUrl.value = ''
+    }
+  } catch (err) {
+    uploadError.value =
+      (err as ApiError)?.displayMessage ||
+      'Échec du téléversement du justificatif. Veuillez vérifier votre connexion et réessayer.'
+  } finally {
+    isUploadingProof.value = false
+  }
+}
+
+function replaceProof() {
+  triggerFileInput()
+}
+
+function removeProof() {
+  proofMediaKey.value = ''
+  proofFileName.value = ''
+  proofFileSize.value = 0
+  proofFileType.value = ''
+  if (proofPreviewUrl.value) {
+    if (typeof URL !== 'undefined' && URL.revokeObjectURL) {
+      URL.revokeObjectURL(proofPreviewUrl.value)
+    }
+    proofPreviewUrl.value = ''
+  }
+  if (fileInputRef.value) {
+    fileInputRef.value.value = ''
+  }
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} o`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`
+}
+
+onScopeDispose(() => {
+  if (proofPreviewUrl.value && typeof URL !== 'undefined' && URL.revokeObjectURL) {
+    URL.revokeObjectURL(proofPreviewUrl.value)
+  }
+})
+
 function submit() {
-  if (!selectedCohort.value) return
+  if (!pathwayKey.value) return
+  if (pathway.value?.requires_equipment_validation && !proofMediaKey.value) {
+    submitError.value =
+      'Un justificatif matériel (capture d’écran ou photo des spécifications système) est obligatoire pour cette filière.'
+    return
+  }
   submitError.value = null
 
   submitMutation.mutate(
     {
       pathway_key: pathwayKey.value,
-      cohort_key: selectedCohort.value.key,
+      cohort_key: selectedCohort.value?.key || undefined,
       motivation: motivation.value.trim() || undefined,
+      proof_media_key: proofMediaKey.value || undefined,
       equipment: hasComputer.value
         ? {
             device_type: deviceType.value,
             cpu_model: cpu.value.trim(),
+            cpu: cpu.value.trim(),
             ram_gb: Number(ramGb.value),
             storage_total_gb: Number(storageGb.value),
+            storage_gb: Number(storageGb.value),
             storage_free_gb: storageFreeGb.value ? Number(storageFreeGb.value) : undefined,
             os_name: osName.value.trim(),
+            os: osName.value.trim(),
             virtualization_supported: virtualizationSupported.value,
           }
         : undefined,

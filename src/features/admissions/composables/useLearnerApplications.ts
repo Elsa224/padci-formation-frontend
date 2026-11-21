@@ -5,11 +5,14 @@ import type { ApiPaginationMeta } from '@/api/types'
 export interface EquipmentDeclaration {
   device_type: string
   cpu_model: string
+  cpu?: string
   cpu_cores?: number
   ram_gb: number
   storage_total_gb: number
+  storage_gb?: number
   storage_free_gb?: number
   os_name: string
+  os?: string
   os_version?: string
   virtualization_supported?: boolean
   notes?: string
@@ -63,9 +66,10 @@ export interface LearnerApplication {
 
 export interface SubmitApplicationDto {
   pathway_key: string
-  cohort_key: string
+  cohort_key?: string
   motivation?: string
   equipment?: EquipmentDeclaration
+  proof_media_key?: string
 }
 
 export function useRespondToEquipmentReview() {
