@@ -290,6 +290,48 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       expect(destinationPreview.text().toLowerCase()).toContain('standby')
     })
 
+    it('renders decideError in a prominent alert banner when approval or decision fails', async () => {
+      vi.mocked(useApplicationsModule.useApplications).mockReturnValue({
+        data: ref({
+          items: [mockApplicationListItem],
+          pagination: { total: 1, per_page: 15, current_page: 1, last_page: 1, from: 1, to: 1 },
+        }),
+        isPending: ref(false),
+      } as any)
+
+      vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
+        data: ref(mockApplicationDetail),
+        isPending: ref(false),
+      } as any)
+
+      // Mock decide to trigger onError callback with an ApiError
+      mockDecideMutate.mockImplementation((_payload, options) => {
+        if (options?.onError) {
+          options.onError({
+            displayMessage: 'La revue matériel doit être approuvée avant l’admission.',
+            message: 'La revue matériel doit être approuvée avant l’admission.',
+          })
+        }
+      })
+
+      const wrapper = mount(AdminCandidatures)
+      await flushPromises()
+
+      await wrapper.find('button[title="Voir le dossier"]').trigger('click')
+      await flushPromises()
+
+      // Approve fails
+      await wrapper.find('[data-testid="btn-approve-application"]').trigger('click')
+      await flushPromises()
+
+      // Error banner is prominently displayed in the drawer
+      const errorBanner = wrapper.find('[data-testid="decide-error-banner"]')
+      expect(errorBanner.exists()).toBe(true)
+      expect(errorBanner.text()).toContain(
+        'La revue matériel doit être approuvée avant l’admission.',
+      )
+    })
+
     it('opens rejection modal, enforces motive and confirms rejection', async () => {
       vi.mocked(useApplicationsModule.useApplications).mockReturnValue({
         data: ref({
@@ -359,9 +401,26 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       },
     ]
 
-    it('displays capacity, enrolled count, and available seats for each cohort', async () => {
+    it('displays capacity, enrolled count, and available seats for each cohort including null capacity', async () => {
+      const cohortsWithNullCap = [
+        ...mockCohorts,
+        {
+          id: 2,
+          key: 'cohort-flex-1',
+          code: 'DW-FLEX',
+          name: 'Promo Flexible',
+          session: 'Continu',
+          capacity: null,
+          enrolled_count: 30,
+          starts_at: '2026-10-01',
+          ends_at: null,
+          status: 'open' as const,
+          pathway: { id: 1, key: 'dev-web', code: 'DW', name: 'Développeur Web' },
+        },
+      ]
+
       vi.mocked(useCohortsModule.useCohorts).mockReturnValue({
-        data: ref({ items: mockCohorts, pagination: null }),
+        data: ref({ items: cohortsWithNullCap, pagination: null }),
         isPending: ref(false),
         isError: ref(false),
         error: ref(null),
@@ -374,6 +433,11 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       expect(wrapper.text()).toContain('85')
       expect(wrapper.text()).toContain('100')
       expect(wrapper.text()).toContain('15')
+
+      // Null capacity displays "Illimitée" and available seats as "Illimitées"
+      expect(wrapper.text()).toContain('DW-FLEX')
+      expect(wrapper.text()).toContain('30 / Illimitée')
+      expect(wrapper.text()).toContain('Illimitées')
     })
 
     it('pre-fills cohort capacity with 100 by default in creation modal and notifies standby drained count', async () => {
@@ -419,8 +483,8 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       await wrapper.find('[data-testid="cohort-name-input"]').setValue('Promo Web Mars')
 
       // Submit form
-      const submitBtn = wrapper.find('[data-testid="btn-submit-create-cohort"]')
-      await submitBtn.trigger('click')
+      const form = wrapper.find('form')
+      await form.trigger('submit')
       await flushPromises()
 
       expect(mockCreateCohortMutateAsync).toHaveBeenCalledWith(
@@ -437,6 +501,30 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       expect(toast.exists()).toBe(true)
       expect(toast.text()).toContain('4')
       expect(toast.text()).toContain('standby ont été automatiquement intégrés')
+    })
+
+    it('validates cohort capacity must be at least 1', async () => {
+      vi.mocked(useCohortsModule.useCohorts).mockReturnValue({
+        data: ref({ items: mockCohorts, pagination: null }),
+        isPending: ref(false),
+      } as any)
+
+      const wrapper = mount(AdminCohortes)
+      await flushPromises()
+
+      await wrapper.find('[data-testid="btn-open-create-cohort"]').trigger('click')
+      await flushPromises()
+
+      await wrapper.find('[data-testid="cohort-pathway-select"]').setValue('dev-web')
+      await wrapper.find('[data-testid="cohort-code-input"]').setValue('DW-TEST')
+      await wrapper.find('[data-testid="cohort-name-input"]').setValue('Promo Test')
+      await wrapper.find('[data-testid="cohort-capacity-input"]').setValue(0)
+
+      await wrapper.find('form').trigger('submit')
+      await flushPromises()
+
+      expect(mockCreateCohortMutateAsync).not.toHaveBeenCalled()
+      expect(wrapper.text()).toContain("La capacité doit être d'au moins 1 place")
     })
   })
 })

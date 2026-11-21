@@ -190,17 +190,21 @@
             <div class="flex justify-between text-sm mb-1.5">
               <span class="text-quiet font-medium">Effectif / Capacité</span>
               <span class="font-bold text-ink">
-                {{ enrolledCount(cohort) }} / {{ cohort.capacity ?? 100 }}
+                {{ enrolledCount(cohort) }} /
+                {{
+                  cohort.capacity !== null && cohort.capacity !== undefined
+                    ? cohort.capacity
+                    : 'Illimitée'
+                }}
               </span>
             </div>
 
             <!-- Jauge de remplissage -->
-            <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div v-if="cohort.capacity" class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
               <div
                 class="bg-primary h-2 rounded-full transition-all duration-300"
                 :style="{
-                  width:
-                    Math.min(100, (enrolledCount(cohort) / (cohort.capacity ?? 100)) * 100) + '%',
+                  width: Math.min(100, (enrolledCount(cohort) / cohort.capacity) * 100) + '%',
                 }"
               ></div>
             </div>
@@ -209,14 +213,20 @@
             <div class="mt-2 flex items-center justify-between text-xs">
               <span class="text-quiet">Places disponibles</span>
               <span
+                v-if="availableSeats(cohort) !== null"
                 class="font-bold rounded-md px-2 py-0.5"
                 :class="
-                  availableSeats(cohort) > 0
+                  (availableSeats(cohort) ?? 0) > 0
                     ? 'bg-primary/10 text-primary'
                     : 'bg-red-100 text-red-700'
                 "
               >
-                {{ availableSeats(cohort) > 0 ? `${availableSeats(cohort)} places` : 'Complet' }}
+                {{
+                  (availableSeats(cohort) ?? 0) > 0 ? `${availableSeats(cohort)} places` : 'Complet'
+                }}
+              </span>
+              <span v-else class="font-bold rounded-md px-2 py-0.5 bg-primary/10 text-primary">
+                Illimitées
               </span>
             </div>
           </div>
@@ -416,7 +426,6 @@
             </button>
             <button
               type="submit"
-              @click.prevent="submitCreateCohort"
               :disabled="createMutation.isPending.value"
               class="rounded-xl bg-primary px-5 py-2 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:bg-primary-shade disabled:opacity-50"
               data-testid="btn-submit-create-cohort"
@@ -489,13 +498,14 @@ function enrolledCount(cohort: Cohort): number {
   return cohort.enrolled_count ?? cohort.enrollments_count ?? 0
 }
 
-function availableSeats(cohort: Cohort): number {
+function availableSeats(cohort: Cohort): number | null {
   if (cohort.available_seats !== undefined && cohort.available_seats !== null) {
     return cohort.available_seats
   }
-  const cap = cohort.capacity ?? 100
-  const count = enrolledCount(cohort)
-  return Math.max(0, cap - count)
+  if (cohort.capacity === null || cohort.capacity === undefined) {
+    return null
+  }
+  return Math.max(0, cohort.capacity - enrolledCount(cohort))
 }
 
 const totalEnrolled = computed(() =>
@@ -549,6 +559,16 @@ function closeCreateModal() {
 async function submitCreateCohort() {
   if (!createForm.pathway_key || !createForm.code || !createForm.name) {
     createError.value = 'Veuillez remplir tous les champs obligatoires.'
+    return
+  }
+
+  if (
+    createForm.capacity === null ||
+    createForm.capacity === undefined ||
+    isNaN(Number(createForm.capacity)) ||
+    Number(createForm.capacity) < 1
+  ) {
+    createError.value = "La capacité doit être d'au moins 1 place."
     return
   }
 

@@ -712,7 +712,49 @@
               </p>
             </section>
 
-            <!-- 7. Saisie du motif de rejet -->
+            <!-- 7. Alerte d'erreur de décision -->
+            <div
+              v-if="decideError"
+              class="rounded-2xl border border-red-300 bg-red-50 p-4 text-sm text-red-700 flex items-start justify-between gap-3 shadow-sm"
+              data-testid="decide-error-banner"
+              role="alert"
+            >
+              <div class="flex items-start gap-3">
+                <svg
+                  class="h-5 w-5 text-red-600 shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div>
+                  <p class="font-bold text-red-800">Erreur lors de la décision</p>
+                  <p class="mt-0.5 text-xs text-red-700 font-medium">{{ decideError }}</p>
+                </div>
+              </div>
+              <button
+                @click="decideError = null"
+                class="rounded-lg p-1 text-red-500 hover:bg-red-100 hover:text-red-800 transition"
+                title="Fermer"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!-- 8. Saisie du motif de rejet -->
             <section
               v-if="pendingDecision === 'rejected'"
               class="rounded-2xl border border-red-200 bg-red-50/40 p-4 space-y-2"
@@ -727,9 +769,6 @@
                 class="app-input w-full"
                 data-testid="reject-reason-input"
               ></textarea>
-              <p v-if="decideError" class="text-xs font-semibold text-red-600">
-                {{ decideError }}
-              </p>
             </section>
           </template>
         </div>
