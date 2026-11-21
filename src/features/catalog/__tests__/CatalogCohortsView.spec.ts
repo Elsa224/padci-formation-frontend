@@ -161,6 +161,82 @@ describe('PathwayDetailView', () => {
     expect(wrapper.text()).toContain('0 place disponible')
     expect(wrapper.text()).toContain('100 / 100 réservées')
     expect(wrapper.text()).toContain('100% remplie')
+
+    const article = wrapper.find('article')
+    expect(article.classes()).toContain('border-amber-200')
+
+    const progressFill = wrapper.find('[role="progressbar"] div')
+    expect(progressFill.classes()).toContain('bg-amber-500')
+
+    const button = wrapper.find('button')
+    expect(button.classes()).toContain('app-action-secondary')
+    expect(button.classes()).not.toContain('app-action-primary')
+  })
+
+  it('renders full status and secondary action when cohort is open but full (status: open, is_full: true)', () => {
+    vi.mocked(useCatalogModule.usePathway).mockReturnValue({
+      data: ref({
+        id: 1,
+        key: 'dev-web',
+        code: 'DW-01',
+        name: 'Développeur Web',
+        slug: 'developpeur-web',
+        description: 'Formation intensive',
+      }),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as any)
+
+    vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
+      data: ref([
+        {
+          id: 13,
+          key: 'dw-promo-open-full',
+          code: 'DW-POPFULL',
+          name: 'Promo Ouverte Mais Pleine',
+          session: '2026-C',
+          capacity: 50,
+          enrolled_count: 50,
+          available_seats: 0,
+          is_full: true,
+          status: 'open',
+          starts_at: '2026-12-01',
+          ends_at: '2027-06-01',
+          available: false,
+        },
+      ]),
+      isPending: ref(false),
+    } as any)
+
+    vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
+      data: ref({ items: [] }),
+      isPending: ref(false),
+    } as any)
+
+    const wrapper = mount(PathwayDetailView, {
+      global: {
+        stubs: {
+          RouterLink: true,
+        },
+      },
+    })
+
+    const statusBadge = wrapper.find('article span.rounded-full.border')
+    expect(statusBadge.text()).toBe('Complète')
+    expect(wrapper.text()).toContain('0 place disponible')
+    expect(wrapper.text()).toContain('50 / 50 réservées')
+
+    const article = wrapper.find('article')
+    expect(article.classes()).toContain('border-amber-200')
+
+    const progressFill = wrapper.find('[role="progressbar"] div')
+    expect(progressFill.classes()).toContain('bg-amber-500')
+
+    // Must use app-action-secondary for full cohort even if status === 'open'
+    const button = wrapper.find('button')
+    expect(button.classes()).toContain('app-action-secondary')
+    expect(wrapper.find('button.app-action-primary').exists()).toBe(false)
   })
 
   it('displays planned status when cohort is not yet open', () => {

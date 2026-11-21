@@ -127,7 +127,7 @@
             :key="cohort.key"
             class="flex flex-col gap-4 rounded-xl border p-5 transition sm:p-6"
             :class="
-              cohort.is_full || cohort.available_seats === 0
+              isCohortFull(cohort)
                 ? 'border-amber-200 bg-amber-50/20'
                 : cohort.available
                   ? 'border-primary/25 bg-primary/[0.02]'
@@ -160,17 +160,17 @@
 
               <div class="shrink-0 pt-1 sm:pt-0">
                 <button
-                  v-if="cohort.available || cohort.status === 'open'"
+                  v-if="isCohortFull(cohort)"
                   type="button"
-                  class="app-action-primary flex w-full items-center justify-center gap-2 sm:w-auto"
+                  class="app-action-secondary flex w-full items-center justify-center gap-2 border-amber-300 text-amber-900 hover:bg-amber-100/50 sm:w-auto"
                   @click="goToCandidature(cohort)"
                 >
                   Postuler à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
                 </button>
                 <button
-                  v-else-if="cohort.is_full || cohort.available_seats === 0"
+                  v-else-if="cohort.available || cohort.status === 'open'"
                   type="button"
-                  class="app-action-secondary flex w-full items-center justify-center gap-2 border-amber-300 text-amber-900 hover:bg-amber-100/50 sm:w-auto"
+                  class="app-action-primary flex w-full items-center justify-center gap-2 sm:w-auto"
                   @click="goToCandidature(cohort)"
                 >
                   Postuler à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
@@ -192,22 +192,14 @@
                   {{ cohort.capacity }} réservées
                   <span
                     class="font-semibold"
-                    :class="
-                      cohort.is_full || cohort.available_seats === 0
-                        ? 'text-amber-800'
-                        : 'text-primary'
-                    "
+                    :class="isCohortFull(cohort) ? 'text-amber-800' : 'text-primary'"
                   >
                     ({{ formatSeatsText(cohort.available_seats) }})
                   </span>
                 </span>
                 <span
                   class="font-semibold"
-                  :class="
-                    cohort.is_full || cohort.available_seats === 0
-                      ? 'text-amber-700'
-                      : 'text-primary'
-                  "
+                  :class="isCohortFull(cohort) ? 'text-amber-700' : 'text-primary'"
                 >
                   {{ getOccupancyPercent(cohort) }}% remplie
                 </span>
@@ -222,9 +214,7 @@
               >
                 <div
                   class="h-full rounded-full transition-all duration-500 ease-out"
-                  :class="
-                    cohort.is_full || cohort.available_seats === 0 ? 'bg-amber-500' : 'bg-primary'
-                  "
+                  :class="isCohortFull(cohort) ? 'bg-amber-500' : 'bg-primary'"
                   :style="{ width: `${getOccupancyPercent(cohort)}%` }"
                 />
               </div>
@@ -308,11 +298,17 @@ function formatDate(dateStr: string | null): string {
   })
 }
 
+function isCohortFull(cohort: PublicCohort): boolean {
+  return Boolean(
+    cohort.is_full || (cohort.available_seats !== undefined && cohort.available_seats <= 0),
+  )
+}
+
 function getCohortStatusBadge(cohort: PublicCohort): {
   label: 'Ouverte' | 'Complète' | 'Planifiée'
   class: string
 } {
-  if (cohort.is_full || (cohort.available_seats !== undefined && cohort.available_seats <= 0)) {
+  if (isCohortFull(cohort)) {
     return {
       label: 'Complète',
       class: 'border-amber-200 bg-amber-100 text-amber-800',
