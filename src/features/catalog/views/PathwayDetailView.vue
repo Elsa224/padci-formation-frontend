@@ -156,6 +156,20 @@
                   <CalendarIcon :size="14" class="shrink-0 text-quiet" aria-hidden="true" />
                   Du {{ formatDate(cohort.starts_at) }} au {{ formatDate(cohort.ends_at) }}
                 </p>
+                <div
+                  v-if="cohort.offline_starts_at"
+                  class="mt-2 inline-flex items-center gap-1.5 rounded-md border border-emerald-200/70 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800"
+                  data-testid="cohort-offline-dates"
+                >
+                  <MapPinIcon :size="13" class="shrink-0 text-emerald-600" aria-hidden="true" />
+                  <span v-if="cohort.offline_ends_at">
+                    Ateliers présentiels : du {{ formatDate(cohort.offline_starts_at) }} au
+                    {{ formatDate(cohort.offline_ends_at) }}
+                  </span>
+                  <span v-else>
+                    Ateliers présentiels : dès le {{ formatDate(cohort.offline_starts_at) }}
+                  </span>
+                </div>
               </div>
 
               <div class="shrink-0 pt-1 sm:pt-0">
@@ -262,6 +276,7 @@ import {
   ArrowRight as ArrowRightIcon,
   BookOpen as BookOpenIcon,
   Calendar as CalendarIcon,
+  MapPin as MapPinIcon,
   Monitor as MonitorIcon,
 } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
