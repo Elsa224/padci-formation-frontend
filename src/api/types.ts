@@ -37,3 +37,70 @@ export interface ApiFailure {
 }
 
 export type ApiEnvelope<T> = ApiSuccess<T> | ApiFailure
+
+export interface EquipmentRequirements {
+  min_cpu?: string
+  min_ram_gb?: number
+  min_storage_gb?: number
+  notes?: string | null
+}
+
+export interface Pathway {
+  id: number
+  key: string
+  code: string
+  name: string
+  slug: string
+  description: string | null
+  equipment_requirements?: EquipmentRequirements | null
+  requires_equipment_validation?: boolean
+  icon?: string | null
+  position?: number
+  is_active?: boolean
+  programme?: {
+    id: number
+    key: string
+    code: string
+    name: string
+  } | null
+  courses_count?: number
+  cohorts_count?: number
+  open_cohorts_count?: number
+  available_cohorts_count?: number
+  created_at?: string
+  updated_at?: string
+}
+
+export interface Cohort {
+  id: number
+  key: string
+  code: string
+  name: string
+  session?: string | null
+  capacity: number
+  enrolled_count: number
+  available_seats: number
+  is_full: boolean
+  starts_at: string | null
+  ends_at: string | null
+  status?: string
+  pathway_id?: number
+  created_at?: string
+  updated_at?: string
+}
+
+export interface PublicCohort {
+  id: number
+  key: string
+  code: string
+  name: string
+  session?: string | null
+  capacity: number
+  enrolled_count: number
+  available_seats: number
+  is_full: boolean
+  starts_at: string | null
+  ends_at: string | null
+  status?: string
+  available: boolean
+}

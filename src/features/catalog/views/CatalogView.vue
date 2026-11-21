@@ -59,11 +59,25 @@
             class="inline-flex rounded-lg bg-primary/10 px-2.5 py-1 text-xs font-bold tracking-wide text-primary"
             >{{ pathway.code }}</span
           >
-          <span
-            v-if="pathway.courses_count"
-            class="inline-flex items-center gap-1 text-xs font-medium text-quiet"
-            ><BookOpenIcon :size="14" aria-hidden="true" />{{ pathway.courses_count }} cours</span
-          >
+          <div class="flex flex-wrap items-center justify-end gap-2">
+            <span
+              v-if="pathway.open_cohorts_count !== undefined"
+              class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold"
+              :class="
+                pathway.open_cohorts_count > 0
+                  ? 'border border-primary/20 bg-primary/10 text-primary'
+                  : 'border border-slate-200 bg-slate-100 text-quiet'
+              "
+            >
+              <CalendarIcon :size="13" aria-hidden="true" />
+              {{ pathway.open_cohorts_count }} session(s) ouverte(s)
+            </span>
+            <span
+              v-if="pathway.courses_count"
+              class="inline-flex items-center gap-1 text-xs font-medium text-quiet"
+              ><BookOpenIcon :size="14" aria-hidden="true" />{{ pathway.courses_count }} cours</span
+            >
+          </div>
         </div>
 
         <div class="mt-6">
@@ -116,6 +130,7 @@ import { computed } from 'vue'
 import {
   ArrowRight as ArrowRightIcon,
   BookOpen as BookOpenIcon,
+  Calendar as CalendarIcon,
   GraduationCap as GraduationCapIcon,
   Monitor as MonitorIcon,
 } from '@lucide/vue'
