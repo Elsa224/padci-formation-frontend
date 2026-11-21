@@ -117,3 +117,5 @@ export function useCreateCohort() {
     },
   })
 }
+
+export { useCohortMembers, type CohortMember, type CohortMemberFilters } from './useCohortMembers'

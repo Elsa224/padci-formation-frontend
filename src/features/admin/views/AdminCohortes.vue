@@ -267,12 +267,27 @@
 
         <!-- Pied de la carte -->
         <div
-          class="p-4 border-t border-line bg-canvas text-xs text-quiet flex items-center justify-between"
+          class="p-4 border-t border-line bg-canvas text-xs text-quiet flex flex-wrap items-center justify-between gap-2"
         >
           <span
             >Code : <strong class="font-medium text-ink">{{ cohort.code }}</strong></span
           >
-          <span v-if="cohort.name" class="truncate max-w-[150px]">{{ cohort.name }}</span>
+          <button
+            type="button"
+            @click="openMembersDrawer(cohort)"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white font-bold text-xs transition shadow-sm"
+            data-testid="btn-view-cohort-members"
+          >
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              />
+            </svg>
+            Voir les apprenants ({{ enrolledCount(cohort) }})
+          </button>
         </div>
       </div>
     </div>
@@ -484,18 +499,233 @@
         </form>
       </div>
     </div>
+
+    <!-- ================= VOLET LATÉRAL / TIROIR DES APPRENANTS ================= -->
+    <div
+      v-if="isMembersDrawerOpen"
+      class="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+      data-testid="cohort-members-drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="drawer-cohort-members-title"
+      @click.self="closeMembersDrawer"
+    >
+      <div
+        class="flex h-full w-full max-w-xl flex-col bg-white shadow-2xl animate-drawer sm:max-w-2xl"
+      >
+        <!-- En-tête du volet -->
+        <div class="flex items-center justify-between border-b border-line bg-canvas px-6 py-4">
+          <div class="flex items-center gap-3">
+            <div
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-white font-bold text-sm shadow-md shadow-primary/20"
+            >
+              {{ selectedCohort?.code?.slice(0, 4) ?? 'COH' }}
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-primary">
+                  Apprenants de la cohorte
+                </span>
+                <span
+                  v-if="selectedCohort"
+                  class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                  :class="statusBadgeClass(selectedCohort.status)"
+                >
+                  {{ statusLabel(selectedCohort.status) }}
+                </span>
+              </div>
+              <h3 id="drawer-cohort-members-title" class="text-lg font-bold text-ink">
+                {{ selectedCohort?.name ?? selectedCohort?.code }}
+              </h3>
+              <p class="text-xs text-quiet">Code : {{ selectedCohort?.code }}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            @click="closeMembersDrawer"
+            class="rounded-lg p-2 text-quiet transition hover:bg-gray-100 hover:text-ink"
+            data-testid="btn-close-members-drawer"
+            title="Fermer"
+          >
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Bannière statistiques rapides -->
+        <div class="border-b border-line bg-canvas/40 px-6 py-3.5 grid grid-cols-2 gap-4 text-xs">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-lg bg-primary/10 text-primary">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-quiet font-medium">Inscrits / Capacité</p>
+              <p class="font-bold text-ink text-sm">
+                {{ selectedCohort ? enrolledCount(selectedCohort) : 0 }} /
+                {{
+                  selectedCohort?.capacity !== null && selectedCohort?.capacity !== undefined
+                    ? selectedCohort.capacity
+                    : 'Illimitée'
+                }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-lg bg-blue-50 text-blue-700">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p class="text-quiet font-medium">Places restantes</p>
+              <p class="font-bold text-ink text-sm">
+                {{
+                  selectedCohort && availableSeats(selectedCohort) !== null
+                    ? `${availableSeats(selectedCohort)} places`
+                    : 'Illimitées'
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recherche et filtres de membres -->
+        <div class="p-4 border-b border-line bg-white flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <input
+              v-model="membersSearchQuery"
+              type="text"
+              placeholder="Rechercher par nom ou email…"
+              class="w-full pl-9 pr-4 py-2 border border-line rounded-lg text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              data-testid="cohort-members-search"
+            />
+            <svg
+              class="w-4 h-4 text-quiet absolute left-3 top-2.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <select
+            v-model="membersStatusFilter"
+            class="px-3 py-2 border border-line rounded-lg text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white"
+            data-testid="cohort-members-status-filter"
+          >
+            <option value="">Tous les statuts</option>
+            <option value="active">Actif</option>
+            <option value="enrolled">Inscrit</option>
+            <option value="suspended">Suspendu</option>
+            <option value="completed">Terminé</option>
+          </select>
+        </div>
+
+        <!-- Corps : Liste des apprenants -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
+          <div v-if="isMembersPending" class="py-12 text-center text-quiet text-sm">
+            Chargement des apprenants…
+          </div>
+          <div v-else-if="isMembersError" class="py-12 text-center text-red-600 text-sm">
+            {{ (membersError as ApiError)?.message ?? 'Impossible de charger les apprenants.' }}
+          </div>
+          <div
+            v-else-if="cohortMembersList.length === 0"
+            class="py-12 text-center text-quiet text-sm"
+            data-testid="cohort-members-empty"
+          >
+            Aucun apprenant dans cette cohorte pour le moment
+          </div>
+          <div
+            v-else
+            v-for="member in cohortMembersList"
+            :key="member.key"
+            class="flex items-center justify-between rounded-xl border border-line p-3.5 bg-white hover:bg-canvas/40 transition shadow-sm"
+            data-testid="cohort-member-row"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <div
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-bold text-xs"
+              >
+                {{ initialsOf(member.name) }}
+              </div>
+              <div class="min-w-0">
+                <p class="font-bold text-ink text-sm truncate" data-testid="cohort-member-name">
+                  {{ member.name }}
+                </p>
+                <p class="text-xs text-quiet truncate" data-testid="cohort-member-email">
+                  {{ member.email }}
+                </p>
+                <p class="text-[11px] text-quiet mt-0.5" data-testid="cohort-member-joined">
+                  Inscrit le {{ formatDate(member.joined_at) }}
+                </p>
+              </div>
+            </div>
+            <div class="shrink-0 text-right">
+              <span
+                class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border"
+                :class="memberStatusBadgeClass(member.status)"
+                data-testid="cohort-member-status"
+              >
+                {{ memberStatusLabel(member.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pied du tiroir -->
+        <div
+          class="border-t border-line bg-canvas/50 px-6 py-3 flex items-center justify-between text-xs text-quiet"
+        >
+          <span>Total affiché : {{ cohortMembersList.length }}</span>
+          <button
+            type="button"
+            @click="closeMembersDrawer"
+            class="rounded-lg border border-line bg-white px-3.5 py-1.5 font-semibold text-ink hover:bg-gray-100 transition"
+          >
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import type { ApiError } from '@/api/http'
 import { useCatalogPathways } from '@/features/public/composables/useCatalogPathways'
 import {
   useCohorts,
   useCreateCohort,
+  useCohortMembers,
   type Cohort,
   type CohortListFilters,
+  type CohortMember,
+  type CohortMemberFilters,
 } from '../composables/useCohorts'
 
 const filterPathwayKey = ref('')
@@ -698,8 +928,129 @@ async function submitCreateCohort() {
     createError.value = (err as ApiError).displayMessage || 'Impossible de créer la cohorte.'
   }
 }
+
+// ==================== TIROIR DES APPRENANTS ====================
+const selectedCohort = ref<Cohort | null>(null)
+const isMembersDrawerOpen = ref(false)
+const membersSearchQuery = ref('')
+const membersStatusFilter = ref('')
+
+const membersFilters = computed<CohortMemberFilters>(() => ({
+  q: membersSearchQuery.value.trim() || undefined,
+  status: membersStatusFilter.value || undefined,
+}))
+
+const selectedCohortKey = computed(() => selectedCohort.value?.key ?? '')
+const {
+  data: membersData,
+  isPending: isMembersPending,
+  isError: isMembersError,
+  error: membersError,
+} = useCohortMembers(selectedCohortKey, membersFilters)
+
+const cohortMembersList = computed<CohortMember[]>(() => {
+  const items = (membersData.value?.items ?? []) as CohortMember[]
+  let list = items
+  const q = membersSearchQuery.value.trim().toLowerCase()
+  if (q) {
+    list = list.filter(
+      (m: CohortMember) => m.name?.toLowerCase().includes(q) || m.email?.toLowerCase().includes(q),
+    )
+  }
+  const s = membersStatusFilter.value.trim().toLowerCase()
+  if (s) {
+    list = list.filter((m: CohortMember) => m.status?.toLowerCase() === s)
+  }
+  return list
+})
+
+function openMembersDrawer(cohort: Cohort) {
+  selectedCohort.value = cohort
+  membersSearchQuery.value = ''
+  membersStatusFilter.value = ''
+  isMembersDrawerOpen.value = true
+}
+
+function closeMembersDrawer() {
+  isMembersDrawerOpen.value = false
+  selectedCohort.value = null
+  membersSearchQuery.value = ''
+  membersStatusFilter.value = ''
+}
+
+function initialsOf(name: string | null | undefined): string {
+  if (!name) return '?'
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return (parts[0]?.[0] ?? '?').toUpperCase()
+  const first = parts[0]?.[0] ?? ''
+  const last = parts[parts.length - 1]?.[0] ?? ''
+  return (first + last).toUpperCase() || '?'
+}
+
+function memberStatusLabel(status: string): string {
+  switch (status) {
+    case 'active':
+      return 'Actif'
+    case 'enrolled':
+      return 'Inscrit'
+    case 'suspended':
+      return 'Suspendu'
+    case 'completed':
+      return 'Terminé'
+    case 'cancelled':
+      return 'Annulé'
+    default:
+      return status
+  }
+}
+
+function memberStatusBadgeClass(status: string): string {
+  switch (status) {
+    case 'active':
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+    case 'enrolled':
+      return 'bg-blue-50 text-blue-700 border-blue-200'
+    case 'suspended':
+      return 'bg-amber-50 text-amber-700 border-amber-200'
+    case 'completed':
+      return 'bg-purple-50 text-purple-700 border-purple-200'
+    default:
+      return 'bg-gray-50 text-gray-700 border-gray-200'
+  }
+}
+
+function handleGlobalKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    if (isMembersDrawerOpen.value) {
+      closeMembersDrawer()
+    } else if (isCreateModalOpen.value) {
+      closeCreateModal()
+    }
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleGlobalKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleGlobalKeydown)
+})
 </script>
 
 <style scoped>
-/* Tailwind handles the styling */
+@keyframes drawerIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-drawer {
+  animation: drawerIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 </style>
