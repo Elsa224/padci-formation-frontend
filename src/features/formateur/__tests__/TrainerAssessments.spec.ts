@@ -3,13 +3,26 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import { emptyQuestion, toPayload, validateQuestions } from '../composables/useTrainerAssessments'
 import * as assessmentsModule from '../composables/useTrainerAssessments'
+import { http } from '@/api/http'
 import FormateurCorrections from '../views/FormateurCorrections.vue'
 import CourseAssessmentsEditor from '../components/CourseAssessmentsEditor.vue'
 import StructureNodeTitle from '../components/StructureNodeTitle.vue'
 
 const gradeMutate = vi.fn()
 const createMutate = vi.fn()
+const updateMutate = vi.fn()
 const mutation = (fn = vi.fn()) => ({ mutateAsync: fn, isPending: ref(false) })
+
+vi.mock('@/api/http', () => ({
+  http: {
+    get: vi.fn(),
+    post: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  },
+  apiMeta: vi.fn(),
+  ApiError: class extends Error {},
+}))
 
 vi.mock('vue-sonner', () => ({ toast: { success: vi.fn() } }))
 vi.mock('../composables/useTrainerAssessments', async (importOriginal) => {
@@ -20,6 +33,7 @@ vi.mock('../composables/useTrainerAssessments', async (importOriginal) => {
     useGradeAnswer: vi.fn(() => mutation(gradeMutate)),
     useCourseAssessmentsAdmin: vi.fn(),
     useCreateAssessment: vi.fn(() => mutation(createMutate)),
+    useUpdateAssessment: vi.fn(() => mutation(updateMutate)),
     usePublishAssessment: vi.fn(() => mutation()),
     useDeleteAssessment: vi.fn(() => mutation()),
     useScheduleExam: vi.fn(() => mutation()),
@@ -176,6 +190,82 @@ describe('CourseAssessmentsEditor', () => {
       props: { courseKey: 'crs_1', editable: false },
     })
     expect(wrapper.find('[data-test="open-builder"]').exists()).toBe(false)
+  })
+
+  it('opens builder with loaded data when Modifier is clicked on a draft quiz and submits update', async () => {
+    vi.mocked(assessmentsModule.useCourseAssessmentsAdmin).mockReturnValue({
+      data: ref([
+        {
+          key: 'asm_1',
+          title: 'Quiz Réseau Ancien',
+          version: 1,
+          status: 'draft',
+          settings: { duration_minutes: 25, max_attempts: 2 },
+          scheduled_at: null,
+          delivery_mode: 'online',
+          location: null,
+          schedule_published_at: null,
+          questions_count: 1,
+        },
+      ]),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as unknown as ReturnType<typeof assessmentsModule.useCourseAssessmentsAdmin>)
+
+    vi.mocked(http.get).mockResolvedValueOnce({
+      data: {
+        key: 'asm_1',
+        title: 'Quiz Réseau Ancien',
+        version: 1,
+        status: 'draft',
+        settings: { duration_minutes: 25, max_attempts: 2 },
+        scheduled_at: null,
+        delivery_mode: 'online',
+        location: null,
+        schedule_published_at: null,
+        questions: [
+          {
+            key: 'q_1',
+            type: 'single_choice',
+            prompt: 'Protocole web ?',
+            points: 2,
+            explanation: 'HTTP est le protocole.',
+            position: 1,
+            options: [
+              { key: 'o_1', body: 'HTTP', is_correct: true, position: 1 },
+              { key: 'o_2', body: 'FTP', is_correct: false, position: 2 },
+            ],
+          },
+        ],
+      },
+    })
+
+    const wrapper = mount(CourseAssessmentsEditor, {
+      props: { courseKey: 'crs_1', editable: true },
+    })
+
+    const editBtn = wrapper.find('[data-test="edit-assessment"]')
+    expect(editBtn.exists()).toBe(true)
+
+    await editBtn.trigger('click')
+    await flushPromises()
+
+    expect(wrapper.find('[data-test="assessment-builder"]').exists()).toBe(true)
+    expect((wrapper.find('#quiz-title').element as HTMLInputElement).value).toBe(
+      'Quiz Réseau Ancien',
+    )
+    expect((wrapper.find('#q-0-prompt').element as HTMLInputElement).value).toBe('Protocole web ?')
+
+    await wrapper.find('#quiz-title').setValue('Quiz Réseau Mis à jour')
+    await wrapper.find('[data-test="assessment-builder"]').trigger('submit')
+    await flushPromises()
+
+    expect(updateMutate).toHaveBeenCalledOnce()
+    const callArgs = updateMutate.mock.calls[0]![0]
+    expect(callArgs.assessmentKey).toBe('asm_1')
+    expect(callArgs.title).toBe('Quiz Réseau Mis à jour')
+    expect(callArgs.settings).toEqual({ duration_minutes: 25, max_attempts: 2 })
   })
 })
 

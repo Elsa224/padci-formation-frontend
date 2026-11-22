@@ -136,28 +136,52 @@
 
         <ol v-else class="space-y-4">
           <li
-            v-for="module in modules.data.value"
+            v-for="(module, mIndex) in modules.data.value"
             :key="module.key"
             class="rounded-xl border border-line p-4"
             data-test="course-module"
           >
-            <StructureNodeTitle
-              :node-key="module.key"
-              :title="module.title"
-              :editable="editable"
-              :busy="nodeBusy"
-              title-class="font-bold text-ink"
-              confirm-text="Supprimer ce module et tous ses chapitres ?"
-              @rename="(title) => renameNode(`modules/${module.key}`, title)"
-              @delete="deleteNode(`modules/${module.key}`, 'Module supprimé.')"
-            >
-              {{ module.position }}. {{ module.title }}
-            </StructureNodeTitle>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <StructureNodeTitle
+                :node-key="module.key"
+                :title="module.title"
+                :editable="editable"
+                :busy="nodeBusy"
+                title-class="font-bold text-ink"
+                confirm-text="Supprimer ce module et tous ses chapitres ?"
+                @rename="(title) => renameNode(`modules/${module.key}`, title)"
+                @delete="deleteNode(`modules/${module.key}`, 'Module supprimé.')"
+              >
+                {{ module.position }}. {{ module.title }}
+              </StructureNodeTitle>
+              <div v-if="editable" class="flex items-center gap-1">
+                <button
+                  type="button"
+                  class="rounded p-1 text-xs font-semibold text-quiet hover:bg-canvas hover:text-ink disabled:opacity-30 disabled:pointer-events-none"
+                  :disabled="mIndex === 0 || reorderBusy"
+                  :aria-label="`Monter le module ${module.title}`"
+                  data-test="move-module-up"
+                  @click="moveModuleUp(mIndex)"
+                >
+                  <ArrowUpIcon :size="14" />
+                </button>
+                <button
+                  type="button"
+                  class="rounded p-1 text-xs font-semibold text-quiet hover:bg-canvas hover:text-ink disabled:opacity-30 disabled:pointer-events-none"
+                  :disabled="mIndex === (modules.data.value?.length ?? 0) - 1 || reorderBusy"
+                  :aria-label="`Descendre le module ${module.title}`"
+                  data-test="move-module-down"
+                  @click="moveModuleDown(mIndex)"
+                >
+                  <ArrowDownIcon :size="14" />
+                </button>
+              </div>
+            </div>
             <p v-if="module.summary" class="mt-1 text-sm text-quiet">{{ module.summary }}</p>
 
             <ul v-if="module.chapters?.length" class="mt-3 space-y-2">
               <li
-                v-for="chapter in module.chapters"
+                v-for="(chapter, cIndex) in module.chapters"
                 :key="chapter.key"
                 class="rounded-lg bg-canvas p-3 text-sm"
               >
@@ -178,7 +202,31 @@
                       )
                     "
                   />
-                  <span class="text-xs text-quiet">{{ chapterTypeLabels[chapter.type] }}</span>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs text-quiet">{{ chapterTypeLabels[chapter.type] }}</span>
+                    <div v-if="editable" class="flex items-center gap-0.5">
+                      <button
+                        type="button"
+                        class="rounded p-1 text-xs font-semibold text-quiet hover:bg-line hover:text-ink disabled:opacity-30 disabled:pointer-events-none"
+                        :disabled="cIndex === 0 || reorderBusy"
+                        :aria-label="`Monter le chapitre ${chapter.title}`"
+                        data-test="move-chapter-up"
+                        @click="moveChapterUp(module, cIndex)"
+                      >
+                        <ArrowUpIcon :size="13" />
+                      </button>
+                      <button
+                        type="button"
+                        class="rounded p-1 text-xs font-semibold text-quiet hover:bg-line hover:text-ink disabled:opacity-30 disabled:pointer-events-none"
+                        :disabled="cIndex === (module.chapters?.length ?? 0) - 1 || reorderBusy"
+                        :aria-label="`Descendre le chapitre ${chapter.title}`"
+                        data-test="move-chapter-down"
+                        @click="moveChapterDown(module, cIndex)"
+                      >
+                        <ArrowDownIcon :size="13" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 <ul v-if="chapter.resources?.length" class="mt-2 space-y-1">
                   <li
@@ -373,7 +421,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { FileText as FileTextIcon, Link as LinkIcon } from '@lucide/vue'
+import {
+  ArrowDown as ArrowDownIcon,
+  ArrowUp as ArrowUpIcon,
+  FileText as FileTextIcon,
+  Link as LinkIcon,
+} from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import CourseStatusBadge from '../components/CourseStatusBadge.vue'
 import StructureNodeTitle from '../components/StructureNodeTitle.vue'
@@ -395,6 +448,8 @@ import {
   useCreateModule,
   useCreateResource,
   useDeleteStructureNode,
+  useReorderChapters,
+  useReorderModules,
   useUpdateCourse,
   useUpdateStructureNode,
   useRevertCourseToDraft,
@@ -402,6 +457,7 @@ import {
   useTrainerCourse,
   type ChapterType,
   type CourseLevel,
+  type CourseModule,
 } from '../composables/useTrainerCourses'
 
 const chapterTypeLabels: Record<ChapterType, string> = {
@@ -424,7 +480,74 @@ const createResource = useCreateResource(courseKey)
 const updateNode = useUpdateStructureNode(courseKey)
 const deleteNodeMutation = useDeleteStructureNode(courseKey)
 const updateCourse = useUpdateCourse(courseKey)
-const nodeBusy = computed(() => updateNode.isPending.value || deleteNodeMutation.isPending.value)
+const reorderModulesMutation = useReorderModules(courseKey)
+const reorderChaptersMutation = useReorderChapters(courseKey)
+const reorderBusy = computed(
+  () => reorderModulesMutation.isPending.value || reorderChaptersMutation.isPending.value,
+)
+const nodeBusy = computed(
+  () => updateNode.isPending.value || deleteNodeMutation.isPending.value || reorderBusy.value,
+)
+
+async function moveModuleUp(index: number) {
+  const list = modules.data.value
+  if (!list || index <= 0) return
+  const newOrder = [...list]
+  const temp = newOrder[index]!
+  newOrder[index] = newOrder[index - 1]!
+  newOrder[index - 1] = temp
+  await run(
+    () => reorderModulesMutation.mutateAsync(newOrder.map((m) => m.key)),
+    'Modules réordonnés.',
+  )
+}
+
+async function moveModuleDown(index: number) {
+  const list = modules.data.value
+  if (!list || index >= list.length - 1) return
+  const newOrder = [...list]
+  const temp = newOrder[index]!
+  newOrder[index] = newOrder[index + 1]!
+  newOrder[index + 1] = temp
+  await run(
+    () => reorderModulesMutation.mutateAsync(newOrder.map((m) => m.key)),
+    'Modules réordonnés.',
+  )
+}
+
+async function moveChapterUp(module: CourseModule, index: number) {
+  const list = module.chapters
+  if (!list || index <= 0) return
+  const newOrder = [...list]
+  const temp = newOrder[index]!
+  newOrder[index] = newOrder[index - 1]!
+  newOrder[index - 1] = temp
+  await run(
+    () =>
+      reorderChaptersMutation.mutateAsync({
+        moduleKey: module.key,
+        chapterKeys: newOrder.map((c) => c.key),
+      }),
+    'Chapitres réordonnés.',
+  )
+}
+
+async function moveChapterDown(module: CourseModule, index: number) {
+  const list = module.chapters
+  if (!list || index >= list.length - 1) return
+  const newOrder = [...list]
+  const temp = newOrder[index]!
+  newOrder[index] = newOrder[index + 1]!
+  newOrder[index + 1] = temp
+  await run(
+    () =>
+      reorderChaptersMutation.mutateAsync({
+        moduleKey: module.key,
+        chapterKeys: newOrder.map((c) => c.key),
+      }),
+    'Chapitres réordonnés.',
+  )
+}
 
 const ficheOpen = ref(false)
 const fiche = reactive({

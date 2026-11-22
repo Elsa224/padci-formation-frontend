@@ -163,6 +163,60 @@ export function useCreateAssessment(courseKey: MaybeRef<string>) {
   )
 }
 
+export interface AssessmentQuestionOption {
+  key?: string
+  body: string
+  is_correct: boolean
+  position?: number
+}
+
+export interface AssessmentQuestionItem {
+  key?: string
+  type: QuestionType
+  prompt: string
+  points: number
+  explanation: string | null
+  position?: number
+  options?: AssessmentQuestionOption[]
+}
+
+export interface TrainerAssessmentDetail extends TrainerAssessment {
+  chapter?: { key: string; title: string } | null
+  questions?: AssessmentQuestionItem[]
+}
+
+/** GET /admin/assessments/{assessment}. */
+export function useAssessmentDetailAdmin(assessmentKey: MaybeRef<string | null>) {
+  return useQuery({
+    queryKey: computed(() => ['trainer-assessment-detail', toValue(assessmentKey)]),
+    queryFn: async () => {
+      const key = toValue(assessmentKey)
+      if (!key) return null
+      return (await http.get<TrainerAssessmentDetail>(`/admin/assessments/${key}`)).data
+    },
+    enabled: computed(() => !!toValue(assessmentKey)),
+  })
+}
+
+/** PATCH /admin/assessments/{assessment} — drafts only. */
+export function useUpdateAssessment(courseKey: MaybeRef<string>) {
+  const client = useQueryClient()
+  return useAssessmentMutation(
+    courseKey,
+    async ({
+      assessmentKey,
+      ...payload
+    }: CreateAssessmentPayload & { assessmentKey: string; chapter_key?: string | null }) => {
+      const res = await http.patch<TrainerAssessment>(
+        `/admin/assessments/${assessmentKey}`,
+        payload,
+      )
+      client.invalidateQueries({ queryKey: ['trainer-assessment-detail', assessmentKey] })
+      return res.data
+    },
+  )
+}
+
 /** POST /admin/assessments/{assessment}/publish. */
 export function usePublishAssessment(courseKey: MaybeRef<string>) {
   return useAssessmentMutation(courseKey, (assessmentKey: string) =>

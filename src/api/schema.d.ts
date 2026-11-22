@@ -793,6 +793,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/admin/courses/{course}/modules/{courseModule}/chapters/reorder': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['admin.chapters.reorder']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/admin/courses/{course}/modules/{courseModule}/chapters/{chapter}': {
     parameters: {
       query?: never
@@ -979,6 +995,22 @@ export interface paths {
     get: operations['admin.course-modules.index']
     put?: never
     post: operations['admin.course-modules.store']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/courses/{course}/modules/reorder': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['admin.course-modules.reorder']
     delete?: never
     options?: never
     head?: never
@@ -3102,6 +3134,14 @@ export interface components {
     RejectDisbursementRequestRequest: {
       reason?: string | null
     }
+    /** ReorderChaptersRequest */
+    ReorderChaptersRequest: {
+      chapter_keys: string[]
+    }
+    /** ReorderCourseModulesRequest */
+    ReorderCourseModulesRequest: {
+      module_keys: string[]
+    }
     /** ResendVerificationRequest */
     ResendVerificationRequest: {
       /** Format: email */
@@ -3371,10 +3411,21 @@ export interface components {
     /** UpdateAssessmentRequest */
     UpdateAssessmentRequest: {
       title?: string
+      chapter_key?: string | null
       settings?: {
         duration_minutes?: number | null
         max_attempts?: number | null
       } | null
+      questions?: {
+        type?: components['schemas']['QuestionType']
+        prompt?: string
+        points?: number
+        explanation?: string | null
+        options?: {
+          body: string
+          is_correct?: boolean
+        }[]
+      }[]
     }
     /** UpdateChapterRequest */
     UpdateChapterRequest: {
@@ -5852,6 +5903,56 @@ export interface operations {
       422: components['responses']['ValidationException']
     }
   }
+  'admin.chapters.reorder': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The course key */
+        course: string
+        /** @description The course module key */
+        courseModule: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ReorderChaptersRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            /** @constant */
+            message: 'Chapitres réordonnés.'
+            data:
+              | components['schemas']['ChapterResource'][]
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
   'admin.chapters.destroy': {
     parameters: {
       query?: never
@@ -6697,6 +6798,54 @@ export interface operations {
             message: 'Module créé.'
             data:
               | components['schemas']['CourseModuleResource']
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'admin.course-modules.reorder': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The course key */
+        course: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ReorderCourseModulesRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            /** @constant */
+            message: 'Modules réordonnés.'
+            data:
+              | components['schemas']['CourseModuleResource'][]
               | string
               | {
                   [key: string]: string

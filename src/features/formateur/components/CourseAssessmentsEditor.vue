@@ -77,6 +77,13 @@
             </span>
             <template v-if="editable && assessment.status === 'draft'">
               <button
+                class="text-xs font-semibold text-primary"
+                data-test="edit-assessment"
+                @click="openEditBuilder(assessment.key)"
+              >
+                Modifier
+              </button>
+              <button
                 class="app-action-secondary"
                 data-test="publish-assessment"
                 @click="run(() => publish.mutateAsync(assessment.key), 'Quiz publié.')"
@@ -188,8 +195,14 @@
       v-if="builderOpen"
       class="space-y-4 rounded-xl border border-primary/30 p-4"
       data-test="assessment-builder"
-      @submit.prevent="createQuiz"
+      @submit.prevent="saveQuiz"
     >
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-ink">
+          {{ editingAssessmentKey ? 'Modifier le quiz' : 'Nouveau quiz' }}
+        </h3>
+      </div>
+
       <div class="grid gap-3 sm:grid-cols-[1fr_8rem_8rem]">
         <label class="text-sm font-semibold text-ink">
           Titre
@@ -355,11 +368,19 @@
       </ul>
 
       <div class="flex justify-end gap-2">
-        <button type="button" class="app-action-secondary" @click="builderOpen = false">
-          Annuler
-        </button>
-        <button class="app-action-primary" :disabled="create.isPending.value">
-          {{ create.isPending.value ? 'Création…' : 'Créer le quiz (brouillon)' }}
+        <button type="button" class="app-action-secondary" @click="closeBuilder">Annuler</button>
+        <button
+          class="app-action-primary"
+          :disabled="create.isPending.value || update.isPending.value"
+          data-test="submit-quiz-builder"
+        >
+          {{
+            create.isPending.value || update.isPending.value
+              ? 'Enregistrement…'
+              : editingAssessmentKey
+                ? 'Mettre à jour le quiz'
+                : 'Créer le quiz (brouillon)'
+          }}
         </button>
       </div>
     </form>
@@ -369,6 +390,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { toast } from 'vue-sonner'
+import { http } from '@/api/http'
 import { apiErrorMessage } from '../composables/useTrainerCourses'
 import {
   emptyQuestion,
@@ -380,10 +402,12 @@ import {
   usePublishAssessment,
   usePublishSchedule,
   useScheduleExam,
+  useUpdateAssessment,
   validateQuestions,
   type DraftQuestion,
   type QuestionType,
   type TrainerAssessment,
+  type TrainerAssessmentDetail,
 } from '../composables/useTrainerAssessments'
 
 const props = defineProps<{ courseKey: string; editable: boolean }>()
@@ -391,6 +415,7 @@ const key = computed(() => props.courseKey)
 
 const assessments = useCourseAssessmentsAdmin(key)
 const create = useCreateAssessment(key)
+const update = useUpdateAssessment(key)
 const publish = usePublishAssessment(key)
 const remove = useDeleteAssessment(key)
 const scheduleMutation = useScheduleExam(key)
@@ -417,6 +442,7 @@ function askDelete(assessmentKey: string) {
 
 // ── Builder ────────────────────────────────────────────────────────────
 const builderOpen = ref(false)
+const editingAssessmentKey = ref<string | null>(null)
 const draftErrors = ref<string[]>([])
 const draft = reactive<{
   title: string
@@ -426,9 +452,47 @@ const draft = reactive<{
 }>({ title: '', duration: 30, attempts: 1, questions: [emptyQuestion()] })
 
 function openBuilder() {
+  editingAssessmentKey.value = null
   Object.assign(draft, { title: '', duration: 30, attempts: 1, questions: [emptyQuestion()] })
   draftErrors.value = []
   builderOpen.value = true
+}
+
+function closeBuilder() {
+  builderOpen.value = false
+  editingAssessmentKey.value = null
+}
+
+async function openEditBuilder(assessmentKey: string) {
+  actionError.value = ''
+  try {
+    const detail = (await http.get<TrainerAssessmentDetail>(`/admin/assessments/${assessmentKey}`))
+      .data
+    editingAssessmentKey.value = assessmentKey
+    draft.title = detail.title
+    draft.duration = detail.settings?.duration_minutes ?? 30
+    draft.attempts = detail.settings?.max_attempts ?? 1
+    draft.questions = detail.questions?.length
+      ? detail.questions.map((q) => ({
+          type: q.type,
+          prompt: q.prompt,
+          points: q.points,
+          explanation: q.explanation ?? '',
+          options:
+            q.options?.map((o) => ({ body: o.body, is_correct: o.is_correct })) ??
+            (q.type === 'free_text'
+              ? []
+              : [
+                  { body: '', is_correct: true },
+                  { body: '', is_correct: false },
+                ]),
+        }))
+      : [emptyQuestion()]
+    draftErrors.value = []
+    builderOpen.value = true
+  } catch (err) {
+    actionError.value = apiErrorMessage(err, 'Impossible de charger le quiz à modifier.')
+  }
 }
 
 function changeType(index: number, type: QuestionType) {
@@ -453,16 +517,27 @@ function markCorrect(qIndex: number, oIndex: number) {
   })
 }
 
-async function createQuiz() {
+async function saveQuiz() {
   draftErrors.value = validateQuestions(draft.questions)
   if (!draft.title.trim()) draftErrors.value.unshift('Donnez un titre au quiz.')
   if (draftErrors.value.length) return
-  const ok = await run(
-    () =>
-      create.mutateAsync(toPayload(draft.title, draft.duration, draft.attempts, draft.questions)),
-    'Quiz créé en brouillon. Publiez-le pour le rendre visible.',
-  )
-  if (ok) builderOpen.value = false
+
+  const payload = toPayload(draft.title, draft.duration, draft.attempts, draft.questions)
+
+  if (editingAssessmentKey.value) {
+    const assessmentKey = editingAssessmentKey.value
+    const ok = await run(
+      () => update.mutateAsync({ assessmentKey, ...payload }),
+      'Quiz mis à jour.',
+    )
+    if (ok) closeBuilder()
+  } else {
+    const ok = await run(
+      () => create.mutateAsync(payload),
+      'Quiz créé en brouillon. Publiez-le pour le rendre visible.',
+    )
+    if (ok) closeBuilder()
+  }
 }
 
 // ── Exam scheduling ───────────────────────────────────────────────────

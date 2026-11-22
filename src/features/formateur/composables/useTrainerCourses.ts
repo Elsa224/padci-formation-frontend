@@ -386,6 +386,35 @@ export function useCreateResource(courseKey: MaybeRef<string>) {
   })
 }
 
+/** POST /admin/courses/{course}/modules/reorder. */
+export function useReorderModules(courseKey: MaybeRef<string>) {
+  const invalidate = useModulesInvalidation(courseKey)
+  return useMutation({
+    mutationFn: async (moduleKeys: string[]) =>
+      (
+        await http.post<CourseModule[]>(`/admin/courses/${toValue(courseKey)}/modules/reorder`, {
+          module_keys: moduleKeys,
+        })
+      ).data,
+    onSuccess: invalidate,
+  })
+}
+
+/** POST /admin/courses/{course}/modules/{module}/chapters/reorder. */
+export function useReorderChapters(courseKey: MaybeRef<string>) {
+  const invalidate = useModulesInvalidation(courseKey)
+  return useMutation({
+    mutationFn: async ({ moduleKey, chapterKeys }: { moduleKey: string; chapterKeys: string[] }) =>
+      (
+        await http.post<CourseChapter[]>(
+          `/admin/courses/${toValue(courseKey)}/modules/${moduleKey}/chapters/reorder`,
+          { chapter_keys: chapterKeys },
+        )
+      ).data,
+    onSuccess: invalidate,
+  })
+}
+
 // ── Contract drift guard ───────────────────────────────────────────────
 // Compile-time only: if the generated contract (src/api/schema.d.ts) stops
 // matching these hand-written shapes, `npm run type-check` fails here.
