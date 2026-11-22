@@ -70,11 +70,8 @@
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import padciLogo from '@/assets/images/logodepadci.png'
+import { homeFor } from '@/features/auth/utils/homeFor'
 
 const auth = useAuthStore()
-const home = computed(() => {
-  if (auth.hasRole('super_admin')) return '/superadmin/dashboard'
-  if (auth.hasRole('admin')) return '/admin/dashboard'
-  return '/formations/dashboard'
-})
+const home = computed(() => homeFor(auth.user?.roles ?? []))
 </script>

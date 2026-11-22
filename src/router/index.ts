@@ -1,24 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { bootstrapAuth } from '@/features/auth/composables/useBootstrapAuth'
+import { homeFor } from '@/features/auth/utils/homeFor'
 
 declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth?: boolean
     /** Any one of these roles is enough — not all of them. */
     roles?: string[]
+    /** Holding any of these roles denies the route, even with an allowed role. */
+    excludedRoles?: string[]
   }
 }
 
-/** Where a route's own `roles` meta sends an authenticated-but-wrong-role
- * user — each role's own home, so "forbidden" doesn't just bounce them to
- * login again. */
-function homeFor(roles: string[]): string {
-  if (roles.includes('super_admin')) return '/superadmin/dashboard'
-  if (roles.includes('admin')) return '/admin/dashboard'
-  if (roles.includes('moderateur')) return '/moderation/materiel'
-  return '/formations/dashboard'
-}
+// A wrong-role user is sent to their own home (homeFor), so "forbidden"
+// doesn't just bounce them to login again.
 
 // Routes are feature-based (src/features/<domain>) rather than role-based —
 // see docs/architecture note in the PADCI backend repo for the module
@@ -287,9 +283,41 @@ const router = createRouter({
       ],
     },
 
-    // TODO(roles): no routes yet for `formateur` — the real
-    // backend has 5 roles, this frontend only covers 3. Tracked, not built
-    // here (see the audit report / plan).
+    // ==================== FORMATEUR ====================
+    // Ported from the legacy-main mockups (FormateurDashboard/Cours), rebuilt
+    // on the Catalog API. Attendance ("présences") and progress reports have
+    // no backend yet and are intentionally not routed.
+    {
+      path: '/formateur',
+      component: () => import('@/features/formateur/layouts/FormateurLayout.vue'),
+      redirect: '/formateur/dashboard',
+      // Formateur only. /admin/courses is not owner-scoped for staff who see
+      // every course (admin, super_admin, moderateur): for a multi-role
+      // account "Mes cours" would list the whole institution, so those roles
+      // are excluded even when the account also holds `formateur`.
+      meta: {
+        requiresAuth: true,
+        roles: ['formateur'],
+        excludedRoles: ['super_admin', 'admin', 'moderateur'],
+      },
+      children: [
+        {
+          path: 'dashboard',
+          name: 'formateur-dashboard',
+          component: () => import('@/features/formateur/views/FormateurDashboard.vue'),
+        },
+        {
+          path: 'cours',
+          name: 'formateur-cours',
+          component: () => import('@/features/formateur/views/FormateurCours.vue'),
+        },
+        {
+          path: 'cours/:courseKey',
+          name: 'formateur-cours-detail',
+          component: () => import('@/features/formateur/views/FormateurCoursDetail.vue'),
+        },
+      ],
+    },
   ],
 })
 
@@ -310,7 +338,11 @@ router.beforeEach(async (to) => {
   }
 
   const allowedRoles = to.matched.flatMap((record) => record.meta.roles ?? [])
-  if (allowedRoles.length > 0 && !allowedRoles.some((role) => auth.hasRole(role))) {
+  const excludedRoles = to.matched.flatMap((record) => record.meta.excludedRoles ?? [])
+  if (
+    (allowedRoles.length > 0 && !allowedRoles.some((role) => auth.hasRole(role))) ||
+    excludedRoles.some((role) => auth.hasRole(role))
+  ) {
     return { path: homeFor(auth.user.roles) }
   }
 

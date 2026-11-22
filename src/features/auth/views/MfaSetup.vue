@@ -5,6 +5,7 @@ import { ShieldCheck, KeyRound } from '@lucide/vue'
 import { useAuthStore } from '@/stores/auth'
 import { ApiError } from '@/api/http'
 import { useMfaSetup, useMfaConfirm } from '../composables/useMfaSetup'
+import { homeFor } from '../utils/homeFor'
 
 // FR-006/ADR-006: super_admin/admin cannot use anything beyond their own
 // profile until TOTP is confirmed (enforced server-side by
@@ -46,12 +47,13 @@ async function submitConfirm(): Promise<void> {
 }
 
 async function finishAndContinue(): Promise<void> {
+  // Learners reach MFA setup from their settings page, so they go back there;
+  // every other role lands on its own workspace.
+  const roles = auth.user?.roles ?? []
   await router.push(
-    auth.hasRole('super_admin')
-      ? '/superadmin/dashboard'
-      : auth.hasRole('admin')
-        ? '/admin/dashboard'
-        : '/parametres',
+    roles.length === 0 || roles.every((role) => role === 'apprenant')
+      ? '/parametres'
+      : homeFor(roles),
   )
 }
 </script>

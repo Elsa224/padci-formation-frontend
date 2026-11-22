@@ -303,6 +303,8 @@ import { useRoute, useRouter } from 'vue-router'
 import formLogo from '@/assets/images/logoemsp.png'
 import loginImage from '@/assets/images/photodecybersecurite.jpg'
 import { ApiError } from '@/api/http'
+import { useAuthStore } from '@/stores/auth'
+import { homeFor } from '../utils/homeFor'
 import { useLogin } from '../composables/useLogin'
 import { useMfaChallenge } from '../composables/useMfaChallenge'
 import { useResendVerification } from '../composables/useResendVerification'
@@ -353,7 +355,9 @@ const isPending = computed(() => login.isPending.value || mfaChallenge.isPending
 
 async function afterAuthenticated(): Promise<void> {
   const redirect =
-    typeof route.query.redirect === 'string' ? route.query.redirect : '/formations/dashboard'
+    typeof route.query.redirect === 'string'
+      ? route.query.redirect
+      : homeFor(useAuthStore().user?.roles ?? [])
   await router.push(redirect)
 }
 
