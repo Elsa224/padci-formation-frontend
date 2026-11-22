@@ -100,20 +100,59 @@
                     <LinkIcon v-if="resource.type === 'link'" :size="14" class="text-quiet" />
                     <FileTextIcon v-else :size="14" class="text-quiet" />
                     <a
-                      v-if="safeHttpUrl(resource.external_url)"
-                      :href="safeHttpUrl(resource.external_url) ?? undefined"
+                      v-if="resourceHref(resource)"
+                      :href="resourceHref(resource) ?? undefined"
                       target="_blank"
                       rel="noopener"
                       class="font-medium text-primary hover:underline"
                       >{{ resource.title }}</a
                     >
                     <span v-else class="font-medium text-ink">{{ resource.title }}</span>
+                    <span v-if="resource.media" class="text-quiet">
+                      · {{ resource.media.original_name }} ({{
+                        formatSize(resource.media.size_bytes)
+                      }})
+                      <template v-if="resource.media.scan_status !== 'clean'">
+                        · analyse antivirus en cours</template
+                      >
+                    </span>
                   </li>
                 </ul>
 
-                <!-- Ajout de support -->
+                <!-- Dépôt de document -->
                 <form
-                  v-if="editable && resourceTarget === chapter.key"
+                  v-if="editable && documentTarget === chapter.key"
+                  class="mt-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto]"
+                  data-test="document-form"
+                  @submit.prevent="addDocument(module.key, chapter.key)"
+                >
+                  <input
+                    v-model.trim="documentForm.title"
+                    class="app-input"
+                    required
+                    maxlength="180"
+                    placeholder="Titre du document"
+                    aria-label="Titre du document"
+                  />
+                  <input
+                    class="app-input"
+                    type="file"
+                    required
+                    :accept="DOCUMENT_ACCEPT"
+                    aria-label="Fichier (PDF, Word, Excel, PowerPoint)"
+                    @change="pickDocument"
+                  />
+                  <button
+                    class="app-action-primary"
+                    :disabled="addDocumentMutation.isPending.value"
+                  >
+                    {{ addDocumentMutation.isPending.value ? 'Envoi…' : 'Déposer' }}
+                  </button>
+                </form>
+
+                <!-- Ajout de lien -->
+                <form
+                  v-else-if="editable && resourceTarget === chapter.key"
                   class="mt-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto]"
                   @submit.prevent="addResource(module.key, chapter.key)"
                 >
@@ -137,13 +176,21 @@
                     Ajouter
                   </button>
                 </form>
-                <button
-                  v-else-if="editable"
-                  class="mt-2 text-xs font-semibold text-primary"
-                  @click="openResourceForm(chapter.key)"
-                >
-                  + Ajouter un lien vers un support
-                </button>
+                <div v-else-if="editable" class="mt-2 flex flex-wrap gap-4">
+                  <button
+                    class="text-xs font-semibold text-primary"
+                    data-test="open-document-form"
+                    @click="openDocumentForm(chapter.key)"
+                  >
+                    + Déposer un document
+                  </button>
+                  <button
+                    class="text-xs font-semibold text-primary"
+                    @click="openResourceForm(chapter.key)"
+                  >
+                    + Ajouter un lien
+                  </button>
+                </div>
               </li>
             </ul>
 
@@ -207,8 +254,9 @@
           </button>
         </form>
         <p v-if="editable" class="text-xs text-quiet">
-          Le dépôt direct de fichiers (PDF, vidéos) sera disponible lorsque l'API rattachera les
-          médias aux chapitres. En attendant, ajoutez un lien vers le support.
+          Documents acceptés : PDF, Word, Excel, PowerPoint ou texte, 20 Mo maximum. Les fichiers
+          restent privés : seuls les apprenants inscrits y accèdent. Le dépôt de vidéos n'est pas
+          encore disponible.
         </p>
       </div>
     </template>
@@ -227,6 +275,11 @@ import {
   courseStatusLabels,
   isEditable,
   safeHttpUrl,
+  DOCUMENT_ACCEPT,
+  DOCUMENT_MAX_BYTES,
+  DOCUMENT_MIMES,
+  useAddDocumentResource,
+  type CourseResourceItem,
   useCourseModules,
   useCreateChapter,
   useCreateModule,
@@ -254,6 +307,57 @@ const revert = useRevertCourseToDraft()
 const createModule = useCreateModule(courseKey)
 const createChapter = useCreateChapter(courseKey)
 const createResource = useCreateResource(courseKey)
+const addDocumentMutation = useAddDocumentResource(courseKey)
+
+const documentTarget = ref<string | null>(null)
+const documentForm = reactive<{ title: string; file: File | null }>({ title: '', file: null })
+
+/** Signed media URL for documents, http(s)-only external URL for links. */
+function resourceHref(resource: CourseResourceItem): string | null {
+  return safeHttpUrl(resource.media?.url ?? resource.external_url)
+}
+
+const sizeFormatter = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 })
+function formatSize(bytes: number): string {
+  return bytes >= 1024 * 1024
+    ? `${sizeFormatter.format(bytes / (1024 * 1024))} Mo`
+    : `${sizeFormatter.format(Math.max(1, bytes / 1024))} Ko`
+}
+
+function openDocumentForm(chapterKey: string) {
+  Object.assign(documentForm, { title: '', file: null })
+  resourceTarget.value = null
+  documentTarget.value = chapterKey
+}
+
+function pickDocument(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0] ?? null
+  documentForm.file = file
+  if (file && !documentForm.title) {
+    documentForm.title = file.name.replace(/\.[^.]+$/, '')
+  }
+}
+
+async function addDocument(moduleKey: string, chapterKey: string) {
+  const file = documentForm.file
+  if (!file) return
+  // Client-side checks mirror the backend rules for a faster answer; the
+  // server still validates type and size on upload.
+  if (file.type && !DOCUMENT_MIMES.includes(file.type)) {
+    actionError.value = 'Format non accepté : PDF, Word, Excel, PowerPoint ou texte uniquement.'
+    return
+  }
+  if (file.size > DOCUMENT_MAX_BYTES) {
+    actionError.value = 'Le fichier dépasse 20 Mo.'
+    return
+  }
+  const ok = await run(
+    () =>
+      addDocumentMutation.mutateAsync({ moduleKey, chapterKey, title: documentForm.title, file }),
+    'Document déposé.',
+  )
+  if (ok) documentTarget.value = null
+}
 
 const editable = computed(() => (course.data.value ? isEditable(course.data.value.status) : false))
 const actionError = ref('')
@@ -313,6 +417,7 @@ async function addChapter(moduleKey: string) {
 
 function openResourceForm(chapterKey: string) {
   Object.assign(resourceForm, { title: '', url: '' })
+  documentTarget.value = null
   resourceTarget.value = chapterKey
 }
 
