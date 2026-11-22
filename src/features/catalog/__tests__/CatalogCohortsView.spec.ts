@@ -7,21 +7,32 @@ import * as useCatalogModule from '../composables/useCatalog'
 
 const mockPush = vi.fn()
 
-vi.mock('vue-router', () => ({
-  useRoute: vi.fn(() => ({
-    params: { key: 'dev-web' },
-  })),
-  useRouter: vi.fn(() => ({
-    push: mockPush,
-  })),
-  RouterLink: {
-    template: '<a><slot /></a>',
-  },
-}))
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('vue-router')>()
+  return {
+    ...actual,
+    useRoute: vi.fn(() => ({
+      params: { key: 'dev-web' },
+    })),
+    useRouter: vi.fn(() => ({
+      push: mockPush,
+    })),
+    RouterLink: {
+      template: '<a><slot /></a>',
+    },
+  }
+})
 
 vi.mock('@/stores/auth', () => ({
   useAuthStore: vi.fn(() => ({
     token: null,
+  })),
+}))
+
+vi.mock('@/features/admissions/composables/useLearnerApplications', () => ({
+  useLearnerApplications: vi.fn(() => ({
+    data: ref([]),
+    isLoading: ref(false),
   })),
 }))
 
