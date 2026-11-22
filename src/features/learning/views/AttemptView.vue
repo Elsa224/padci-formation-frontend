@@ -91,17 +91,33 @@
       <!-- Résultat -->
       <div v-if="!inProgress" class="app-panel space-y-2" data-test="result-summary">
         <template v-if="data.status === 'submitted'">
+          <p
+            v-if="data.auto_submitted"
+            class="rounded-xl bg-amber-50 p-3 text-sm font-medium text-amber-800"
+            data-test="auto-submitted-notice"
+          >
+            Temps écoulé : vos réponses enregistrées ont été notées automatiquement
+          </p>
           <p class="text-sm text-quiet">Votre score</p>
           <p class="text-3xl font-bold tabular-nums text-ink" data-test="score">
             {{ data.score ?? 0 }} / {{ data.max_score }}
           </p>
         </template>
-        <p v-else-if="data.status === 'pending_grading'" class="text-sm text-ink">
-          Vos réponses sont enregistrées. Certaines questions sont corrigées par votre formateur :
-          le score s'affichera ici après correction.
-        </p>
+        <div v-else-if="data.status === 'pending_grading'" class="space-y-2">
+          <p
+            v-if="data.auto_submitted"
+            class="rounded-xl bg-amber-50 p-3 text-sm font-medium text-amber-800"
+            data-test="auto-submitted-notice"
+          >
+            Temps écoulé : vos réponses enregistrées ont été notées automatiquement
+          </p>
+          <p class="text-sm text-ink">
+            Vos réponses sont enregistrées. Certaines questions sont corrigées par votre formateur :
+            le score s'affichera ici après correction.
+          </p>
+        </div>
         <p v-else-if="data.status === 'expired'" class="text-sm text-ink">
-          Le temps imparti est écoulé avant l'envoi : cette tentative n'a pas été notée.
+          Temps écoulé : vos réponses enregistrées ont été notées automatiquement
         </p>
       </div>
 

@@ -152,4 +152,29 @@ describe('AttemptView', () => {
     expect(wrapper.find('[data-test="score"]').exists()).toBe(false)
     expect(wrapper.text()).toContain('corrigées par votre formateur')
   })
+
+  it('displays elapsed time notice when attempt is expired', () => {
+    const wrapper = mountWith(attempt({ status: 'expired' }))
+    expect(wrapper.text()).toContain(
+      'Temps écoulé : vos réponses enregistrées ont été notées automatiquement',
+    )
+  })
+
+  it('displays elapsed time notice when attempt was auto-submitted', () => {
+    const wrapper = mountWith(attempt({ status: 'submitted', auto_submitted: true, score: 2 }))
+    expect(wrapper.find('[data-test="auto-submitted-notice"]').exists()).toBe(true)
+    expect(wrapper.find('[data-test="auto-submitted-notice"]').text()).toBe(
+      'Temps écoulé : vos réponses enregistrées ont été notées automatiquement',
+    )
+    expect(wrapper.find('[data-test="score"]').text()).toBe('2 / 3')
+  })
+
+  it('displays elapsed time notice when attempt with pending grading was auto-submitted', () => {
+    const wrapper = mountWith(attempt({ status: 'pending_grading', auto_submitted: true }))
+    expect(wrapper.find('[data-test="auto-submitted-notice"]').exists()).toBe(true)
+    expect(wrapper.find('[data-test="auto-submitted-notice"]').text()).toBe(
+      'Temps écoulé : vos réponses enregistrées ont été notées automatiquement',
+    )
+    expect(wrapper.text()).toContain('corrigées par votre formateur')
+  })
 })

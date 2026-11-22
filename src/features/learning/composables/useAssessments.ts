@@ -64,6 +64,7 @@ export interface Attempt {
   started_at: string
   expires_at: string | null
   submitted_at: string | null
+  auto_submitted?: boolean
   questions: AttemptQuestion[]
 }
 
