@@ -80,7 +80,7 @@
             >
               Supprimer
             </button>
-            <router-link to="/parametres" class="app-action-primary flex-1 gap-2 sm:flex-none">
+            <router-link :to="settingsPath" class="app-action-primary flex-1 gap-2 sm:flex-none">
               <SquarePenIcon :size="18" />
               Paramètres du compte
             </router-link>
@@ -188,12 +188,19 @@ import {
   TrophyIcon,
 } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { useLogout } from '@/features/auth/composables/useLogout'
 import { useLearnerCounts, useProfile, useProfilePhoto } from '../composables/useProfile'
 
 const { data: profile, isPending, isError, error } = useProfile()
 const { data: counts } = useLearnerCounts()
+// The view is mounted both in the learner shell (/profil) and the trainer
+// shell (/formateur/profil): stay in the current workspace.
+const route = useRoute()
+const settingsPath = computed(() =>
+  route.path.startsWith('/formateur') ? '/formateur/parametres' : '/parametres',
+)
 const logout = useLogout()
 const { photo, upload, remove } = useProfilePhoto()
 const photoError = ref('')

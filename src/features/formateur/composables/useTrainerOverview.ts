@@ -53,10 +53,10 @@ export function selectUpcomingCohorts(cohorts: Cohort[], now = new Date(), limit
 }
 
 /**
- * GET /admin/cohorts filtered to planned/open sessions. The endpoint is
- * institution-wide (cohorts.view), not limited to the trainer's own
- * cohorts, so the dashboard labels it as such. It has no date sort, so we
- * take the largest page allowed (100) per status before sorting by date.
+ * GET /admin/cohorts filtered to planned/open sessions. Server-side the
+ * list is scoped to the cohorts the trainer teaches (Cohort::scopeVisibleTo,
+ * emsp-api fix/cohort-trainer-scope). It has no date sort, so we take the
+ * largest page allowed (100) per status before sorting by date.
  */
 export function useUpcomingCohorts() {
   return useQuery({

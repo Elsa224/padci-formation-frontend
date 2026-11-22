@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import {
   BarChart3 as BarChartIcon,
+  BookOpenCheck as BookOpenCheckIcon,
   CalendarDays as CalendarIcon,
   LayoutDashboard as LayoutDashboardIcon,
   Settings as SettingsIcon,
@@ -33,6 +34,12 @@ const navigation: WorkspaceNavGroup[] = [
       { label: 'Tableau de bord', to: '/admin/dashboard', icon: LayoutDashboardIcon },
       { label: 'Candidatures', to: '/admin/candidatures', icon: CandidaturesIcon },
       { label: 'Cohortes', to: '/admin/cohortes', icon: CalendarIcon },
+    ],
+  },
+  {
+    label: 'Pédagogie',
+    items: [
+      { label: 'Modération des cours', to: '/admin/moderation-cours', icon: BookOpenCheckIcon },
     ],
   },
   {

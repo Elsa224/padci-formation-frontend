@@ -46,6 +46,26 @@ describe('formateur route guard', () => {
     expect(router.currentRoute.value.path).toBe('/admin/dashboard')
   })
 
+  it('gives a trainer their own profile and settings pages', async () => {
+    signIn(['formateur'])
+    await router.push('/formateur/profil')
+    expect(router.currentRoute.value.path).toBe('/formateur/profil')
+    await router.push('/formateur/parametres')
+    expect(router.currentRoute.value.path).toBe('/formateur/parametres')
+  })
+
+  it('lets an admin moderate courses inside the admin workspace', async () => {
+    signIn(['admin'])
+    await router.push('/admin/moderation-cours')
+    expect(router.currentRoute.value.path).toBe('/admin/moderation-cours')
+  })
+
+  it('does not loop when an account has no usable role', async () => {
+    signIn([])
+    await router.push('/formations/dashboard')
+    expect(router.currentRoute.value.path).toBe('/catalogue')
+  })
+
   it('sends a learner away from the trainer workspace', async () => {
     signIn(['apprenant'])
     await router.push('/formateur/dashboard')

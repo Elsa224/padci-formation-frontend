@@ -226,6 +226,13 @@ const router = createRouter({
           component: () => import('@/features/admin/views/AdminCohortes.vue'),
         },
         {
+          // admin holds courses.moderate/courses.publish (PermissionMatrix):
+          // same review screen as moderators, inside the admin shell.
+          path: 'moderation-cours',
+          name: 'admin-moderation-cours',
+          component: () => import('@/features/moderation/views/CourseReviews.vue'),
+        },
+        {
           path: 'utilisateurs',
           name: 'admin-utilisateurs',
           component: () => import('@/features/superadmin/views/SuperAdminUtilisateurs.vue'),
@@ -316,6 +323,17 @@ const router = createRouter({
           name: 'formateur-cours-detail',
           component: () => import('@/features/formateur/views/FormateurCoursDetail.vue'),
         },
+        // Same /profile API as learners; the views are role-agnostic.
+        {
+          path: 'profil',
+          name: 'formateur-profil',
+          component: () => import('@/features/profile/views/ProfilApprenants.vue'),
+        },
+        {
+          path: 'parametres',
+          name: 'formateur-parametres',
+          component: () => import('@/features/profile/views/ParametresApprenant.vue'),
+        },
       ],
     },
   ],
@@ -343,7 +361,12 @@ router.beforeEach(async (to) => {
     (allowedRoles.length > 0 && !allowedRoles.some((role) => auth.hasRole(role))) ||
     excludedRoles.some((role) => auth.hasRole(role))
   ) {
-    return { path: homeFor(auth.user.roles) }
+    const home = homeFor(auth.user.roles)
+    // An account with no usable role (e.g. all roles revoked) would be sent
+    // to a home it cannot open either — an infinite redirect. Fall back to
+    // the public catalogue instead.
+    if (home === to.path) return { path: '/catalogue' }
+    return { path: home }
   }
 
   return true

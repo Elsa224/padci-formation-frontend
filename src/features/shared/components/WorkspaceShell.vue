@@ -255,13 +255,27 @@ const roleLabel = computed(() =>
       ? 'Administration'
       : auth.hasRole('moderateur')
         ? 'Modérateur'
-        : 'Apprenant',
+        : auth.hasRole('formateur')
+          ? 'Formateur'
+          : 'Apprenant',
 )
 const profilePath = computed<string | null>(() =>
-  auth.hasRole('apprenant') ? '/profil' : auth.hasRole('admin') ? '/admin/parametres' : null,
+  auth.hasRole('apprenant')
+    ? '/profil'
+    : auth.hasRole('admin')
+      ? '/admin/parametres'
+      : auth.hasRole('formateur')
+        ? '/formateur/profil'
+        : null,
 )
 const settingsPath = computed<string | null>(() =>
-  auth.hasRole('apprenant') ? '/parametres' : auth.hasRole('admin') ? '/admin/parametres' : null,
+  auth.hasRole('apprenant')
+    ? '/parametres'
+    : auth.hasRole('admin')
+      ? '/admin/parametres'
+      : auth.hasRole('formateur')
+        ? '/formateur/parametres'
+        : null,
 )
 
 function isActive(path: string): boolean {

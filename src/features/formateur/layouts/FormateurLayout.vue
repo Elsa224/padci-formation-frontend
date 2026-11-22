@@ -14,7 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import { BookOpen as BookOpenIcon, LayoutDashboard as LayoutDashboardIcon } from '@lucide/vue'
+import {
+  BookOpen as BookOpenIcon,
+  Compass as CompassIcon,
+  LayoutDashboard as LayoutDashboardIcon,
+} from '@lucide/vue'
 import WorkspaceShell, {
   type WorkspaceNavGroup,
 } from '@/features/shared/components/WorkspaceShell.vue'
@@ -25,6 +29,7 @@ const navigation: WorkspaceNavGroup[] = [
     items: [
       { label: 'Tableau de bord', to: '/formateur/dashboard', icon: LayoutDashboardIcon },
       { label: 'Mes cours', to: '/formateur/cours', icon: BookOpenIcon },
+      { label: 'Catalogue', to: '/catalogue', icon: CompassIcon },
     ],
   },
 ]
