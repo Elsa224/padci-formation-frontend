@@ -100,8 +100,8 @@
                     <LinkIcon v-if="resource.type === 'link'" :size="14" class="text-quiet" />
                     <FileTextIcon v-else :size="14" class="text-quiet" />
                     <a
-                      v-if="resource.external_url"
-                      :href="resource.external_url"
+                      v-if="safeHttpUrl(resource.external_url)"
+                      :href="safeHttpUrl(resource.external_url) ?? undefined"
                       target="_blank"
                       rel="noopener"
                       class="font-medium text-primary hover:underline"
@@ -153,21 +153,17 @@
               class="mt-3 space-y-2 rounded-lg border border-line p-3"
               @submit.prevent="addChapter(module.key)"
             >
-              <div class="grid gap-2 sm:grid-cols-[1fr_auto]">
-                <input
-                  v-model.trim="chapterForm.title"
-                  class="app-input"
-                  required
-                  maxlength="180"
-                  placeholder="Titre du chapitre"
-                  aria-label="Titre du chapitre"
-                />
-                <select v-model="chapterForm.type" class="app-input" aria-label="Type de chapitre">
-                  <option v-for="(label, value) in chapterTypeLabels" :key="value" :value="value">
-                    {{ label }}
-                  </option>
-                </select>
-              </div>
+              <!-- Lesson only: video/document/link chapters need a media or URL
+                   field the API does not accept on chapters yet. Supports go
+                   in as link resources below each chapter. -->
+              <input
+                v-model.trim="chapterForm.title"
+                class="app-input"
+                required
+                maxlength="180"
+                placeholder="Titre de la leçon"
+                aria-label="Titre de la leçon"
+              />
               <textarea
                 v-model="chapterForm.body"
                 class="app-input min-h-24"
@@ -230,6 +226,7 @@ import {
   canSubmit,
   courseStatusLabels,
   isEditable,
+  safeHttpUrl,
   useCourseModules,
   useCreateChapter,
   useCreateModule,
@@ -263,7 +260,7 @@ const actionError = ref('')
 
 const moduleTitle = ref('')
 const chapterTarget = ref<string | null>(null)
-const chapterForm = reactive({ title: '', type: 'lesson' as ChapterType, body: '' })
+const chapterForm = reactive({ title: '', body: '' })
 const resourceTarget = ref<string | null>(null)
 const resourceForm = reactive({ title: '', url: '' })
 
@@ -296,7 +293,7 @@ async function addModule() {
 }
 
 function openChapterForm(moduleKey: string) {
-  Object.assign(chapterForm, { title: '', type: 'lesson', body: '' })
+  Object.assign(chapterForm, { title: '', body: '' })
   chapterTarget.value = moduleKey
 }
 
@@ -306,7 +303,7 @@ async function addChapter(moduleKey: string) {
       createChapter.mutateAsync({
         moduleKey,
         title: chapterForm.title,
-        type: chapterForm.type,
+        type: 'lesson',
         body: chapterForm.body.trim() || null,
       }),
     'Chapitre ajouté.',
@@ -320,6 +317,11 @@ function openResourceForm(chapterKey: string) {
 }
 
 async function addResource(moduleKey: string, chapterKey: string) {
+  const url = safeHttpUrl(resourceForm.url)
+  if (url === null) {
+    actionError.value = 'Le lien doit commencer par http:// ou https://.'
+    return
+  }
   const ok = await run(
     () =>
       createResource.mutateAsync({
@@ -327,7 +329,7 @@ async function addResource(moduleKey: string, chapterKey: string) {
         chapterKey,
         title: resourceForm.title,
         type: 'link',
-        external_url: resourceForm.url,
+        external_url: url,
       }),
     'Support ajouté.',
   )

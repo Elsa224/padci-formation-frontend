@@ -27,10 +27,10 @@
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
-      <!-- Cours à reprendre -->
+      <!-- Derniers cours créés -->
       <section class="app-panel space-y-4">
         <div class="flex items-center justify-between gap-3">
-          <h2 class="text-lg font-bold text-ink">Mes cours récents</h2>
+          <h2 class="text-lg font-bold text-ink">Derniers cours créés</h2>
           <RouterLink to="/formateur/cours" class="text-sm font-semibold text-primary">
             Tout voir
           </RouterLink>
@@ -41,11 +41,11 @@
         <p v-else-if="courses.isError.value" class="text-sm text-red-700" role="alert">
           {{ apiErrorMessage(courses.error.value, 'Impossible de charger vos cours.') }}
         </p>
-        <p v-else-if="!recentCourses.length" class="rounded-xl bg-canvas p-6 text-sm text-quiet">
+        <p v-else-if="!latestCourses.length" class="rounded-xl bg-canvas p-6 text-sm text-quiet">
           Vous n'avez pas encore de cours. Créez-en un pour y déposer vos supports.
         </p>
         <ul v-else class="divide-y divide-line">
-          <li v-for="course in recentCourses" :key="course.key">
+          <li v-for="course in latestCourses" :key="course.key">
             <RouterLink
               :to="`/formateur/cours/${course.key}`"
               class="flex items-center justify-between gap-3 py-3 hover:text-primary"
@@ -127,30 +127,37 @@ import { computed } from 'vue'
 import { Plus as PlusIcon } from '@lucide/vue'
 import { useAuthStore } from '@/stores/auth'
 import CourseStatusBadge from '../components/CourseStatusBadge.vue'
-import { apiErrorMessage, useTrainerCourses } from '../composables/useTrainerCourses'
+import {
+  apiErrorMessage,
+  useTrainerCourseCount,
+  useTrainerCourses,
+} from '../composables/useTrainerCourses'
 import { usePendingGrading, useUpcomingCohorts } from '../composables/useTrainerOverview'
 
 const auth = useAuthStore()
+// Same normalized key as page 1 of "Mes cours": one cached request for both.
 const courses = useTrainerCourses()
+const totalCount = useTrainerCourseCount(['all'])
+const publishedCount = useTrainerCourseCount(['published'])
+const pendingCount = useTrainerCourseCount(['submitted', 'in_review'])
 const grading = usePendingGrading()
 const cohorts = useUpcomingCohorts()
 
-const items = computed(() => courses.data.value?.items ?? [])
-const recentCourses = computed(() => items.value.slice(0, 5))
+// The API lists courses by creation order (latest id first).
+const latestCourses = computed(() => (courses.data.value?.items ?? []).slice(0, 5))
+
+function countKpi(label: string, query: ReturnType<typeof useTrainerCourseCount>) {
+  return {
+    label,
+    value: query.isError.value ? null : (query.data.value ?? 0),
+    loading: query.isPending.value,
+  }
+}
 
 const kpis = computed(() => [
-  { label: 'Mes cours', value: items.value.length, loading: courses.isPending.value },
-  {
-    label: 'Cours publiés',
-    value: items.value.filter((course) => course.status === 'published').length,
-    loading: courses.isPending.value,
-  },
-  {
-    label: 'En attente de validation',
-    value: items.value.filter((course) => ['submitted', 'in_review'].includes(course.status))
-      .length,
-    loading: courses.isPending.value,
-  },
+  countKpi('Mes cours', totalCount),
+  countKpi('Cours publiés', publishedCount),
+  countKpi('En attente de validation', pendingCount),
   {
     label: 'Copies à corriger',
     value: grading.isError.value ? null : (grading.data.value?.total ?? 0),

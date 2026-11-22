@@ -104,6 +104,20 @@ export const courseLevelLabels: Record<CourseLevel, string> = {
   advanced: 'Avancé',
 }
 
+/**
+ * Only http(s) links are rendered as clickable: a stored `javascript:` or
+ * `data:` URL must never reach an href, whatever the backend accepted.
+ */
+export function safeHttpUrl(url: string | null | undefined): string | null {
+  if (!url) return null
+  try {
+    const parsed = new URL(url)
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : null
+  } catch {
+    return null
+  }
+}
+
 export function apiErrorMessage(error: unknown, fallback = 'Une erreur est survenue.'): string {
   return error instanceof ApiError ? error.displayMessage : fallback
 }
@@ -113,23 +127,51 @@ export interface TrainerCourseFilters {
   page?: number
 }
 
-/** GET /admin/courses — courses.view, scoped server-side to the owner. */
+export const TRAINER_COURSES_PER_PAGE = 24
+
+/**
+ * GET /admin/courses — courses.view, scoped server-side to the owner.
+ * The query key is normalized (status/page defaults spelled out) so every
+ * caller asking for the same page shares one cache entry.
+ */
 export function useTrainerCourses(filters: MaybeRef<TrainerCourseFilters> = {}) {
+  const status = computed(() => toValue(filters).status || 'all')
+  const page = computed(() => toValue(filters).page ?? 1)
   return useQuery({
-    queryKey: computed(() => ['trainer-courses', toValue(filters)]),
+    queryKey: computed(() => ['trainer-courses', status.value, page.value]),
     queryFn: async () => {
-      const current = toValue(filters)
       const response = await http.get<TrainerCourse[]>('/admin/courses', {
         params: {
-          status: current.status || undefined,
-          page: current.page ?? 1,
-          per_page: 100,
+          status: status.value === 'all' ? undefined : status.value,
+          page: page.value,
+          per_page: TRAINER_COURSES_PER_PAGE,
         },
       })
       return {
         items: response.data,
         pagination: apiMeta(response)?.pagination ?? (null as ApiPaginationMeta | null),
       }
+    },
+  })
+}
+
+/**
+ * Exact number of the trainer's courses in the given statuses, read from
+ * the paginator total (per_page=1) rather than counted from one page.
+ */
+export function useTrainerCourseCount(statuses: Array<CourseStatus | 'all'>) {
+  return useQuery({
+    queryKey: ['trainer-courses', 'count', ...statuses],
+    queryFn: async () => {
+      const totals = await Promise.all(
+        statuses.map(async (status) => {
+          const response = await http.get<TrainerCourse[]>('/admin/courses', {
+            params: { status: status === 'all' ? undefined : status, per_page: 1 },
+          })
+          return apiMeta(response)?.pagination?.total ?? response.data.length
+        }),
+      )
+      return totals.reduce((sum, total) => sum + total, 0)
     },
   })
 }

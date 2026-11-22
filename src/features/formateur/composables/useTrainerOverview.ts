@@ -34,24 +34,40 @@ export function usePendingGrading() {
   })
 }
 
+/** Local calendar date as YYYY-MM-DD, comparable with the API's date strings. */
+function localDate(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+/**
+ * Sessions that have not started yet, soonest first. An `open` cohort that
+ * started months ago is not an "upcoming" session.
+ */
+export function selectUpcomingCohorts(cohorts: Cohort[], now = new Date(), limit = 5): Cohort[] {
+  const today = localDate(now)
+  return cohorts
+    .filter((cohort) => cohort.starts_at !== null && cohort.starts_at.slice(0, 10) >= today)
+    .sort((a, b) => (a.starts_at ?? '').localeCompare(b.starts_at ?? ''))
+    .slice(0, limit)
+}
+
 /**
  * GET /admin/cohorts filtered to planned/open sessions. The endpoint is
  * institution-wide (cohorts.view), not limited to the trainer's own
- * cohorts, so the dashboard labels it as such.
+ * cohorts, so the dashboard labels it as such. It has no date sort, so we
+ * take the largest page allowed (100) per status before sorting by date.
  */
 export function useUpcomingCohorts() {
   return useQuery({
     queryKey: ['trainer-upcoming-cohorts'],
     queryFn: async () => {
-      const [open, planned] = await Promise.all(
+      const responses = await Promise.all(
         (['open', 'planned'] as const).map((status) =>
-          http.get<Cohort[]>('/admin/cohorts', { params: { status, per_page: 20 } }),
+          http.get<Cohort[]>('/admin/cohorts', { params: { status, per_page: 100 } }),
         ),
       )
-      return [...(open?.data ?? []), ...(planned?.data ?? [])]
-        .filter((cohort) => cohort.starts_at !== null)
-        .sort((a, b) => (a.starts_at ?? '').localeCompare(b.starts_at ?? ''))
-        .slice(0, 5)
+      return selectUpcomingCohorts(responses.flatMap((response) => response.data))
     },
   })
 }

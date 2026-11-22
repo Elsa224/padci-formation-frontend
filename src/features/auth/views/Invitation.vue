@@ -15,6 +15,7 @@ import {
 import { useInvitationDetails, useAcceptInvitation } from '../composables/useInvitation'
 import ChecklistMotDePasse from '../components/ChecklistMotDePasse.vue'
 import { peutEnvoyerMotDePasse } from '../utils/passwordRules'
+import { homeFor } from '../utils/homeFor'
 import { ApiError } from '@/api/http'
 import logoEmsp from '@/assets/images/logoemsp.png'
 import bgPhoto from '@/assets/images/photodecybersecurite.jpg'
@@ -121,13 +122,10 @@ async function handleSubmit() {
     // Redirection fluide vers l'espace dédié
     setTimeout(() => {
       const roles = res.user?.roles || []
-      if (roles.includes('super_admin')) {
-        router.push('/superadmin/dashboard')
-      } else if (roles.includes('admin')) {
-        router.push('/admin/candidatures')
-      } else {
-        router.push('/catalogue')
-      }
+      // A new admin starts on the applications queue; everyone else on
+      // their own workspace home.
+      const isPlainAdmin = roles.includes('admin') && !roles.includes('super_admin')
+      router.push(isPlainAdmin ? '/admin/candidatures' : homeFor(roles))
     }, 1800)
   } catch (err) {
     if (err instanceof ApiError) {

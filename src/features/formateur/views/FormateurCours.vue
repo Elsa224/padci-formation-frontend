@@ -151,12 +151,28 @@
           </p>
         </article>
       </div>
+
+      <nav
+        v-if="lastPage > 1"
+        class="flex items-center justify-between gap-3 border-t border-line pt-4 text-sm"
+        aria-label="Pagination des cours"
+      >
+        <button class="app-action-secondary" :disabled="page <= 1" @click="page--">
+          Précédent
+        </button>
+        <span class="text-quiet" data-test="pagination-label">
+          Page {{ page }} sur {{ lastPage }}
+        </span>
+        <button class="app-action-secondary" :disabled="page >= lastPage" @click="page++">
+          Suivant
+        </button>
+      </nav>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { Plus as PlusIcon } from '@lucide/vue'
 import { toast } from 'vue-sonner'
@@ -177,7 +193,12 @@ import {
 
 const router = useRouter()
 const status = ref<CourseStatus | ''>('')
-const courses = useTrainerCourses(computed(() => ({ status: status.value })))
+const page = ref(1)
+watch(status, () => {
+  page.value = 1
+})
+const courses = useTrainerCourses(computed(() => ({ status: status.value, page: page.value })))
+const lastPage = computed(() => courses.data.value?.pagination?.last_page ?? 1)
 const pathways = useCatalogPathways()
 const create = useCreateCourse()
 const submit = useSubmitCourse()
