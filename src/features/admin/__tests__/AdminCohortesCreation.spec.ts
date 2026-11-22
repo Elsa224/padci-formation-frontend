@@ -68,14 +68,14 @@ describe('AdminCohortes Creation & Offline Dates', () => {
     vi.mocked(useCatalogPathwaysModule.useCatalogPathways).mockReturnValue({
       data: ref(mockPathways),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     vi.mocked(useCohortsModule.useCohorts).mockReturnValue({
       data: ref({ items: mockExistingCohorts, pagination: null }),
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
   })
 
   it('displays an informative offline tag on cohort cards when offline_starts_at is present', async () => {

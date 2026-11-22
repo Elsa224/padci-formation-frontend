@@ -68,7 +68,7 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
   })
 
   describe('AdminCandidatures', () => {
@@ -169,14 +169,14 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
         isPending: ref(false),
         isError: ref(false),
         error: ref(null),
-      } as any)
+      } as never)
 
       vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
         data: ref(mockApplicationDetail),
         isPending: ref(false),
         isError: ref(false),
         error: ref(null),
-      } as any)
+      } as never)
 
       const wrapper = mount(AdminCandidatures)
       await flushPromises()
@@ -231,12 +231,12 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
           pagination: { total: 1, per_page: 15, current_page: 1, last_page: 1, from: 1, to: 1 },
         }),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
         data: ref(mockApplicationDetail),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       const wrapper = mount(AdminCandidatures)
       await flushPromises()
@@ -269,7 +269,7 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       vi.mocked(useApplicationsModule.useDecideEquipmentReview).mockReturnValue({
         mutateAsync: mockDecideEquipmentMutateAsync,
         isPending: ref(false),
-      } as any)
+      } as never)
 
       const pendingEquipmentCandidate = {
         ...mockApplicationDetail,
@@ -293,12 +293,12 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
           pagination: { total: 1, per_page: 15, current_page: 1, last_page: 1, from: 1, to: 1 },
         }),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
         data: ref(pendingEquipmentCandidate),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       const wrapper = mount(AdminCandidatures)
       await flushPromises()
@@ -339,12 +339,12 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
           pagination: { total: 1, per_page: 15, current_page: 1, last_page: 1, from: 1, to: 1 },
         }),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
         data: ref(standbyCandidate),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       const wrapper = mount(AdminCandidatures)
       await flushPromises()
@@ -364,12 +364,12 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
           pagination: { total: 1, per_page: 15, current_page: 1, last_page: 1, from: 1, to: 1 },
         }),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
         data: ref(mockApplicationDetail),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       // Mock decide to trigger onError callback with an ApiError
       mockDecideMutate.mockImplementation((_payload, options) => {
@@ -406,12 +406,12 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
           pagination: { total: 1, per_page: 15, current_page: 1, last_page: 1, from: 1, to: 1 },
         }),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
         data: ref(mockApplicationDetail),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       const wrapper = mount(AdminCandidatures)
       await flushPromises()
@@ -491,7 +491,7 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
         isPending: ref(false),
         isError: ref(false),
         error: ref(null),
-      } as any)
+      } as never)
 
       const wrapper = mount(AdminCohortes)
       await flushPromises()
@@ -513,7 +513,7 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
         isPending: ref(false),
         isError: ref(false),
         error: ref(null),
-      } as any)
+      } as never)
 
       mockCreateCohortMutateAsync.mockResolvedValueOnce({
         cohort: {
@@ -576,7 +576,7 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
       vi.mocked(useCohortsModule.useCohorts).mockReturnValue({
         data: ref({ items: mockCohorts, pagination: null }),
         isPending: ref(false),
-      } as any)
+      } as never)
 
       const wrapper = mount(AdminCohortes)
       await flushPromises()

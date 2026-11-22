@@ -116,7 +116,7 @@ describe('CohortAttendanceModal', () => {
       isError: ref(false),
       error: ref(null),
       refetch: vi.fn(),
-    } as any)
+    } as unknown as ReturnType<typeof attendanceModule.useCohortAttendanceSessions>)
 
     vi.spyOn(attendanceModule, 'useCohortAttendanceSessionDetail').mockReturnValue({
       data: ref(mockSessionDetail),
@@ -124,7 +124,7 @@ describe('CohortAttendanceModal', () => {
       isError: ref(false),
       error: ref(null),
       refetch: vi.fn(),
-    } as any)
+    } as unknown as ReturnType<typeof attendanceModule.useCohortAttendanceSessionDetail>)
 
     vi.spyOn(attendanceModule, 'useCohortAttendanceSummary').mockReturnValue({
       data: ref(mockSummary),
@@ -132,22 +132,22 @@ describe('CohortAttendanceModal', () => {
       isError: ref(false),
       error: ref(null),
       refetch: vi.fn(),
-    } as any)
+    } as unknown as ReturnType<typeof attendanceModule.useCohortAttendanceSummary>)
 
     vi.spyOn(attendanceModule, 'useCreateAttendanceSession').mockReturnValue({
       mutateAsync: mockMutateCreate,
       isPending: ref(false),
-    } as any)
+    } as unknown as ReturnType<typeof attendanceModule.useCreateAttendanceSession>)
 
     vi.spyOn(attendanceModule, 'useUpdateAttendanceBatch').mockReturnValue({
       mutateAsync: mockMutateUpdateBatch,
       isPending: ref(false),
-    } as any)
+    } as unknown as ReturnType<typeof attendanceModule.useUpdateAttendanceBatch>)
 
     vi.spyOn(attendanceModule, 'useDeleteAttendanceSession').mockReturnValue({
       mutateAsync: mockMutateDelete,
       isPending: ref(false),
-    } as any)
+    } as unknown as ReturnType<typeof attendanceModule.useDeleteAttendanceSession>)
   })
 
   it('renders modal when open is true, hides when false', async () => {
@@ -281,9 +281,7 @@ describe('CohortAttendanceModal', () => {
     )
   })
 
-  it('deletes a session when confirmed', async () => {
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
-
+  it('deletes a session only after clicking "Confirmer"', async () => {
     const wrapper = mount(CohortAttendanceModal, {
       props: {
         open: true,
@@ -293,7 +291,18 @@ describe('CohortAttendanceModal', () => {
     })
 
     const deleteBtn = wrapper.find('[data-test="delete-session-btn"]')
-    await deleteBtn.trigger('click')
+    expect(deleteBtn.exists()).toBe(true)
+
+    // Click on initial delete button to reveal confirmation prompt
+    await deleteBtn.find('[data-test="confirm-button"]').trigger('click')
+    await flushPromises()
+
+    // Deletion must NOT be called before clicking "Confirmer"
+    expect(mockMutateDelete).not.toHaveBeenCalled()
+    expect(wrapper.find('[data-test="confirm-yes"]').exists()).toBe(true)
+
+    // Click confirm
+    await wrapper.find('[data-test="confirm-yes"]').trigger('click')
     await flushPromises()
 
     expect(mockMutateDelete).toHaveBeenCalledWith('ses-1')

@@ -365,7 +365,8 @@ function formatSeatsText(seats: number | undefined): string {
   return `${count} places disponibles`
 }
 
-function goToCandidature(_cohort?: PublicCohort) {
+function goToCandidature(cohort?: PublicCohort) {
+  void cohort
   const target = `/candidature?pathway=${pathwayKey.value}`
   router.push(auth.token ? target : `/connexion?redirect=${encodeURIComponent(target)}`)
 }

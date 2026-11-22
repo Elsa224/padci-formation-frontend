@@ -1065,16 +1065,16 @@ const candidatePhone = computed(() => {
 const requiredSpecs = computed(() => {
   if (!detail.value) return {}
   const snapshot = detail.value.equipment_review?.requirements_snapshot
-  if (snapshot && Object.keys(snapshot).length > 0) return snapshot as Record<string, any>
-  return (detail.value.pathway?.equipment_requirements ?? {}) as Record<string, any>
+  if (snapshot && Object.keys(snapshot).length > 0) return snapshot as Record<string, unknown>
+  return (detail.value.pathway?.equipment_requirements ?? {}) as Record<string, unknown>
 })
 
 const declaredSpecs = computed(() => {
   if (!detail.value) return {}
   const dec = detail.value.equipment_review?.declaration
-  if (dec && Object.keys(dec).length > 0) return dec as Record<string, any>
-  const payload = detail.value.payload as Record<string, any> | null
-  if (payload?.equipment) return payload.equipment as Record<string, any>
+  if (dec && Object.keys(dec).length > 0) return dec as Record<string, unknown>
+  const payload = detail.value.payload as Record<string, unknown> | null
+  if (payload?.equipment) return payload.equipment as Record<string, unknown>
   return {}
 })
 

@@ -350,15 +350,13 @@
                 >
                   Pointer / Émarger
                 </button>
-                <button
-                  type="button"
-                  class="rounded-lg p-1.5 text-quiet hover:bg-red-50 hover:text-red-700"
-                  aria-label="Supprimer cette séance"
+                <ConfirmButton
+                  label="Supprimer"
+                  confirm="Supprimer cette séance ?"
+                  button-class="rounded-lg p-1.5 text-xs text-red-600 hover:bg-red-50 hover:text-red-700"
                   data-test="delete-session-btn"
-                  @click="handleDeleteSession(session.key)"
-                >
-                  <Trash2Icon :size="16" />
-                </button>
+                  @confirm="handleDeleteSession(session.key)"
+                />
               </div>
             </li>
           </ul>
@@ -454,8 +452,9 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { Plus as PlusIcon, Trash2 as Trash2Icon, X as XIcon } from '@lucide/vue'
+import { Plus as PlusIcon, X as XIcon } from '@lucide/vue'
 import { toast } from 'vue-sonner'
+import ConfirmButton from '@/features/admin/components/ConfirmButton.vue'
 import { apiErrorMessage } from '@/features/formateur/composables/useTrainerCourses'
 import {
   attendanceStatusLabels,
@@ -581,7 +580,6 @@ async function saveAttendanceBatch() {
 }
 
 async function handleDeleteSession(sessionKey: string) {
-  if (!confirm('Supprimer cette séance d’émargement ?')) return
   actionError.value = ''
   try {
     await deleteSessionMutation.mutateAsync(sessionKey)

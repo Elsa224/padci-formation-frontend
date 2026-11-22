@@ -1,6 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type UseMutationReturnType,
+  type UseQueryReturnType,
+} from '@tanstack/vue-query'
 import { computed, inject, ref, unref, type MaybeRef } from 'vue'
-import { http } from '@/api/http'
+import { http, type ApiError } from '@/api/http'
 
 export type AttendanceStatus = 'present' | 'absent' | 'late' | 'excused'
 
@@ -102,7 +108,7 @@ export function useCohortAttendanceSessions(cohortKey: MaybeRef<string | null | 
       isError: ref(false),
       error: ref(null),
       refetch: () => Promise.resolve(),
-    } as any
+    } as unknown as UseQueryReturnType<AttendanceSession[], ApiError>
   }
 
   return useQuery({
@@ -133,7 +139,7 @@ export function useCohortAttendanceSessionDetail(
       isError: ref(false),
       error: ref(null),
       refetch: () => Promise.resolve(),
-    } as any
+    } as unknown as UseQueryReturnType<AttendanceSession | null, ApiError>
   }
 
   return useQuery({
@@ -160,7 +166,7 @@ export function useCohortAttendanceSummary(cohortKey: MaybeRef<string | null | u
       isError: ref(false),
       error: ref(null),
       refetch: () => Promise.resolve(),
-    } as any
+    } as unknown as UseQueryReturnType<CohortAttendanceSummary | null, ApiError>
   }
 
   return useQuery({
@@ -186,7 +192,12 @@ export function useCreateAttendanceSession(cohortKey: MaybeRef<string>) {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any
+    } as unknown as UseMutationReturnType<
+      AttendanceSession,
+      ApiError,
+      CreateAttendanceSessionPayload,
+      unknown
+    >
   }
   const queryClient = useQueryClient()
   return useMutation({
@@ -221,7 +232,12 @@ export function useUpdateAttendanceBatch(
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any
+    } as unknown as UseMutationReturnType<
+      AttendanceSession,
+      ApiError,
+      UpdateAttendanceBatchPayload,
+      unknown
+    >
   }
   const queryClient = useQueryClient()
   return useMutation({
@@ -256,7 +272,7 @@ export function useDeleteAttendanceSession(cohortKey: MaybeRef<string>) {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any
+    } as unknown as UseMutationReturnType<void, ApiError, string, unknown>
   }
   const queryClient = useQueryClient()
   return useMutation({

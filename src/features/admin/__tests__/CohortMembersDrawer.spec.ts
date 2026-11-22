@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import { computed, ref } from 'vue'
+import { computed, ref, unref } from 'vue'
 import AdminCohortes from '../views/AdminCohortes.vue'
 import * as useCohortsModule from '../composables/useCohorts'
 import * as useCatalogPathwaysModule from '@/features/public/composables/useCatalogPathways'
@@ -107,31 +107,32 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
     vi.mocked(useCatalogPathwaysModule.useCatalogPathways).mockReturnValue({
       data: ref(mockPathways),
       isPending: ref(false),
-    } as any)
+    } as unknown as ReturnType<typeof useCatalogPathwaysModule.useCatalogPathways>)
 
     vi.mocked(useCohortsModule.useCohorts).mockReturnValue({
       data: ref({ items: mockCohorts, pagination: null }),
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as unknown as ReturnType<typeof useCohortsModule.useCohorts>)
 
-    vi.mocked(useCohortsModule.useCohortMembers).mockImplementation((cohortKey: any) => {
-      const data = computed(() => {
-        const keyVal =
-          typeof cohortKey === 'function' ? cohortKey() : (cohortKey?.value ?? cohortKey)
-        if (keyVal === 'cohort-dw-1') {
-          return { items: mockMembers, pagination: null }
-        }
-        return { items: [], pagination: null }
-      })
-      return {
-        data,
-        isPending: ref(false),
-        isError: ref(false),
-        error: ref(null),
-      } as any
-    })
+    vi.mocked(useCohortsModule.useCohortMembers).mockImplementation(
+      (cohortKey: Parameters<typeof useCohortsModule.useCohortMembers>[0]) => {
+        const data = computed(() => {
+          const keyVal = unref(cohortKey)
+          if (keyVal === 'cohort-dw-1') {
+            return { items: mockMembers, pagination: null }
+          }
+          return { items: [], pagination: null }
+        })
+        return {
+          data,
+          isPending: ref(false),
+          isError: ref(false),
+          error: ref(null),
+        } as unknown as ReturnType<typeof useCohortsModule.useCohortMembers>
+      },
+    )
   })
 
   it('renders "Voir les apprenants (X)" button on each cohort card and opens drawer on click', async () => {
@@ -326,7 +327,7 @@ describe('useCohortMembers composable', () => {
           joined_at: '2026-05-10T09:30:00Z',
         },
       ],
-    } as any)
+    } as unknown as Awaited<ReturnType<typeof http.get>>)
 
     const TestComponent = {
       setup() {

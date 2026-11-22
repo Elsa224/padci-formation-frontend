@@ -47,7 +47,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { BookOpenIcon, UserPlusIcon } from '@lucide/vue'
 import { RouterLink } from 'vue-router'
 import bannerImage from '@/assets/images/banierepadciformation.png'

@@ -338,15 +338,12 @@
                 </td>
 
                 <td class="py-4 px-6 text-center">
-                  <button
-                    type="button"
-                    @click="handleRevoke(inv)"
-                    :disabled="revokingKey === inv.key"
-                    class="text-xs font-semibold px-3 py-1.5 rounded-lg text-red-600 hover:bg-red-50 transition disabled:opacity-50 cursor-pointer"
-                  >
-                    <span v-if="revokingKey === inv.key">Révocation...</span>
-                    <span v-else>Révoquer</span>
-                  </button>
+                  <ConfirmButton
+                    label="Révoquer"
+                    confirm="Révoquer l'invitation ?"
+                    button-class="text-xs font-semibold px-3 py-1.5 rounded-lg text-red-600 hover:bg-red-50 transition disabled:opacity-50 cursor-pointer"
+                    @confirm="handleRevoke(inv)"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -366,6 +363,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import ConfirmButton from '@/features/admin/components/ConfirmButton.vue'
 import {
   UsersRound as UsersRoundIcon,
   UserPlus as UserPlusIcon,
@@ -419,9 +417,6 @@ const revokeMutation = useRevokeAdminInvitation()
 const revokingKey = ref<string | null>(null)
 
 async function handleRevoke(inv: AdminInvitation) {
-  if (!confirm(`Êtes-vous sûr de vouloir révoquer l'invitation pour ${inv.email} ?`)) {
-    return
-  }
   revokingKey.value = inv.key
   try {
     await revokeMutation.mutateAsync(inv.key)

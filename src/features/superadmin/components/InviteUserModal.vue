@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import {
   XIcon,
   MailIcon,
-  ShieldIcon,
   ArrowRightIcon,
   ClockIcon,
   AlertTriangleIcon,
@@ -13,7 +12,7 @@ import { useCreateAdminInvitation, type AdminInvitation } from '../composables/u
 import { ApiError } from '@/api/http'
 import { useAuthStore } from '@/stores/auth'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     open: boolean
   }>(),

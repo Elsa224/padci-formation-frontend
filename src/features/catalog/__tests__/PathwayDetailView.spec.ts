@@ -51,12 +51,12 @@ describe('PathwayDetailView - Offline Scheduling and Cohorts Display', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
       data: ref({ items: [] }),
       isPending: ref(false),
-    } as any)
+    } as never)
   })
 
   it('renders offline date range badge when both offline_starts_at and offline_ends_at are provided', () => {
@@ -80,7 +80,7 @@ describe('PathwayDetailView - Offline Scheduling and Cohorts Display', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {
@@ -118,7 +118,7 @@ describe('PathwayDetailView - Offline Scheduling and Cohorts Display', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {
@@ -156,7 +156,7 @@ describe('PathwayDetailView - Offline Scheduling and Cohorts Display', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {

@@ -41,7 +41,7 @@ describe('LearnerDashboard Cohort Status & Standby', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useLearnerApplicationsModule.useLearnerApplications).mockReturnValue({
       data: ref({
@@ -65,7 +65,7 @@ describe('LearnerDashboard Cohort Status & Standby', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     const wrapper = mount(LearnerDashboard, {
       global: {
@@ -89,7 +89,7 @@ describe('LearnerDashboard Cohort Status & Standby', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useLearnerApplicationsModule.useLearnerApplications).mockReturnValue({
       data: ref({
@@ -122,7 +122,7 @@ describe('LearnerDashboard Cohort Status & Standby', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     const wrapper = mount(LearnerDashboard, {
       global: {
@@ -171,14 +171,14 @@ describe('LearnerDashboard Cohort Status & Standby', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useLearnerApplicationsModule.useLearnerApplications).mockReturnValue({
       data: ref({ items: [] }),
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     const wrapper = mount(LearnerDashboard, {
       global: {
@@ -226,7 +226,7 @@ describe('MesCandidaturesView Standby Status Support', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     const wrapper = mount(MesCandidaturesView, {
       global: {

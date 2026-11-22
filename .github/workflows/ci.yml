@@ -47,8 +47,5 @@ jobs:
         env:
           VITE_API_BASE_URL: https://api.example.invalid/api/v1
 
-      # ESLint reste informatif tant que la dette existante (any, noms de
-      # composants shadcn) n'est pas résorbée — voir le plan d'action P0.
-      - name: Lint (eslint, non bloquant)
+      - name: Lint (eslint)
         run: npx eslint .
-        continue-on-error: true

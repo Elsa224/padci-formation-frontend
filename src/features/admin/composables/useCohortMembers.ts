@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/vue-query'
+import { useQuery, type UseQueryReturnType } from '@tanstack/vue-query'
 import { computed, inject, ref, unref, type MaybeRef } from 'vue'
-import { apiMeta, http } from '@/api/http'
+import { apiMeta, http, type ApiError } from '@/api/http'
 import type { ApiPaginationMeta } from '@/api/types'
 
 export interface CohortMember {
@@ -41,7 +41,10 @@ export function useCohortMembers(
       isError: ref(false),
       error: ref(null),
       refetch: () => Promise.resolve(),
-    } as any
+    } as unknown as UseQueryReturnType<
+      { items: CohortMember[]; pagination: ApiPaginationMeta | null },
+      ApiError
+    >
   }
 
   return useQuery({

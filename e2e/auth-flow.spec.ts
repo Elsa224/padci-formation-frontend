@@ -76,8 +76,8 @@ test('inscription → email non vérifié → vérification → connexion', asyn
 
   // Le lien signé est lu MAINTENANT : dès la navigation suivante l'écran
   // succès n'existe plus côté SPA.
-  const href = await devLink.getAttribute('href')
-  expect(href, 'verification_url doit être renvoyé en local').toBeTruthy()
+  await expect(devLink).toHaveAttribute('href', /.+/)
+  const href = (await devLink.getAttribute('href'))!
 
   // 2. Connexion refusée tant que l'email n'est pas vérifié :
   //    le 403 AUTH_EMAIL_NOT_VERIFIED ouvre l'état "non vérifié", pas une
@@ -125,7 +125,9 @@ test('règles serveur : confirmation ≠ mot de passe et mot de passe faible', a
   await expect(page.getByText('Compte créé !')).toHaveCount(0)
 })
 
-test('mot de passe oublié → email (Mailpit) → réinitialisation → connexion avec le nouveau', async ({ page }) => {
+test('mot de passe oublié → email (Mailpit) → réinitialisation → connexion avec le nouveau', async ({
+  page,
+}) => {
   const email = uniqueEmail('reset')
 
   // Pré-requis : un compte vérifié. Créé via le flow UI (test 1) puis la
@@ -138,9 +140,9 @@ test('mot de passe oublié → email (Mailpit) → réinitialisation → connexi
   await page.getByRole('button', { name: 'Créer mon compte' }).click()
   await expect(page.getByText('Compte créé !')).toBeVisible()
   const devLink = page.getByRole('link', { name: /\[dev\] Vérifier l'adresse maintenant/ })
-  const verifyHref = await devLink.getAttribute('href')
-  expect(verifyHref).toBeTruthy()
-  await page.goto(verifyHref as string)
+  await expect(devLink).toHaveAttribute('href', /.+/)
+  const verifyHref = (await devLink.getAttribute('href'))!
+  await page.goto(verifyHref)
   await expect(page.getByText('Adresse vérifiée ✓', { exact: false })).toBeVisible()
 
   // 1. Mot de passe oublié

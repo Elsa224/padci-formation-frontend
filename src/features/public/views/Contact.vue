@@ -81,7 +81,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'ContactForm',
   data() {
@@ -110,7 +110,8 @@ export default {
         }
         this.sent = true
       } catch (e) {
-        this.errorMsg = e.message || 'Erreur réseau. Vérifiez votre connexion et réessayez.'
+        this.errorMsg =
+          e instanceof Error ? e.message : 'Erreur réseau. Vérifiez votre connexion et réessayez.'
       } finally {
         this.sending = false
       }

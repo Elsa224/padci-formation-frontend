@@ -200,16 +200,15 @@
           >
             Compléter les informations
           </button>
-          <button
+          <ConfirmButton
             v-if="
               app.status === 'submitted' || app.status === 'in_review' || app.status === 'standby'
             "
-            @click="withdraw(app)"
-            :disabled="withdrawMutation.isPending.value"
-            class="w-full rounded-xl border border-red-200 px-4 py-2 text-xs font-semibold text-danger-ink transition hover:bg-red-50 disabled:opacity-50 sm:w-auto"
-          >
-            Retirer ma candidature
-          </button>
+            label="Retirer ma candidature"
+            confirm="Confirmer le retrait de votre candidature ?"
+            button-class="w-full rounded-xl border border-red-200 px-4 py-2 text-xs font-semibold text-danger-ink transition hover:bg-red-50 disabled:opacity-50 sm:w-auto"
+            @confirm="withdraw(app)"
+          />
           <div
             v-if="app.status === 'standby'"
             class="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs text-blue-900 sm:max-w-xs"
@@ -235,6 +234,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import ConfirmButton from '@/features/admin/components/ConfirmButton.vue'
 import type { ApiError } from '@/api/http'
 import {
   type EquipmentDeclaration,
@@ -336,8 +336,6 @@ function respondToEquipment(application: LearnerApplication) {
 }
 
 function withdraw(app: LearnerApplication) {
-  if (confirm(`Confirmez-vous le retrait de votre candidature pour ${app.pathway?.name} ?`)) {
-    withdrawMutation.mutate(app.key)
-  }
+  withdrawMutation.mutate(app.key)
 }
 </script>

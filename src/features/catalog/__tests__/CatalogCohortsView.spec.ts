@@ -55,7 +55,7 @@ describe('PathwayDetailView', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref([
@@ -75,12 +75,12 @@ describe('PathwayDetailView', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
       data: ref({ items: [] }),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {
@@ -122,7 +122,7 @@ describe('PathwayDetailView', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref([
@@ -142,12 +142,12 @@ describe('PathwayDetailView', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
       data: ref({ items: [] }),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {
@@ -186,7 +186,7 @@ describe('PathwayDetailView', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref([
@@ -207,12 +207,12 @@ describe('PathwayDetailView', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
       data: ref({ items: [] }),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {
@@ -257,7 +257,7 @@ describe('PathwayDetailView', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref([
@@ -278,12 +278,12 @@ describe('PathwayDetailView', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
       data: ref({ items: [] }),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {
@@ -311,7 +311,7 @@ describe('PathwayDetailView', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref([
@@ -329,12 +329,12 @@ describe('PathwayDetailView', () => {
         },
       ]),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
       data: ref({ items: [] }),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(PathwayDetailView, {
       global: {
@@ -376,7 +376,7 @@ describe('CatalogView', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     const wrapper = mount(CatalogView, {
       global: {

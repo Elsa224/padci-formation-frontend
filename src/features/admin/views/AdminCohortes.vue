@@ -711,9 +711,7 @@
                   Cours : {{ Math.round(member.progress_rate * 100) }}%
                 </span>
                 <span class="text-[10px] text-quiet">
-                  {{ member.completed_chapters_count ?? 0 }}/{{
-                    member.total_chapters_count ?? 0
-                  }}
+                  {{ member.completed_chapters_count ?? 0 }}/{{ member.total_chapters_count ?? 0 }}
                   chap.
                 </span>
               </div>

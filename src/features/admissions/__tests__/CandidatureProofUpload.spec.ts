@@ -83,12 +83,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(CandidatureView, {
       global: {
@@ -120,12 +120,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     mockUploadMutateAsync.mockResolvedValueOnce({
       key: 'media_proof_abc123',
@@ -177,12 +177,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     mockUploadMutateAsync.mockResolvedValueOnce({
       key: 'media_proof_abc123',
@@ -238,12 +238,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(CandidatureView, {
       global: {
@@ -282,12 +282,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     mockUploadMutateAsync.mockResolvedValueOnce({
       key: 'media_proof_final_789',
@@ -361,12 +361,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     mockUploadMutateAsync.mockResolvedValueOnce({
       key: 'media_drag_drop_123',
@@ -416,12 +416,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(CandidatureView, {
       global: {
@@ -456,12 +456,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const createObjectURLSpy = vi
       .spyOn(URL, 'createObjectURL')
@@ -529,12 +529,12 @@ describe('CandidatureProofUpload', () => {
       isPending: ref(false),
       isError: ref(false),
       error: ref(null),
-    } as any)
+    } as never)
 
     vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
       data: ref(mockCohortsData),
       isPending: ref(false),
-    } as any)
+    } as never)
 
     const wrapper = mount(CandidatureView, {
       global: {
