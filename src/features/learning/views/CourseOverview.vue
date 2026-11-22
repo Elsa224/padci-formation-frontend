@@ -148,6 +148,9 @@
           </div>
         </div>
       </div>
+
+      <!-- ÉVALUATIONS & ATTESTATION (accès inscrit uniquement) -->
+      <CourseAssessmentsPanel v-if="course.has_access" :course-key="course.key" />
     </template>
   </div>
 </template>
@@ -157,6 +160,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ApiError } from '@/api/http'
 import { useCourseOutline } from '../composables/useLearningCourse'
+import CourseAssessmentsPanel from '../components/CourseAssessmentsPanel.vue'
 
 const route = useRoute()
 const courseKey = computed(() => String(route.params.courseKey ?? ''))
