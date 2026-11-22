@@ -82,7 +82,7 @@ export interface CohortAttendanceSummary {
 export interface CreateAttendanceSessionPayload {
   date: string
   title?: string | null
-  starts_at_time?: string | null
+  starts_at_time: string
   ends_at_time?: string | null
 }
 

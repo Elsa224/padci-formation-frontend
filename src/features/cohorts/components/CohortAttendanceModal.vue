@@ -92,14 +92,16 @@
                   />
                 </label>
                 <label class="text-xs font-semibold text-ink sm:col-span-2 md:col-span-1">
-                  Horaires
+                  Horaires *
                   <div class="mt-1 flex items-center gap-1">
                     <input
                       v-model="newSession.starts_at_time"
                       type="text"
+                      required
                       placeholder="09:00"
                       maxlength="10"
                       class="app-input w-20 text-center"
+                      data-test="new-session-starts-at"
                     />
                     <span class="text-quiet">-</span>
                     <input
@@ -108,6 +110,7 @@
                       placeholder="17:00"
                       maxlength="10"
                       class="app-input w-20 text-center"
+                      data-test="new-session-ends-at"
                     />
                   </div>
                 </label>
@@ -314,8 +317,10 @@
                   <span
                     v-if="session.starts_at_time || session.ends_at_time"
                     class="rounded bg-canvas px-1.5 py-0.5 text-xs text-quiet"
+                    data-test="session-time"
                   >
-                    {{ session.starts_at_time }} - {{ session.ends_at_time }}
+                    {{ session.starts_at_time
+                    }}<template v-if="session.ends_at_time"> - {{ session.ends_at_time }}</template>
                   </span>
                 </div>
                 <p class="text-sm text-quiet mt-0.5">
@@ -500,12 +505,16 @@ const newSession = reactive({
 
 async function handleCreateSession() {
   actionError.value = ''
+  if (!newSession.starts_at_time?.trim()) {
+    actionError.value = "L'horaire de début est obligatoire."
+    return
+  }
   try {
     const created = await createSessionMutation.mutateAsync({
       date: newSession.date,
       title: newSession.title || null,
-      starts_at_time: newSession.starts_at_time || null,
-      ends_at_time: newSession.ends_at_time || null,
+      starts_at_time: newSession.starts_at_time.trim(),
+      ends_at_time: newSession.ends_at_time?.trim() || null,
     })
     toast.success('Séance d’émargement créée.')
     showNewSessionForm.value = false

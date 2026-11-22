@@ -34,6 +34,21 @@ describe('CohortAttendanceModal', () => {
         rate: 100,
       },
     },
+    {
+      key: 'ses-2',
+      date: '2026-11-20',
+      title: 'Séance 2 - Pratique câblage',
+      starts_at_time: '14:00',
+      ends_at_time: null,
+      stats: {
+        total: 2,
+        present: 2,
+        late: 0,
+        absent: 0,
+        excused: 0,
+        rate: 100,
+      },
+    },
   ]
 
   const mockSessionDetail = {
@@ -191,8 +206,14 @@ describe('CohortAttendanceModal', () => {
     })
 
     // Initial tab is sessions
-    expect(wrapper.find('[data-test="session-item"]').exists()).toBe(true)
+    const sessionItems = wrapper.findAll('[data-test="session-item"]')
+    expect(sessionItems.length).toBe(2)
     expect(wrapper.text()).toContain('Séance 1 - Introduction aux réseaux')
+    expect(wrapper.text()).toContain('Séance 2 - Pratique câblage')
+
+    const times = wrapper.findAll('[data-test="session-time"]')
+    expect(times[0]!.text()).toBe('09:00 - 17:00')
+    expect(times[1]!.text()).toBe('14:00')
 
     // Switch to summary tab
     const summaryTab = wrapper.find('[data-test="tab-summary"]')
@@ -236,6 +257,32 @@ describe('CohortAttendanceModal', () => {
       starts_at_time: '09:00',
       ends_at_time: '17:00',
     })
+  })
+
+  it('fails validation when starts_at_time is empty in creation form', async () => {
+    const wrapper = mount(CohortAttendanceModal, {
+      props: {
+        open: true,
+        cohortKey: 'cht-1',
+        cohortName: 'Promotion 2026 Network',
+      },
+    })
+
+    const openCreateBtn = wrapper.find('[data-test="open-new-session-btn"]')
+    await openCreateBtn.trigger('click')
+
+    const dateInput = wrapper.find('[data-test="new-session-date"]')
+    await dateInput.setValue('2026-11-25')
+
+    const startsAtInput = wrapper.find('[data-test="new-session-starts-at"]')
+    await startsAtInput.setValue('')
+
+    const form = wrapper.find('[data-test="new-session-form"] form')
+    await form.trigger('submit.prevent')
+    await flushPromises()
+
+    expect(mockMutateCreate).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain("L'horaire de début est obligatoire.")
   })
 
   it('opens attendance sheet, allows changing status and submitting batch', async () => {
