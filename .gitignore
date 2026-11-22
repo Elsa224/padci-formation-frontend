@@ -43,3 +43,6 @@ __screenshots__/
 
 test-results/
 playwright-report/
+
+# Agent worktrees and local tooling
+.claude/

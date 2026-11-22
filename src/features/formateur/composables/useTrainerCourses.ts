@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed, toValue, type MaybeRef } from 'vue'
 import { apiMeta, ApiError, http } from '@/api/http'
 import type { ApiPaginationMeta } from '@/api/types'
+import type { Schema } from '@/api/contract'
 import type { ResourceMedia } from '@/features/learning/composables/useLearningCourse'
 
 /**
@@ -341,3 +342,19 @@ export function useCreateResource(courseKey: MaybeRef<string>) {
     onSuccess: invalidate,
   })
 }
+
+// ── Contract drift guard ───────────────────────────────────────────────
+// Compile-time only: if the generated contract (src/api/schema.d.ts) stops
+// matching these hand-written shapes, `npm run type-check` fails here.
+type ContractCourse = Schema<'CourseResource'>
+type ContractResource = Schema<'LearningResourceResource'>
+export type _CourseMatchesContract =
+  ContractCourse extends Pick<TrainerCourse, 'key' | 'title' | 'status' | 'level' | 'summary'>
+    ? true
+    : never
+export type _ResourceMatchesContract =
+  ContractResource extends Pick<CourseResourceItem, 'key' | 'title' | 'type' | 'external_url'>
+    ? true
+    : never
+const _contractChecks: [_CourseMatchesContract, _ResourceMatchesContract] = [true, true]
+void _contractChecks

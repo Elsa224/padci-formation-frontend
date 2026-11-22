@@ -50,11 +50,8 @@ async function finishAndContinue(): Promise<void> {
   // Learners reach MFA setup from their settings page, so they go back there;
   // every other role lands on its own workspace.
   const roles = auth.user?.roles ?? []
-  await router.push(
-    roles.length === 0 || roles.every((role) => role === 'apprenant')
-      ? '/parametres'
-      : homeFor(roles),
-  )
+  // `every` is true for an empty list too: a role-less account goes to settings.
+  await router.push(roles.every((role) => role === 'apprenant') ? '/parametres' : homeFor(roles))
 }
 </script>
 
