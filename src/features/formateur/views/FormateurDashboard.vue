@@ -64,7 +64,7 @@
       <section class="app-panel space-y-4">
         <div>
           <h2 class="text-lg font-bold text-ink">Prochaines sessions</h2>
-          <p class="text-xs text-quiet">Cohortes ouvertes ou planifiées de l'établissement.</p>
+          <p class="text-xs text-quiet">Vos cohortes ouvertes ou planifiées.</p>
         </div>
         <div v-if="cohorts.isPending.value" class="space-y-3">
           <div v-for="n in 3" :key="n" class="app-skeleton h-14" />
