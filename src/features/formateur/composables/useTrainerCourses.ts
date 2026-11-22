@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed, toValue, type MaybeRef } from 'vue'
 import { apiMeta, ApiError, http } from '@/api/http'
 import type { ApiPaginationMeta } from '@/api/types'
+import type { ResourceMedia } from '@/features/learning/composables/useLearningCourse'
 
 /**
  * Trainer ("formateur") side of the Catalog module. Every endpoint lives
@@ -48,9 +49,22 @@ export interface CourseResourceItem {
   type: 'text' | 'link' | 'video' | 'document'
   body: string | null
   external_url: string | null
+  media?: ResourceMedia | null
   visibility: 'preview' | 'enrolled' | 'download'
   position: number
 }
+
+/** Accepted document uploads: the backend document MIME allowlist. */
+export const DOCUMENT_ACCEPT = '.pdf,.txt,.docx,.xlsx,.pptx'
+export const DOCUMENT_MIMES = [
+  'application/pdf',
+  'text/plain',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+]
+/** config('media.max_kb') default: 20 MB. */
+export const DOCUMENT_MAX_BYTES = 20 * 1024 * 1024
 
 export type ChapterType = 'lesson' | 'video' | 'document' | 'external_link'
 
@@ -104,19 +118,7 @@ export const courseLevelLabels: Record<CourseLevel, string> = {
   advanced: 'Avancé',
 }
 
-/**
- * Only http(s) links are rendered as clickable: a stored `javascript:` or
- * `data:` URL must never reach an href, whatever the backend accepted.
- */
-export function safeHttpUrl(url: string | null | undefined): string | null {
-  if (!url) return null
-  try {
-    const parsed = new URL(url)
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : null
-  } catch {
-    return null
-  }
-}
+export { safeHttpUrl } from '@/lib/safeUrl'
 
 export function apiErrorMessage(error: unknown, fallback = 'Une erreur est survenue.'): string {
   return error instanceof ApiError ? error.displayMessage : fallback
@@ -285,10 +287,44 @@ export interface CreateResourcePayload {
   moduleKey: string
   chapterKey: string
   title: string
-  /** Media-backed types (video/document) are not wired to uploads server-side yet. */
-  type: 'text' | 'link'
+  /** `document` carries an uploaded file (media_key); video is not wired yet. */
+  type: 'text' | 'link' | 'document'
   body?: string | null
   external_url?: string | null
+  /** Key of a file the current user uploaded via POST /media. */
+  media_key?: string
+}
+
+/**
+ * Upload a file (POST /media, private) then attach it to the chapter as a
+ * `document` resource. The backend checks the file belongs to the uploader
+ * and is a document type.
+ */
+export function useAddDocumentResource(courseKey: MaybeRef<string>) {
+  const invalidate = useModulesInvalidation(courseKey)
+  return useMutation({
+    mutationFn: async (input: {
+      moduleKey: string
+      chapterKey: string
+      title: string
+      file: File
+    }) => {
+      const form = new FormData()
+      form.append('file', input.file)
+      const media = (
+        await http.post<{ key: string }>('/media', form, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+      ).data
+      return (
+        await http.post<CourseResourceItem>(
+          `/admin/courses/${toValue(courseKey)}/modules/${input.moduleKey}/chapters/${input.chapterKey}/resources`,
+          { title: input.title, type: 'document', media_key: media.key },
+        )
+      ).data
+    },
+    onSuccess: invalidate,
+  })
 }
 
 /** POST /admin/courses/{course}/modules/{module}/chapters/{chapter}/resources. */

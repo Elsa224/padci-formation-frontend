@@ -60,25 +60,61 @@
             <div
               v-for="res in chapter.resources"
               :key="res.key"
-              class="border rounded-xl p-3 flex items-center justify-between text-xs transition"
-              :class="res.locked ? 'bg-canvas text-quiet' : 'bg-white hover:bg-canvas text-ink'"
+              class="border rounded-xl p-3 text-xs transition"
+              :class="res.locked ? 'bg-canvas text-quiet' : 'bg-white text-ink'"
+              data-test="chapter-resource"
             >
-              <div class="flex items-center gap-2">
-                <span>{{ res.type === 'link' ? '🔗' : '📄' }}</span>
-                <span class="font-medium">{{ res.title }}</span>
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex min-w-0 items-center gap-2">
+                  <LinkIcon v-if="res.type === 'link'" :size="16" class="shrink-0 text-quiet" />
+                  <FileTextIcon v-else :size="16" class="shrink-0 text-quiet" />
+                  <span class="font-medium">{{ res.title }}</span>
+                  <span v-if="res.media" class="truncate text-quiet">
+                    · {{ res.media.original_name }}
+                  </span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span v-if="res.locked" class="italic">Verrouillé</span>
+                  <template v-else-if="res.media">
+                    <span v-if="!res.media.url" class="italic text-quiet">
+                      Document en cours de vérification
+                    </span>
+                    <template v-else>
+                      <button
+                        v-if="isPdf(res)"
+                        class="font-semibold text-primary hover:underline"
+                        data-test="toggle-pdf"
+                        @click="togglePdf(res.key)"
+                      >
+                        {{ openPdfKey === res.key ? 'Masquer' : 'Afficher' }}
+                      </button>
+                      <button
+                        class="font-semibold text-primary hover:underline"
+                        @click="openDocument(res.key)"
+                      >
+                        Ouvrir dans un onglet
+                      </button>
+                    </template>
+                  </template>
+                  <a
+                    v-else-if="safeHttpUrl(res.external_url)"
+                    :href="safeHttpUrl(res.external_url) ?? undefined"
+                    target="_blank"
+                    rel="noopener"
+                    class="font-semibold text-primary hover:underline"
+                  >
+                    Ouvrir &rarr;
+                  </a>
+                </div>
               </div>
-              <div>
-                <a
-                  v-if="!res.locked && res.external_url"
-                  :href="res.external_url"
-                  target="_blank"
-                  rel="noopener"
-                  class="text-primary hover:underline font-semibold"
-                >
-                  Ouvrir &rarr;
-                </a>
-                <span v-else-if="res.locked" class="italic">Verrouillé</span>
-              </div>
+              <!-- Lecteur PDF intégré : URL signée, valable quelques minutes -->
+              <iframe
+                v-if="openPdfKey === res.key && pdfUrl"
+                :src="pdfUrl"
+                :title="res.title"
+                class="mt-3 h-[70vh] w-full rounded-lg border border-line"
+                data-test="pdf-viewer"
+              />
             </div>
           </div>
         </div>
@@ -117,13 +153,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { FileText as FileTextIcon, Link as LinkIcon } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
+import { safeHttpUrl } from '@/lib/safeUrl'
 import {
   useChapterContent,
   useCourseOutline,
   useRecordProgress,
+  type ChapterResource,
   type OutlineChapter,
 } from '../composables/useLearningCourse'
 
@@ -134,7 +173,57 @@ const courseKey = computed(() => String(route.params.courseKey ?? ''))
 const chapterKey = computed(() => String(route.params.chapterKey ?? ''))
 
 const { data: courseOutline } = useCourseOutline(courseKey)
-const { data: chapter, isPending, isError, error } = useChapterContent(courseKey, chapterKey)
+const {
+  data: chapter,
+  isPending,
+  isError,
+  error,
+  refetch: refetchChapter,
+} = useChapterContent(courseKey, chapterKey)
+
+// ── Documents ───────────────────────────────────────────────────────────
+// Media URLs are signed and expire after a few minutes, so each open asks
+// the API for a fresh one instead of reusing the URL from page load.
+const openPdfKey = ref<string | null>(null)
+const pdfUrl = ref<string | null>(null)
+watch(chapterKey, () => {
+  openPdfKey.value = null
+  pdfUrl.value = null
+})
+
+function isPdf(resource: ChapterResource): boolean {
+  return resource.media?.mime === 'application/pdf'
+}
+
+async function freshMediaUrl(resourceKey: string): Promise<string | null> {
+  const { data } = await refetchChapter()
+  const media = data?.resources.find((r) => r.key === resourceKey)?.media
+  return safeHttpUrl(media?.url)
+}
+
+async function togglePdf(resourceKey: string) {
+  if (openPdfKey.value === resourceKey) {
+    openPdfKey.value = null
+    pdfUrl.value = null
+    return
+  }
+  pdfUrl.value = await freshMediaUrl(resourceKey)
+  openPdfKey.value = pdfUrl.value ? resourceKey : null
+}
+
+async function openDocument(resourceKey: string) {
+  // Open synchronously within the click so popup blockers allow it, then
+  // point it at the fresh signed URL.
+  const tab = window.open('', '_blank')
+  const url = await freshMediaUrl(resourceKey)
+  if (!tab) return
+  if (url === null) {
+    tab.close()
+    return
+  }
+  tab.opener = null
+  tab.location.href = url
+}
 
 // Flatten chapters from outline to find next and previous
 const allChapters = computed<OutlineChapter[]>(() => {

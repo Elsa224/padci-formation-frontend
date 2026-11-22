@@ -61,6 +61,18 @@ export interface ChapterResource {
   locked: boolean
   body: string | null
   external_url: string | null
+  /** Document file; `url` is short-lived and only sent when the resource is readable. */
+  media?: ResourceMedia | null
+}
+
+/** `ResourceMediaPayload` shape (backend). */
+export interface ResourceMedia {
+  key: string
+  original_name: string
+  mime: string
+  size_bytes: number
+  scan_status: string
+  url: string | null
 }
 
 export interface ChapterContent {
