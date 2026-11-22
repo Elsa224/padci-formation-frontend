@@ -18,6 +18,15 @@ vi.mock('../composables/useEnrollments', () => ({
   useEnrollments: vi.fn(),
 }))
 
+vi.mock('../composables/useLearnerAttendance', () => ({
+  useLearnerAttendance: vi.fn(() => ({
+    data: ref({ summary: null, items: [] }),
+    isPending: ref(false),
+    isError: ref(false),
+    error: ref(null),
+  })),
+}))
+
 vi.mock('@/features/admissions/composables/useLearnerApplications', () => ({
   useLearnerApplications: vi.fn(),
   useRespondToEquipmentReview: vi.fn(() => ({

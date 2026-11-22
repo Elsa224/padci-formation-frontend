@@ -1757,6 +1757,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/learning/attendance': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['learning.attendance.index']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/admin/courses/{course}/modules/{courseModule}/chapters/{chapter}/resources': {
     parameters: {
       query?: never
@@ -2997,6 +3013,35 @@ export interface components {
       questions?: string[]
       questions_count?: number
       max_score?: string
+    }
+    /** LearnerAttendanceItemResource */
+    LearnerAttendanceItemResource: {
+      key: string
+      /** @enum {string} */
+      status: 'present' | 'absent' | 'late' | 'excused'
+      /** @enum {string} */
+      status_label: 'Présent' | 'Absent' | 'En retard' | 'Excusé'
+      note: string | null
+      session: {
+        key: string
+        title: string | null
+        date: string
+        starts_at_time: string | null
+        ends_at_time: string | null
+        cohort_name: string
+      }
+    }
+    /** LearnerAttendanceResource */
+    LearnerAttendanceResource: {
+      summary: {
+        total: number
+        present: number
+        late: number
+        absent: number
+        excused: number
+        rate: number
+      }
+      items: components['schemas']['LearnerAttendanceItemResource'][]
     }
     /** LearningProgressResource */
     LearningProgressResource: {
@@ -9454,6 +9499,43 @@ export interface operations {
       401: components['responses']['AuthenticationException']
       403: components['responses']['AuthorizationException']
       404: components['responses']['ModelNotFoundException']
+    }
+  }
+  'learning.attendance.index': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | components['schemas']['LearnerAttendanceResource']
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
     }
   }
   'admin.learning-resources.store': {

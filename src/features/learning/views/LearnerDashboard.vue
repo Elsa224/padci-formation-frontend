@@ -220,6 +220,175 @@
         </div>
       </div>
     </div>
+
+    <!-- SECTION MON ASSIDUITÉ -->
+    <section
+      data-test="learner-attendance-section"
+      data-testid="learner-attendance-section"
+      class="app-panel space-y-5 p-5 sm:p-6"
+      aria-labelledby="attendance-section-title"
+    >
+      <div
+        class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-line pb-4"
+      >
+        <div>
+          <h2 id="attendance-section-title" class="text-base font-bold text-ink sm:text-lg">
+            Mon assiduité
+          </h2>
+          <p class="text-xs text-quiet">
+            Suivi de votre présence aux séances d'émargement de vos sessions.
+          </p>
+        </div>
+        <div v-if="attendanceSummary && attendanceItems.length > 0" class="flex items-center gap-2">
+          <span
+            class="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold"
+            :class="
+              attendanceSummary.rate >= 80
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : attendanceSummary.rate >= 50
+                  ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                  : 'bg-red-50 text-red-700 border border-red-200'
+            "
+            data-test="attendance-rate-badge"
+          >
+            Taux d'assiduité : {{ attendanceSummary.rate }}%
+          </span>
+        </div>
+      </div>
+
+      <!-- État de chargement assiduité -->
+      <div v-if="isAttendancePending" class="space-y-3">
+        <div class="app-skeleton h-16 w-full rounded-xl" />
+        <div class="app-skeleton h-24 w-full rounded-xl" />
+      </div>
+
+      <!-- État d'erreur -->
+      <div v-else-if="isAttendanceError" class="py-4 text-center text-xs text-danger-ink">
+        Impossible de charger votre assiduité pour le moment.
+      </div>
+
+      <!-- Cas où l'apprenant a des séances -->
+      <div v-else-if="attendanceItems.length > 0" class="space-y-5">
+        <!-- Résumé KPI -->
+        <div
+          class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6"
+          data-test="attendance-summary-cards"
+        >
+          <div class="rounded-xl border border-line bg-canvas/40 p-3 text-center">
+            <span class="text-xs font-semibold text-quiet">Taux</span>
+            <p
+              class="mt-1 text-lg font-bold"
+              :class="
+                attendanceSummary && attendanceSummary.rate >= 80 ? 'text-emerald-600' : 'text-ink'
+              "
+            >
+              {{ attendanceSummary?.rate ?? 0 }}%
+            </p>
+          </div>
+          <div class="rounded-xl border border-line bg-canvas/40 p-3 text-center">
+            <span class="text-xs font-semibold text-quiet">Total séances</span>
+            <p class="mt-1 text-lg font-bold text-ink" data-test="summary-total">
+              {{ attendanceSummary?.total ?? 0 }}
+            </p>
+          </div>
+          <div class="rounded-xl border border-line bg-canvas/40 p-3 text-center">
+            <span class="text-xs font-semibold text-emerald-700">Présent(s)</span>
+            <p class="mt-1 text-lg font-bold text-emerald-700" data-test="summary-present">
+              {{ attendanceSummary?.present ?? 0 }}
+            </p>
+          </div>
+          <div class="rounded-xl border border-line bg-canvas/40 p-3 text-center">
+            <span class="text-xs font-semibold text-amber-700">Retard(s)</span>
+            <p class="mt-1 text-lg font-bold text-amber-700" data-test="summary-late">
+              {{ attendanceSummary?.late ?? 0 }}
+            </p>
+          </div>
+          <div class="rounded-xl border border-line bg-canvas/40 p-3 text-center">
+            <span class="text-xs font-semibold text-blue-700">Excusé(s)</span>
+            <p class="mt-1 text-lg font-bold text-blue-700" data-test="summary-excused">
+              {{ attendanceSummary?.excused ?? 0 }}
+            </p>
+          </div>
+          <div class="rounded-xl border border-line bg-canvas/40 p-3 text-center">
+            <span class="text-xs font-semibold text-red-700">Absent(s)</span>
+            <p class="mt-1 text-lg font-bold text-red-700" data-test="summary-absent">
+              {{ attendanceSummary?.absent ?? 0 }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Liste des séances -->
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-quiet">
+            Séances d'émargement récentes
+          </h3>
+          <div class="divide-y divide-line rounded-xl border border-line overflow-hidden bg-white">
+            <div
+              v-for="item in attendanceItems"
+              :key="item.key"
+              class="flex flex-col gap-2 p-3.5 sm:flex-row sm:items-center sm:justify-between transition hover:bg-canvas/40"
+              data-test="attendance-item"
+            >
+              <div class="space-y-0.5">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-bold text-ink">
+                    {{ item.session.title || 'Séance de cours' }}
+                  </span>
+                  <span
+                    v-if="item.session.cohort_name"
+                    class="rounded bg-canvas px-1.5 py-0.5 text-[11px] font-medium text-quiet"
+                  >
+                    {{ item.session.cohort_name }}
+                  </span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-xs text-quiet">
+                  <span>{{ formatSessionDate(item.session.date) }}</span>
+                  <span v-if="item.session.starts_at_time" class="text-line">•</span>
+                  <span v-if="item.session.starts_at_time">
+                    {{ item.session.starts_at_time
+                    }}{{ item.session.ends_at_time ? ' - ' + item.session.ends_at_time : '' }}
+                  </span>
+                  <span v-if="item.note" class="italic text-quiet/80"> ({{ item.note }}) </span>
+                </div>
+              </div>
+
+              <div class="flex shrink-0 items-center">
+                <span
+                  class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-bold"
+                  :class="getAttendanceStatusBadgeClass(item.status)"
+                  data-test="attendance-status-badge"
+                >
+                  {{ item.status_label || getAttendanceStatusLabel(item.status) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cas où l'apprenant n'a pas encore de séance -->
+      <div v-else class="py-8 text-center" data-test="attendance-empty-state">
+        <div
+          class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-500 mb-2"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+        </div>
+        <p class="text-sm font-semibold text-ink">
+          Aucune séance d'émargement enregistrée pour le moment
+        </p>
+        <p class="mt-1 text-xs text-quiet max-w-sm mx-auto">
+          Vos présences et pointages apparaîtront ici dès que vos séances en présentiel ou ateliers
+          débuteront.
+        </p>
+      </div>
+    </section>
   </section>
 </template>
 
@@ -227,10 +396,19 @@
 import { computed } from 'vue'
 import type { ApiError } from '@/api/http'
 import { useEnrollments } from '../composables/useEnrollments'
+import { useLearnerAttendance } from '../composables/useLearnerAttendance'
 import { useLearnerApplications } from '@/features/admissions/composables/useLearnerApplications'
 
 const { data, isPending, isError, error } = useEnrollments()
 const enrollments = computed(() => data.value?.items ?? [])
+
+const {
+  data: attendanceData,
+  isPending: isAttendancePending,
+  isError: isAttendanceError,
+} = useLearnerAttendance()
+const attendanceSummary = computed(() => attendanceData.value?.summary ?? null)
+const attendanceItems = computed(() => attendanceData.value?.items ?? [])
 
 const { data: applicationsData } = useLearnerApplications()
 const applications = computed(() => applicationsData?.value?.items ?? [])
@@ -283,5 +461,44 @@ function formatCohortDate(dateStr: string | null | undefined): string {
     month: 'short',
     year: 'numeric',
   })
+}
+
+function formatSessionDate(dateStr: string | null | undefined): string {
+  if (!dateStr) return ''
+  return new Date(dateStr).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
+}
+
+function getAttendanceStatusBadgeClass(status: string): string {
+  switch (status) {
+    case 'present':
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+    case 'late':
+      return 'bg-amber-50 text-amber-700 border-amber-200'
+    case 'absent':
+      return 'bg-red-50 text-red-700 border-red-200'
+    case 'excused':
+      return 'bg-blue-50 text-blue-700 border-blue-200'
+    default:
+      return 'bg-slate-50 text-slate-700 border-slate-200'
+  }
+}
+
+function getAttendanceStatusLabel(status: string): string {
+  switch (status) {
+    case 'present':
+      return 'Présent'
+    case 'late':
+      return 'En retard'
+    case 'absent':
+      return 'Absent'
+    case 'excused':
+      return 'Excusé'
+    default:
+      return status
+  }
 }
 </script>
