@@ -44,13 +44,22 @@
             </template>
           </p>
         </div>
-        <button
-          class="app-action-secondary"
-          :aria-expanded="openCohort === cohort.key"
-          @click="openCohort = openCohort === cohort.key ? null : cohort.key"
-        >
-          {{ openCohort === cohort.key ? 'Masquer les apprenants' : 'Voir les apprenants' }}
-        </button>
+        <div class="flex items-center gap-2">
+          <button
+            class="app-action-primary text-xs"
+            data-test="open-attendance-btn"
+            @click="openAttendanceFor(cohort)"
+          >
+            Émargement / Présences
+          </button>
+          <button
+            class="app-action-secondary"
+            :aria-expanded="openCohort === cohort.key"
+            @click="openCohort = openCohort === cohort.key ? null : cohort.key"
+          >
+            {{ openCohort === cohort.key ? 'Masquer les apprenants' : 'Voir les apprenants' }}
+          </button>
+        </div>
       </div>
 
       <div v-if="openCohort === cohort.key">
@@ -93,6 +102,14 @@
         </div>
       </div>
     </article>
+
+    <CohortAttendanceModal
+      v-if="attendanceOpen"
+      :open="attendanceOpen"
+      :cohort-key="attendanceCohortKey"
+      :cohort-name="attendanceCohortName"
+      @close="attendanceOpen = false"
+    />
   </section>
 </template>
 
@@ -101,6 +118,7 @@ import { computed, ref } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
 import { http } from '@/api/http'
 import type { Cohort } from '@/features/admin/composables/useCohorts'
+import CohortAttendanceModal from '@/features/cohorts/components/CohortAttendanceModal.vue'
 import { apiErrorMessage } from '../composables/useTrainerCourses'
 
 interface CohortEnrollment {
@@ -140,5 +158,15 @@ const enrollments = useQuery({
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' })
 function formatDate(value: string) {
   return dateFormatter.format(new Date(value))
+}
+
+const attendanceOpen = ref(false)
+const attendanceCohortKey = ref('')
+const attendanceCohortName = ref('')
+
+function openAttendanceFor(cohort: Cohort) {
+  attendanceCohortKey.value = cohort.key
+  attendanceCohortName.value = cohort.name
+  attendanceOpen.value = true
 }
 </script>

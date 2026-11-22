@@ -272,22 +272,38 @@
           <span
             >Code : <strong class="font-medium text-ink">{{ cohort.code }}</strong></span
           >
-          <button
-            type="button"
-            @click="openMembersDrawer(cohort)"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white font-bold text-xs transition shadow-sm"
-            data-testid="btn-view-cohort-members"
-          >
-            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-            Voir les apprenants ({{ enrolledCount(cohort) }})
-          </button>
+          <div class="flex items-center gap-1.5">
+            <button
+              v-if="cohort.offline_starts_at"
+              type="button"
+              class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-line bg-white hover:bg-canvas text-ink font-semibold text-xs transition shadow-sm"
+              data-testid="btn-cohort-attendance"
+              @click="openAttendanceModal(cohort)"
+            >
+              Présences
+            </button>
+            <button
+              type="button"
+              @click="openMembersDrawer(cohort)"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white font-bold text-xs transition shadow-sm"
+              data-testid="btn-view-cohort-members"
+            >
+              <svg
+                class="w-3.5 h-3.5 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+              Voir les apprenants ({{ enrolledCount(cohort) }})
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -711,12 +727,22 @@
         </div>
       </div>
     </div>
+
+    <!-- Modale de pointage / assiduité -->
+    <CohortAttendanceModal
+      v-if="isAttendanceModalOpen"
+      :open="isAttendanceModalOpen"
+      :cohort-key="attendanceCohortKey"
+      :cohort-name="attendanceCohortName"
+      @close="isAttendanceModalOpen = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import type { ApiError } from '@/api/http'
+import CohortAttendanceModal from '@/features/cohorts/components/CohortAttendanceModal.vue'
 import { useCatalogPathways } from '@/features/public/composables/useCatalogPathways'
 import {
   useCohorts,
@@ -978,6 +1004,17 @@ function closeMembersDrawer() {
   membersStatusFilter.value = ''
 }
 
+// ==================== MODAL ÉMARGEMENT / PRÉSENCES ====================
+const isAttendanceModalOpen = ref(false)
+const attendanceCohortKey = ref('')
+const attendanceCohortName = ref('')
+
+function openAttendanceModal(cohort: Cohort) {
+  attendanceCohortKey.value = cohort.key
+  attendanceCohortName.value = cohort.name
+  isAttendanceModalOpen.value = true
+}
+
 function initialsOf(name: string | null | undefined): string {
   if (!name) return '?'
   const parts = name.trim().split(/\s+/)
@@ -1021,7 +1058,9 @@ function memberStatusBadgeClass(status: string): string {
 
 function handleGlobalKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape') {
-    if (isMembersDrawerOpen.value) {
+    if (isAttendanceModalOpen.value) {
+      isAttendanceModalOpen.value = false
+    } else if (isMembersDrawerOpen.value) {
       closeMembersDrawer()
     } else if (isCreateModalOpen.value) {
       closeCreateModal()

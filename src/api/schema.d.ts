@@ -406,6 +406,54 @@ export interface paths {
     patch: operations['admin.assessments.attempts.answers.grade']
     trace?: never
   }
+  '/admin/cohorts/{cohort}/attendance/sessions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['admin.cohorts.attendance.sessions.index']
+    put?: never
+    post: operations['admin.cohorts.attendance.sessions.store']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/cohorts/{cohort}/attendance/sessions/{session}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['admin.cohorts.attendance.sessions.show']
+    put: operations['admin.cohorts.attendance.sessions.update']
+    post?: never
+    delete: operations['admin.cohorts.attendance.sessions.destroy']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/cohorts/{cohort}/attendance/summary': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['admin.cohorts.attendance.summary']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/admin/audit-logs': {
     parameters: {
       query?: never
@@ -2403,6 +2451,54 @@ export interface components {
         }
       }[]
     }
+    /** AttendanceRecordResource */
+    AttendanceRecordResource: {
+      key: string
+      /** @enum {string} */
+      status: 'present' | 'absent' | 'late' | 'excused'
+      /** @enum {string} */
+      status_label: 'Présent' | 'Absent' | 'En retard' | 'Excusé'
+      note: string | null
+      marked_at: string | null
+      enrollment_key?: string
+      learner?: {
+        key: string
+        name: string
+        email: string
+      }
+      marked_by?: {
+        key: string
+        name: string
+      } | null
+    }
+    /** AttendanceSessionResource */
+    AttendanceSessionResource: {
+      key: string
+      date: string
+      title: string | null
+      starts_at_time: string | null
+      ends_at_time: string | null
+      cohort_key?: string
+      creator?: {
+        key: string
+        name: string
+      } | null
+      stats?: {
+        total: number
+        present: number
+        absent: number
+        late: number
+        excused: number
+        rate: number
+      }
+      attendances?: components['schemas']['AttendanceRecordResource'][]
+      created_at: string | null
+    }
+    /**
+     * AttendanceStatus
+     * @enum {string}
+     */
+    AttendanceStatus: 'present' | 'absent' | 'late' | 'excused'
     /** AuditLogResource */
     AuditLogResource: {
       id: number
@@ -3251,6 +3347,14 @@ export interface components {
         }[]
       }[]
     }
+    /** StoreAttendanceSessionRequest */
+    StoreAttendanceSessionRequest: {
+      /** Format: date */
+      date: string
+      title?: string | null
+      starts_at_time?: string | null
+      ends_at_time?: string | null
+    }
     /** StoreBudgetLineRequest */
     StoreBudgetLineRequest: {
       name: string
@@ -3425,6 +3529,17 @@ export interface components {
           body: string
           is_correct?: boolean
         }[]
+      }[]
+    }
+    /** UpdateAttendanceBatchRequest */
+    UpdateAttendanceBatchRequest: {
+      title?: string | null
+      starts_at_time?: string | null
+      ends_at_time?: string | null
+      attendances: {
+        key: string
+        status: components['schemas']['AttendanceStatus']
+        note?: string | null
       }[]
     }
     /** UpdateChapterRequest */
@@ -4926,6 +5041,262 @@ export interface operations {
       403: components['responses']['AuthorizationException']
       404: components['responses']['ModelNotFoundException']
       422: components['responses']['ValidationException']
+    }
+  }
+  'admin.cohorts.attendance.sessions.index': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | (components['schemas']['AttendanceSessionResource'] & Record<string, never>)[]
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+    }
+  }
+  'admin.cohorts.attendance.sessions.store': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StoreAttendanceSessionRequest']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            /** @constant */
+            message: 'Séance d’émargement créée.'
+            data:
+              | (components['schemas']['AttendanceSessionResource'] & Record<string, never>)
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'admin.cohorts.attendance.sessions.show': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+        /** @description The session key */
+        session: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | (components['schemas']['AttendanceSessionResource'] & Record<string, never>)
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+    }
+  }
+  'admin.cohorts.attendance.sessions.update': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+        /** @description The session key */
+        session: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAttendanceBatchRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            /** @constant */
+            message: 'Émargement enregistré.'
+            data:
+              | (components['schemas']['AttendanceSessionResource'] & Record<string, never>)
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'admin.cohorts.attendance.sessions.destroy': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+        /** @description The session key */
+        session: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No content */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+    }
+  }
+  'admin.cohorts.attendance.summary': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | {
+                  cohort_key: string
+                  total_sessions: number
+                  learners: string[]
+                }
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
     }
   }
   'admin.audit-logs.index': {
