@@ -167,3 +167,33 @@ export function useDecideApplication() {
     },
   })
 }
+
+export interface DecideEquipmentReviewPayload {
+  key: string
+  decision: 'approved' | 'rejected' | 'needs_info'
+  reason?: string
+}
+
+/** POST /moderation/equipment-reviews/{review}/decide — equipment.review or admissions.manage */
+export function useDecideEquipmentReview() {
+  let queryClient: ReturnType<typeof useQueryClient> | null = null
+  try {
+    queryClient = useQueryClient()
+  } catch {
+    // Vue query client not found in test context
+  }
+
+  return useMutation({
+    mutationFn: async ({ key, decision, reason }: DecideEquipmentReviewPayload) => {
+      const { data } = await http.post(`/moderation/equipment-reviews/${key}/decide`, {
+        decision,
+        reason,
+      })
+      return data
+    },
+    onSuccess: () => {
+      queryClient?.invalidateQueries({ queryKey: ['admin-applications'] })
+      queryClient?.invalidateQueries({ queryKey: ['admin-application'] })
+    },
+  })
+}

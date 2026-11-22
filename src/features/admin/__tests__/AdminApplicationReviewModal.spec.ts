@@ -25,6 +25,10 @@ vi.mock('../composables/useApplications', async (importOriginal) => {
       mutate: mockDecideMutate,
       isPending: ref(false),
     })),
+    useDecideEquipmentReview: vi.fn(() => ({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+      isPending: ref(false),
+    })),
   }
 })
 
@@ -258,6 +262,69 @@ describe('AdminApplicationReviewModal and Cohort Management', () => {
         }),
         expect.any(Object),
       )
+    })
+
+    it('displays equipment validation button when equipment review is pending and calls mutateAsync on click', async () => {
+      const mockDecideEquipmentMutateAsync = vi.fn().mockResolvedValue({})
+      vi.mocked(useApplicationsModule.useDecideEquipmentReview).mockReturnValue({
+        mutateAsync: mockDecideEquipmentMutateAsync,
+        isPending: ref(false),
+      } as any)
+
+      const pendingEquipmentCandidate = {
+        ...mockApplicationDetail,
+        equipment_review: {
+          key: 'rev-pending-999',
+          status: 'pending' as const,
+          reason: null,
+          declaration: {
+            device_type: 'laptop',
+            cpu: 'Core i5',
+            ram_gb: 8,
+            storage_gb: 256,
+            os: 'Windows 11',
+          },
+        },
+      }
+
+      vi.mocked(useApplicationsModule.useApplications).mockReturnValue({
+        data: ref({
+          items: [pendingEquipmentCandidate],
+          pagination: { total: 1, per_page: 15, current_page: 1, last_page: 1, from: 1, to: 1 },
+        }),
+        isPending: ref(false),
+      } as any)
+
+      vi.mocked(useApplicationsModule.useApplication).mockReturnValue({
+        data: ref(pendingEquipmentCandidate),
+        isPending: ref(false),
+      } as any)
+
+      const wrapper = mount(AdminCandidatures)
+      await flushPromises()
+
+      await wrapper.find('button[title="Voir le dossier"]').trigger('click')
+      await flushPromises()
+
+      // The approve application button is disabled because equipment is pending
+      const approveAppBtn = wrapper.find('[data-testid="btn-approve-application"]')
+      expect(approveAppBtn.attributes('disabled')).toBeDefined()
+
+      // The equipment review action section is visible
+      const reviewActions = wrapper.find('[data-testid="equipment-review-actions"]')
+      expect(reviewActions.exists()).toBe(true)
+      expect(reviewActions.text()).toContain('Revue matériel en attente')
+
+      // Click "Valider le matériel"
+      const approveEquipBtn = wrapper.find('[data-testid="btn-approve-equipment"]')
+      expect(approveEquipBtn.exists()).toBe(true)
+      await approveEquipBtn.trigger('click')
+
+      expect(mockDecideEquipmentMutateAsync).toHaveBeenCalledWith({
+        key: 'rev-pending-999',
+        decision: 'approved',
+        reason: undefined,
+      })
     })
 
     it('shows standby destination preview when application has no cohort assigned', async () => {

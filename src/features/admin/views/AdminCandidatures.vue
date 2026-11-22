@@ -575,6 +575,61 @@
                   <span class="italic text-ink">{{ detail.equipment_review.reason }}</span>
                 </span>
               </div>
+
+              <!-- Actions rapides de revue du matériel pour l'administrateur -->
+              <div
+                v-if="detail.equipment_review && detail.equipment_review.status !== 'approved'"
+                class="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50/70 p-3.5"
+                data-testid="equipment-review-actions"
+              >
+                <div>
+                  <p class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                    <span
+                      class="inline-block h-2 w-2 rounded-full bg-amber-500 animate-pulse"
+                    ></span>
+                    Revue matériel en attente
+                  </p>
+                  <p class="text-[11px] text-amber-800 mt-0.5">
+                    Validez le matériel pour débloquer l'approbation de cette candidature.
+                  </p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    :disabled="decideEquipmentMutation.isPending.value"
+                    @click="
+                      decideEquipment(
+                        'rejected',
+                        'Matériel non conforme aux prérequis de la filière',
+                      )
+                    "
+                    class="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition disabled:opacity-50"
+                  >
+                    Refuser
+                  </button>
+                  <button
+                    type="button"
+                    :disabled="decideEquipmentMutation.isPending.value"
+                    @click="decideEquipment('approved')"
+                    class="rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition disabled:opacity-50 flex items-center gap-1.5"
+                    data-testid="btn-approve-equipment"
+                  >
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2.5"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    {{
+                      decideEquipmentMutation.isPending.value
+                        ? 'Validation…'
+                        : 'Valider le matériel'
+                    }}
+                  </button>
+                </div>
+              </div>
             </section>
 
             <!-- 4. Visionneuse de Justificatif Matériel (Proof Viewer) -->
@@ -789,6 +844,16 @@
 
           <template v-if="canDecide">
             <template v-if="pendingDecision !== 'rejected'">
+              <p
+                v-if="
+                  !canAccept &&
+                  detail.equipment_review &&
+                  detail.equipment_review.status !== 'approved'
+                "
+                class="w-full text-xs font-semibold text-amber-700 sm:w-auto sm:mr-auto"
+              >
+                ⚠ Validez le matériel ci-dessus pour débloquer l'approbation.
+              </p>
               <button
                 @click="pendingDecision = 'rejected'"
                 class="rounded-xl border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
@@ -883,6 +948,7 @@ import {
   useApplication,
   useApplications,
   useDecideApplication,
+  useDecideEquipmentReview,
   useStartApplicationReview,
   type ApplicationListFilters,
 } from '../composables/useApplications'
@@ -1136,6 +1202,22 @@ const startReviewMutation = useStartApplicationReview()
 function startReview() {
   if (!selectedKey.value) return
   startReviewMutation.mutate(selectedKey.value)
+}
+
+const decideEquipmentMutation = useDecideEquipmentReview()
+async function decideEquipment(decision: 'approved' | 'rejected' | 'needs_info', reason?: string) {
+  if (!detail.value?.equipment_review?.key) return
+  decideError.value = null
+  try {
+    await decideEquipmentMutation.mutateAsync({
+      key: detail.value.equipment_review.key,
+      decision,
+      reason,
+    })
+  } catch (err) {
+    decideError.value =
+      (err as ApiError).displayMessage || 'Impossible de mettre à jour la revue matériel.'
+  }
 }
 
 const decideMutation = useDecideApplication()
