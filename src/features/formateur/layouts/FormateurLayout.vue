@@ -16,8 +16,10 @@
 <script setup lang="ts">
 import {
   BookOpen as BookOpenIcon,
+  ClipboardCheck as ClipboardCheckIcon,
   Compass as CompassIcon,
   LayoutDashboard as LayoutDashboardIcon,
+  UsersRound as UsersIcon,
 } from '@lucide/vue'
 import WorkspaceShell, {
   type WorkspaceNavGroup,
@@ -29,6 +31,8 @@ const navigation: WorkspaceNavGroup[] = [
     items: [
       { label: 'Tableau de bord', to: '/formateur/dashboard', icon: LayoutDashboardIcon },
       { label: 'Mes cours', to: '/formateur/cours', icon: BookOpenIcon },
+      { label: 'Copies à corriger', to: '/formateur/corrections', icon: ClipboardCheckIcon },
+      { label: 'Mes cohortes', to: '/formateur/cohortes', icon: UsersIcon },
       { label: 'Catalogue', to: '/catalogue', icon: CompassIcon },
     ],
   },

@@ -340,6 +340,16 @@ const router = createRouter({
           name: 'formateur-cours-detail',
           component: () => import('@/features/formateur/views/FormateurCoursDetail.vue'),
         },
+        {
+          path: 'corrections',
+          name: 'formateur-corrections',
+          component: () => import('@/features/formateur/views/FormateurCorrections.vue'),
+        },
+        {
+          path: 'cohortes',
+          name: 'formateur-cohortes',
+          component: () => import('@/features/formateur/views/FormateurCohortes.vue'),
+        },
         // Same /profile API as learners; the views are role-agnostic.
         {
           path: 'profil',
