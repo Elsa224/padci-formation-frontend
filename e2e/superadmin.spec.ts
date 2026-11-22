@@ -41,17 +41,16 @@ test.describe('SuperAdmin pages', () => {
     await expect(page.getByText('Cisco Networking Academy')).toBeVisible()
 
     const validerBtn = page.getByRole('button', { name: 'Valider' }).first()
-    if (await validerBtn.isVisible()) {
-      await validerBtn.click()
-      await expect(page.getByRole('heading', { name: 'Confirmer le décaissement' })).toBeVisible()
-      await page.getByRole('button', { name: 'Valider le paiement' }).click()
-      await expect(
-        page.getByText(
-          'Un décaissement ne peut être marqué payé que si une ANO signée y est rattachée.',
-        ),
-      ).toBeVisible()
-      await page.getByRole('button', { name: 'Annuler' }).click()
-    }
+    await expect(validerBtn).toBeVisible()
+    await validerBtn.click()
+    await expect(page.getByRole('heading', { name: 'Confirmer le décaissement' })).toBeVisible()
+    await page.getByRole('button', { name: 'Valider le paiement' }).click()
+    await expect(
+      page.getByText(
+        'Un décaissement ne peut être marqué payé que si une ANO signée y est rattachée.',
+      ),
+    ).toBeVisible()
+    await page.getByRole('button', { name: 'Annuler' }).click()
   })
 
   test('SuperAdmin ANO displays list and allows signing', async ({ page }) => {

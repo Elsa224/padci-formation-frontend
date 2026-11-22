@@ -128,10 +128,12 @@ export interface MockApiState {
   attempts: Record<string, MockAttempt>
   certificates: MockCertificate[]
   resetTokens: Record<string, string>
+  applications: Array<Record<string, unknown>>
 }
 
 export function createDefaultState(): MockApiState {
   return {
+    applications: [],
     users: [
       {
         id: 1,
@@ -841,15 +843,44 @@ export async function setupDisposableApi(
 
     // 12. APPLICATIONS
     if (path === '/applications' && method === 'POST') {
-      return jsonResponse(route, { key: `app_${Date.now()}`, status: 'submitted' }, 201)
+      const newApp = {
+        key: `app_${Date.now()}`,
+        status: 'submitted',
+        cohort: { name: 'Cohorte Cyber Sécurité Promo 2026' },
+        pathway: { name: 'Cyber Sécurité' },
+        created_at: new Date().toISOString(),
+      }
+      state.applications.push(newApp)
+      return jsonResponse(route, newApp, 201)
     }
     if ((path === '/applications' || path === '/applications/my') && method === 'GET') {
+      return jsonResponse(route, state.applications)
+    }
+
+    // 12b. ENROLLMENTS
+    if (path === '/enrollments' && method === 'GET') {
       return jsonResponse(route, [
         {
-          key: 'app_1',
-          status: 'submitted',
-          cohort: { name: 'Cohorte Cyber Sécurité Promo 2026' },
-          pathway: { name: 'Cyber Sécurité' },
+          id: 1,
+          key: 'enr_1',
+          status: 'active',
+          cohort: {
+            id: 1,
+            key: 'coh_1',
+            code: 'CYBER-2026',
+            name: 'Cohorte Cyber 2026',
+            session: 'Session Printemps 2026',
+            status: 'active',
+          },
+          course: {
+            id: 1,
+            key: 'crs_cyber_sec',
+            slug: 'intro-cyber',
+            title: 'Introduction à la Cybersécurité',
+            status: 'published',
+          },
+          enrolled_at: new Date().toISOString(),
+          completed_at: null,
           created_at: new Date().toISOString(),
         },
       ])

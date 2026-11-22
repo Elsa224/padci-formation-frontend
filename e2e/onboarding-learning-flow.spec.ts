@@ -32,28 +32,25 @@ test.describe('Learner Application Flow & Dynamic Learning Space', () => {
     await expect(page.getByRole('heading', { name: 'Cyber Sécurité', exact: true })).toBeVisible()
 
     const applyBtn = page.getByRole('button', { name: /Participer à cette formation/ }).first()
-    if (await applyBtn.isVisible()) {
-      await applyBtn.click()
+    await expect(applyBtn).toBeVisible()
+    await applyBtn.click()
 
-      // Formulaire étape 1
-      await expect(page.getByRole('heading', { name: /Votre filière/ })).toBeVisible()
-      const motivation = page.locator('textarea').first()
-      if (await motivation.isVisible()) {
-        await motivation.fill('Je souhaite me perfectionner en sécurité réseau.')
-      }
-      await page.getByRole('button', { name: /Continuer/ }).click()
+    // Formulaire étape 1
+    await expect(page.getByRole('heading', { name: /Votre filière/ })).toBeVisible()
+    const motivation = page.locator('textarea').first()
+    await motivation.fill('Je souhaite me perfectionner en sécurité réseau.')
+    await page.getByRole('button', { name: /Continuer/ }).click()
 
-      // Formulaire étape 2
-      await page.getByRole('button', { name: /Continuer|Vérifier/ }).click()
+    // Formulaire étape 2
+    await page.getByRole('button', { name: /Continuer|Vérifier/ }).click()
 
-      // Formulaire étape 3
-      await page.getByRole('button', { name: /Confirmer et envoyer/ }).click()
+    // Formulaire étape 3
+    await page.getByRole('button', { name: /Confirmer et envoyer/ }).click()
 
-      // Écran de succès
-      await expect(page.getByRole('heading', { name: /Candidature enregistrée/ })).toBeVisible()
-      await page.getByRole('link', { name: 'Voir mes candidatures' }).click()
-      await expect(page.getByRole('heading', { name: /Mes candidatures/i })).toBeVisible()
-    }
+    // Écran de succès
+    await expect(page.getByRole('heading', { name: /Candidature enregistrée/ })).toBeVisible()
+    await page.getByRole('link', { name: 'Voir mes candidatures' }).click()
+    await expect(page.getByRole('heading', { name: /Mes candidatures/i })).toBeVisible()
   })
 
   test('Learner accesses LearnerDashboard and views dynamic course structure', async ({ page }) => {
@@ -61,10 +58,9 @@ test.describe('Learner Application Flow & Dynamic Learning Space', () => {
     await expect(page.getByRole('heading', { name: 'Mon espace de formation' })).toBeVisible()
 
     // Vérifier la présence d'au moins un cours ou bouton
-    const courseCard = page.getByRole('link', { name: /Module 1/ }).first()
-    if (await courseCard.isVisible()) {
-      await courseCard.click()
-      await expect(page).toHaveURL(/\/formations\/crs_/)
-    }
+    const courseCard = page.getByRole('link', { name: /Accéder au cours/ }).first()
+    await expect(courseCard).toBeVisible()
+    await courseCard.click()
+    await expect(page).toHaveURL(/\/formations\/crs_/)
   })
 })
