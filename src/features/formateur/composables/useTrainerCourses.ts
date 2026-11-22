@@ -252,6 +252,49 @@ function useModulesInvalidation(courseKey: MaybeRef<string>) {
     client.invalidateQueries({ queryKey: ['trainer-course-modules', toValue(courseKey)] })
 }
 
+export interface UpdateCoursePayload {
+  title?: string
+  summary?: string | null
+  description?: string | null
+  level?: CourseLevel
+}
+
+/** PATCH /admin/courses/{course} — while editable (draft/rejected). */
+export function useUpdateCourse(courseKey: MaybeRef<string>) {
+  const client = useQueryClient()
+  return useMutation({
+    mutationFn: async (payload: UpdateCoursePayload) =>
+      (await http.patch<TrainerCourse>(`/admin/courses/${toValue(courseKey)}`, payload)).data,
+    onSuccess: () => {
+      void client.invalidateQueries({ queryKey: ['trainer-course', toValue(courseKey)] })
+      void client.invalidateQueries({ queryKey: ['trainer-courses'] })
+    },
+  })
+}
+
+/**
+ * Rename or delete a node of the course structure. `path` is the part
+ * after /admin/courses/{course}/, e.g. `modules/{m}` or
+ * `modules/{m}/chapters/{c}/resources/{r}`. Deleting a module or chapter
+ * cascades server-side to what it contains.
+ */
+export function useUpdateStructureNode(courseKey: MaybeRef<string>) {
+  const invalidate = useModulesInvalidation(courseKey)
+  return useMutation({
+    mutationFn: ({ path, title }: { path: string; title: string }) =>
+      http.patch(`/admin/courses/${toValue(courseKey)}/${path}`, { title }),
+    onSuccess: invalidate,
+  })
+}
+
+export function useDeleteStructureNode(courseKey: MaybeRef<string>) {
+  const invalidate = useModulesInvalidation(courseKey)
+  return useMutation({
+    mutationFn: (path: string) => http.delete(`/admin/courses/${toValue(courseKey)}/${path}`),
+    onSuccess: invalidate,
+  })
+}
+
 /** POST /admin/courses/{course}/modules. */
 export function useCreateModule(courseKey: MaybeRef<string>) {
   const invalidate = useModulesInvalidation(courseKey)

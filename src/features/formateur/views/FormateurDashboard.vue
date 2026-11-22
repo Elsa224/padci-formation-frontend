@@ -105,6 +105,9 @@
         <h2 class="text-lg font-bold text-ink">Copies en attente de correction</h2>
         <p class="text-xs text-quiet">Réponses libres soumises par les apprenants de vos cours.</p>
       </div>
+      <RouterLink to="/formateur/corrections" class="app-action-primary w-fit">
+        Corriger les copies
+      </RouterLink>
       <ul class="divide-y divide-line text-sm">
         <li
           v-for="attempt in grading.data.value.items"

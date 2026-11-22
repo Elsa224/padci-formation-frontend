@@ -27,6 +27,14 @@
         <div class="flex flex-wrap items-center gap-3">
           <CourseStatusBadge :status="course.data.value.status" />
           <button
+            v-if="editable && !ficheOpen"
+            class="app-action-secondary"
+            data-test="edit-fiche"
+            @click="openFiche"
+          >
+            Modifier la fiche
+          </button>
+          <button
             v-if="course.data.value.status === 'rejected'"
             class="app-action-secondary"
             :disabled="revert.isPending.value"
@@ -54,6 +62,61 @@
         }}).
       </p>
 
+      <!-- Fiche du cours -->
+      <form
+        v-if="ficheOpen"
+        class="app-panel space-y-3"
+        data-test="fiche-form"
+        @submit.prevent="saveFiche"
+      >
+        <h2 class="text-lg font-bold text-ink">Fiche du cours</h2>
+        <div class="grid gap-3 md:grid-cols-[1fr_12rem]">
+          <label class="text-sm font-semibold text-ink">
+            Titre
+            <input
+              id="fiche-title"
+              v-model.trim="fiche.title"
+              class="app-input mt-1"
+              required
+              maxlength="180"
+            />
+          </label>
+          <label class="text-sm font-semibold text-ink">
+            Niveau
+            <select id="fiche-level" v-model="fiche.level" class="app-input mt-1">
+              <option v-for="(label, value) in courseLevelLabels" :key="value" :value="value">
+                {{ label }}
+              </option>
+            </select>
+          </label>
+        </div>
+        <label class="block text-sm font-semibold text-ink">
+          Résumé
+          <textarea
+            id="fiche-summary"
+            v-model.trim="fiche.summary"
+            class="app-input mt-1 min-h-16"
+            maxlength="500"
+          />
+        </label>
+        <label class="block text-sm font-semibold text-ink">
+          Description
+          <textarea
+            id="fiche-description"
+            v-model.trim="fiche.description"
+            class="app-input mt-1 min-h-28"
+          />
+        </label>
+        <div class="flex justify-end gap-2">
+          <button type="button" class="app-action-secondary" @click="ficheOpen = false">
+            Annuler
+          </button>
+          <button class="app-action-primary" :disabled="updateCourse.isPending.value">
+            Enregistrer
+          </button>
+        </div>
+      </form>
+
       <!-- Contenu -->
       <div class="app-panel space-y-5">
         <h2 class="text-lg font-bold text-ink">Contenu du cours</h2>
@@ -78,7 +141,18 @@
             class="rounded-xl border border-line p-4"
             data-test="course-module"
           >
-            <p class="font-bold text-ink">{{ module.position }}. {{ module.title }}</p>
+            <StructureNodeTitle
+              :node-key="module.key"
+              :title="module.title"
+              :editable="editable"
+              :busy="nodeBusy"
+              title-class="font-bold text-ink"
+              confirm-text="Supprimer ce module et tous ses chapitres ?"
+              @rename="(title) => renameNode(`modules/${module.key}`, title)"
+              @delete="deleteNode(`modules/${module.key}`, 'Module supprimé.')"
+            >
+              {{ module.position }}. {{ module.title }}
+            </StructureNodeTitle>
             <p v-if="module.summary" class="mt-1 text-sm text-quiet">{{ module.summary }}</p>
 
             <ul v-if="module.chapters?.length" class="mt-3 space-y-2">
@@ -88,7 +162,22 @@
                 class="rounded-lg bg-canvas p-3 text-sm"
               >
                 <div class="flex flex-wrap items-center justify-between gap-2">
-                  <span class="font-semibold text-ink">{{ chapter.title }}</span>
+                  <StructureNodeTitle
+                    :node-key="chapter.key"
+                    :title="chapter.title"
+                    :editable="editable"
+                    :busy="nodeBusy"
+                    confirm-text="Supprimer ce chapitre et ses supports ?"
+                    @rename="
+                      (title) => renameNode(`modules/${module.key}/chapters/${chapter.key}`, title)
+                    "
+                    @delete="
+                      deleteNode(
+                        `modules/${module.key}/chapters/${chapter.key}`,
+                        'Chapitre supprimé.',
+                      )
+                    "
+                  />
                   <span class="text-xs text-quiet">{{ chapterTypeLabels[chapter.type] }}</span>
                 </div>
                 <ul v-if="chapter.resources?.length" class="mt-2 space-y-1">
@@ -116,6 +205,22 @@
                         · analyse antivirus en cours</template
                       >
                     </span>
+                    <StructureNodeTitle
+                      class="!flex-none"
+                      :node-key="resource.key"
+                      title=""
+                      :editable="editable"
+                      :busy="nodeBusy"
+                      :renamable="false"
+                      delete-label="Retirer"
+                      confirm-text="Retirer ce support ?"
+                      @delete="
+                        deleteNode(
+                          `modules/${module.key}/chapters/${chapter.key}/resources/${resource.key}`,
+                          'Support retiré.',
+                        )
+                      "
+                    />
                   </li>
                 </ul>
 
@@ -259,6 +364,8 @@
           encore disponible.
         </p>
       </div>
+
+      <CourseAssessmentsEditor :course-key="courseKey" :editable="editable" />
     </template>
   </section>
 </template>
@@ -269,9 +376,12 @@ import { useRoute } from 'vue-router'
 import { FileText as FileTextIcon, Link as LinkIcon } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import CourseStatusBadge from '../components/CourseStatusBadge.vue'
+import StructureNodeTitle from '../components/StructureNodeTitle.vue'
+import CourseAssessmentsEditor from '../components/CourseAssessmentsEditor.vue'
 import {
   apiErrorMessage,
   canSubmit,
+  courseLevelLabels,
   courseStatusLabels,
   isEditable,
   safeHttpUrl,
@@ -284,10 +394,14 @@ import {
   useCreateChapter,
   useCreateModule,
   useCreateResource,
+  useDeleteStructureNode,
+  useUpdateCourse,
+  useUpdateStructureNode,
   useRevertCourseToDraft,
   useSubmitCourse,
   useTrainerCourse,
   type ChapterType,
+  type CourseLevel,
 } from '../composables/useTrainerCourses'
 
 const chapterTypeLabels: Record<ChapterType, string> = {
@@ -307,6 +421,49 @@ const revert = useRevertCourseToDraft()
 const createModule = useCreateModule(courseKey)
 const createChapter = useCreateChapter(courseKey)
 const createResource = useCreateResource(courseKey)
+const updateNode = useUpdateStructureNode(courseKey)
+const deleteNodeMutation = useDeleteStructureNode(courseKey)
+const updateCourse = useUpdateCourse(courseKey)
+const nodeBusy = computed(() => updateNode.isPending.value || deleteNodeMutation.isPending.value)
+
+const ficheOpen = ref(false)
+const fiche = reactive({
+  title: '',
+  level: 'beginner' as CourseLevel,
+  summary: '',
+  description: '',
+})
+function openFiche() {
+  const current = course.data.value
+  if (!current) return
+  Object.assign(fiche, {
+    title: current.title,
+    level: current.level,
+    summary: current.summary ?? '',
+    description: current.description ?? '',
+  })
+  ficheOpen.value = true
+}
+async function saveFiche() {
+  const ok = await run(
+    () =>
+      updateCourse.mutateAsync({
+        title: fiche.title,
+        level: fiche.level,
+        summary: fiche.summary || null,
+        description: fiche.description || null,
+      }),
+    'Fiche mise à jour.',
+  )
+  if (ok) ficheOpen.value = false
+}
+
+function renameNode(path: string, title: string) {
+  void run(() => updateNode.mutateAsync({ path, title }), 'Titre mis à jour.')
+}
+function deleteNode(path: string, success: string) {
+  void run(() => deleteNodeMutation.mutateAsync(path), success)
+}
 const addDocumentMutation = useAddDocumentResource(courseKey)
 
 const documentTarget = ref<string | null>(null)
