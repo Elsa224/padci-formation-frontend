@@ -17,6 +17,7 @@ function homeFor(roles: string[]): string {
   if (roles.includes('super_admin')) return '/superadmin/dashboard'
   if (roles.includes('admin')) return '/admin/dashboard'
   if (roles.includes('moderateur')) return '/moderation/materiel'
+  if (roles.includes('formateur')) return '/formateur/dashboard'
   return '/formations/dashboard'
 }
 
@@ -287,9 +288,35 @@ const router = createRouter({
       ],
     },
 
-    // TODO(roles): no routes yet for `formateur` — the real
-    // backend has 5 roles, this frontend only covers 3. Tracked, not built
-    // here (see the audit report / plan).
+    // ==================== FORMATEUR ====================
+    // Ported from the legacy-main mockups (FormateurDashboard/Cours), rebuilt
+    // on the Catalog API. Attendance ("présences") and progress reports have
+    // no backend yet and are intentionally not routed.
+    {
+      path: '/formateur',
+      component: () => import('@/features/formateur/layouts/FormateurLayout.vue'),
+      redirect: '/formateur/dashboard',
+      // Formateur only: for admins /admin/courses is not owner-scoped, so
+      // "Mes cours" would list every course of the institution.
+      meta: { requiresAuth: true, roles: ['formateur'] },
+      children: [
+        {
+          path: 'dashboard',
+          name: 'formateur-dashboard',
+          component: () => import('@/features/formateur/views/FormateurDashboard.vue'),
+        },
+        {
+          path: 'cours',
+          name: 'formateur-cours',
+          component: () => import('@/features/formateur/views/FormateurCours.vue'),
+        },
+        {
+          path: 'cours/:courseKey',
+          name: 'formateur-cours-detail',
+          component: () => import('@/features/formateur/views/FormateurCoursDetail.vue'),
+        },
+      ],
+    },
   ],
 })
 
