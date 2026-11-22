@@ -2184,7 +2184,7 @@ export interface components {
       key: string
       /** @enum {string} */
       status: 'pending' | 'issued' | 'revoked'
-      pdf_path: string | null
+      has_pdf: boolean
       holder?: {
         key: string
         name: string
