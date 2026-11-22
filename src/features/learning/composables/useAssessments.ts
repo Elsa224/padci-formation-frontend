@@ -15,6 +15,14 @@ import { http } from '@/api/http'
 export type QuestionType = 'single_choice' | 'multiple_choice' | 'true_false' | 'free_text'
 export type AttemptStatus = 'in_progress' | 'submitted' | 'expired' | 'pending_grading'
 
+export interface LearnerAssessmentAttemptSummary {
+  key: string
+  status: AttemptStatus | string
+  score: number | null
+  submitted_at: string | null
+  auto_submitted: boolean
+}
+
 /** `LearnerAssessmentResource` (index: without questions). */
 export interface LearnerAssessment {
   key: string
@@ -27,6 +35,10 @@ export interface LearnerAssessment {
   schedule_published_at: string | null
   questions_count?: number
   max_score?: number | string | null
+  attempts_used?: number
+  attempts_remaining?: number
+  best_score?: number | null
+  last_attempt?: LearnerAssessmentAttemptSummary | null
 }
 
 export interface AttemptOption {

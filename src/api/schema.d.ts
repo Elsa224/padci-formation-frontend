@@ -2984,6 +2984,16 @@ export interface components {
       delivery_mode: string | null
       location: string | null
       schedule_published_at: string | null
+      attempts_used: number
+      attempts_remaining: number
+      best_score: number | null
+      last_attempt: {
+        key: string
+        status: string
+        score: number | null
+        submitted_at: string | null
+        auto_submitted: boolean
+      } | null
       questions?: string[]
       questions_count?: number
       max_score?: string

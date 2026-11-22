@@ -88,4 +88,137 @@ describe('CourseAssessmentsPanel', () => {
     await flushPromises()
     expect(wrapper.text()).toContain('Score minimum non atteint.')
   })
+
+  it('handles state: jamais passé (0 attempt used, 1 remaining, button Commencer present, no review link)', () => {
+    vi.mocked(assessmentsModule.useCourseAssessments).mockReturnValue({
+      data: ref([
+        {
+          key: 'asm_exam',
+          title: 'Examen final',
+          status: 'published',
+          settings: { duration_minutes: 60, max_attempts: 1 },
+          scheduled_at: null,
+          delivery_mode: null,
+          location: null,
+          schedule_published_at: null,
+          questions_count: 20,
+          max_score: 20,
+          attempts_used: 0,
+          attempts_remaining: 1,
+          best_score: null,
+          last_attempt: null,
+        },
+      ]),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as never)
+
+    const wrapper = mountPanel()
+
+    expect(wrapper.find('[data-test="assessment-attempts-stats"]').text()).toBe(
+      '1 tentative restante',
+    )
+    const startButton = wrapper.find('[data-test="start-assessment"]')
+    expect(startButton.exists()).toBe(true)
+    expect(startButton.text()).toBe('Commencer')
+    expect(wrapper.find('[data-test="review-attempt"]').exists()).toBe(false)
+    expect(wrapper.find('[data-test="attempts-exhausted"]').exists()).toBe(false)
+  })
+
+  it('handles state: passé une fois avec tentatives restantes (attempts_used=1, attempts_remaining=1, best_score=4, review link and start button present)', () => {
+    vi.mocked(assessmentsModule.useCourseAssessments).mockReturnValue({
+      data: ref([
+        {
+          key: 'asm_exam',
+          title: 'Examen final',
+          status: 'published',
+          settings: { duration_minutes: 60, max_attempts: 2 },
+          scheduled_at: null,
+          delivery_mode: null,
+          location: null,
+          schedule_published_at: null,
+          questions_count: 5,
+          max_score: 5,
+          attempts_used: 1,
+          attempts_remaining: 1,
+          best_score: 4,
+          last_attempt: {
+            key: 'att_123',
+            status: 'submitted',
+            score: 4,
+            submitted_at: '2026-11-22T21:00:00Z',
+            auto_submitted: false,
+          },
+        },
+      ]),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as never)
+
+    const wrapper = mountPanel()
+
+    expect(wrapper.find('[data-test="assessment-attempts-stats"]').text()).toBe(
+      'Meilleur score 4/5 · 1 tentative restante',
+    )
+    const reviewEl = wrapper.find('[data-test="review-attempt"]')
+    expect(reviewEl.exists()).toBe(true)
+    expect(reviewEl.text()).toBe('Revoir ma copie')
+    const reviewLink = wrapper.findComponent(RouterLinkStub)
+    expect(reviewLink.props().to).toBe('/formations/crs_1/evaluations/att_123')
+
+    const startButton = wrapper.find('[data-test="start-assessment"]')
+    expect(startButton.exists()).toBe(true)
+    expect(startButton.text()).toBe('Commencer')
+    expect(wrapper.find('[data-test="attempts-exhausted"]').exists()).toBe(false)
+  })
+
+  it('handles state: tentatives épuisées (attempts_used=2, attempts_remaining=0, best_score=4, review link present, start button absent, attempts-exhausted visible)', () => {
+    vi.mocked(assessmentsModule.useCourseAssessments).mockReturnValue({
+      data: ref([
+        {
+          key: 'asm_exam',
+          title: 'Examen final',
+          status: 'published',
+          settings: { duration_minutes: 60, max_attempts: 2 },
+          scheduled_at: null,
+          delivery_mode: null,
+          location: null,
+          schedule_published_at: null,
+          questions_count: 5,
+          max_score: 5,
+          attempts_used: 2,
+          attempts_remaining: 0,
+          best_score: 4,
+          last_attempt: {
+            key: 'att_456',
+            status: 'submitted',
+            score: 4,
+            submitted_at: '2026-11-22T21:00:00Z',
+            auto_submitted: false,
+          },
+        },
+      ]),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as never)
+
+    const wrapper = mountPanel()
+
+    expect(wrapper.find('[data-test="assessment-attempts-stats"]').text()).toBe(
+      'Meilleur score 4/5 · 0 tentative restante',
+    )
+    const reviewEl = wrapper.find('[data-test="review-attempt"]')
+    expect(reviewEl.exists()).toBe(true)
+    expect(reviewEl.text()).toBe('Revoir ma copie')
+    const reviewLink = wrapper.findComponent(RouterLinkStub)
+    expect(reviewLink.props().to).toBe('/formations/crs_1/evaluations/att_456')
+
+    expect(wrapper.find('[data-test="start-assessment"]').exists()).toBe(false)
+    const exhaustedBadge = wrapper.find('[data-test="attempts-exhausted"]')
+    expect(exhaustedBadge.exists()).toBe(true)
+    expect(exhaustedBadge.text()).toBe('Tentatives épuisées')
+  })
 })

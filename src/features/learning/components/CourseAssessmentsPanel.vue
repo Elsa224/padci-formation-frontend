@@ -29,6 +29,9 @@
               {{ assessment.settings.duration_minutes }} min ·
               {{ attemptsLabel(assessment.settings.max_attempts) }}
             </p>
+            <p class="mt-0.5 text-xs text-quiet" data-test="assessment-attempts-stats">
+              {{ attemptsStats(assessment) }}
+            </p>
             <p
               v-if="assessment.scheduled_at"
               class="mt-1 text-xs font-semibold text-primary"
@@ -41,14 +44,32 @@
               <template v-if="assessment.location"> · {{ assessment.location }}</template>
             </p>
           </div>
-          <button
-            class="app-action-primary"
-            :disabled="start.isPending.value"
-            data-test="start-assessment"
-            @click="startAssessment(assessment.key)"
-          >
-            Commencer ou reprendre
-          </button>
+          <div class="flex items-center gap-2">
+            <RouterLink
+              v-if="assessment.last_attempt"
+              :to="`/formations/${props.courseKey}/evaluations/${assessment.last_attempt.key}`"
+              class="app-action-secondary"
+              data-test="review-attempt"
+            >
+              Revoir ma copie
+            </RouterLink>
+            <span
+              v-if="isAttemptsExhausted(assessment)"
+              class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-quiet"
+              data-test="attempts-exhausted"
+            >
+              Tentatives épuisées
+            </span>
+            <button
+              v-else
+              class="app-action-primary"
+              :disabled="start.isPending.value"
+              data-test="start-assessment"
+              @click="startAssessment(assessment.key)"
+            >
+              {{ assessment.last_attempt?.status === 'in_progress' ? 'Reprendre' : 'Commencer' }}
+            </button>
+          </div>
           <p
             v-if="startError?.key === assessment.key"
             class="w-full rounded-xl bg-red-50 p-3 text-sm text-red-800"
@@ -102,7 +123,11 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { ApiError } from '@/api/http'
-import { useCourseAssessments, useStartAttempt } from '../composables/useAssessments'
+import {
+  useCourseAssessments,
+  useStartAttempt,
+  type LearnerAssessment,
+} from '../composables/useAssessments'
 import { useMyCertificates, useRequestCertificate } from '../composables/useCertificates'
 
 const props = defineProps<{ courseKey: string }>()
@@ -129,6 +154,29 @@ function apiMessage(error: unknown, fallback: string) {
 
 function attemptsLabel(max: number) {
   return max === 1 ? '1 tentative' : `${max} tentatives`
+}
+
+function isAttemptsExhausted(assessment: LearnerAssessment): boolean {
+  const remaining = assessment.attempts_remaining ?? 1
+  return remaining <= 0 && assessment.last_attempt?.status !== 'in_progress'
+}
+
+function attemptsStats(assessment: LearnerAssessment): string {
+  const remaining = assessment.attempts_remaining ?? assessment.settings.max_attempts
+  const remainingText =
+    remaining <= 0
+      ? '0 tentative restante'
+      : remaining === 1
+        ? '1 tentative restante'
+        : `${remaining} tentatives restantes`
+
+  if (assessment.best_score !== null && assessment.best_score !== undefined) {
+    const maxScore = assessment.max_score ?? assessment.questions_count
+    const scoreText = maxScore ? `${assessment.best_score}/${maxScore}` : `${assessment.best_score}`
+    return `Meilleur score ${scoreText} · ${remainingText}`
+  }
+
+  return remainingText
 }
 
 const dateTime = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeStyle: 'short' })
