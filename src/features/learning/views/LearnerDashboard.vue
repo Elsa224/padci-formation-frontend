@@ -140,6 +140,7 @@
           <router-link
             v-if="enrollment.course"
             :to="`/formations/${enrollment.course.key}`"
+            :aria-label="`Accéder au cours ${enrollment.course.title}`"
             class="group flex items-center gap-4 px-5 py-4 transition hover:bg-mint/50"
           >
             <span
