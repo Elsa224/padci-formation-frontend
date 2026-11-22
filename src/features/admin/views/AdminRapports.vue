@@ -1,314 +1,174 @@
 <template>
-  <div class="space-y-6">
-    <!-- ================= EN-TÊTE ================= -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <section class="app-page max-w-6xl">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Rapports & Suivi-Évaluation</h1>
-        <p class="text-sm text-quiet mt-1">
-          Indicateurs de performance (KPIs) et rapports du projet PADCI (Composante 3).
+        <p class="text-xs font-bold uppercase tracking-wider text-primary">Pilotage</p>
+        <h1 class="app-page-title mt-2">Rapports et indicateurs</h1>
+        <p class="app-page-copy">
+          Inscriptions, achèvement et attestations, calculés en direct par la plateforme.
         </p>
       </div>
+    </header>
 
-      <!-- Bouton de génération de rapport global -->
-      <button
-        class="flex items-center justify-center gap-2 bg-primary hover:bg-primary-shade text-white px-4 py-2.5 rounded-xl font-medium transition-colors shadow-sm text-sm"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
-        </svg>
-        Générer le rapport final (PDF)
-      </button>
+    <!-- Indicateurs globaux -->
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <article v-for="kpi in kpis" :key="kpi.label" class="app-panel" data-test="report-kpi">
+        <div v-if="overview.isPending.value" class="app-skeleton h-14" />
+        <template v-else>
+          <p class="text-sm font-medium text-quiet">{{ kpi.label }}</p>
+          <p class="mt-1 text-3xl font-bold tabular-nums text-ink">{{ kpi.value }}</p>
+        </template>
+      </article>
     </div>
+    <p v-if="overview.isError.value" class="text-sm text-red-700" role="alert">
+      {{ apiMessage(overview.error.value, 'Impossible de charger les indicateurs.') }}
+    </p>
 
-    <!-- ================= TABLEAU DES INDICATEURS CLÉS (KPIs du TDR) ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
-      <div class="px-6 py-5 border-b border-line">
-        <h2 class="text-lg font-bold text-ink flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-            />
-          </svg>
-          Indicateurs de performance (Cibles TDR)
-        </h2>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr
-              class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
-            >
-              <th class="py-3 px-6">Indicateur</th>
-              <th class="py-3 px-6 text-center">Cible (TDR)</th>
-              <th class="py-3 px-6 text-center">Réalisé</th>
-              <th class="py-3 px-6">Progression</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-line text-sm">
-            <!-- Ligne 1 -->
-            <tr class="hover:bg-canvas transition">
-              <td class="py-4 px-6 font-medium text-ink">Formateurs formés et certifiés</td>
-              <td class="py-4 px-6 text-center text-quiet">200</td>
-              <td class="py-4 px-6 text-center font-bold text-primary">148</td>
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-2">
-                  <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-primary h-2 rounded-full" style="width: 74%"></div>
-                  </div>
-                  <span class="text-xs font-bold text-ink">74%</span>
-                </div>
-              </td>
-            </tr>
-            <!-- Ligne 2 -->
-            <tr class="hover:bg-canvas transition">
-              <td class="py-4 px-6 font-medium text-ink">Taux de certification Cisco/Oracle</td>
-              <td class="py-4 px-6 text-center text-quiet">≥ 80%</td>
-              <td class="py-4 px-6 text-center font-bold text-primary">82%</td>
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-2">
-                  <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-primary h-2 rounded-full" style="width: 82%"></div>
-                  </div>
-                  <span class="text-xs font-bold text-ink">82%</span>
-                </div>
-              </td>
-            </tr>
-            <!-- Ligne 3 -->
-            <tr class="hover:bg-canvas transition">
-              <td class="py-4 px-6 font-medium text-ink">Taux d'assiduité aux sessions</td>
-              <td class="py-4 px-6 text-center text-quiet">≥ 90%</td>
-              <td class="py-4 px-6 text-center font-bold text-primary">94%</td>
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-2">
-                  <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-primary h-2 rounded-full" style="width: 94%"></div>
-                  </div>
-                  <span class="text-xs font-bold text-ink">94%</span>
-                </div>
-              </td>
-            </tr>
-            <!-- Ligne 4 -->
-            <tr class="hover:bg-canvas transition">
-              <td class="py-4 px-6 font-medium text-ink">
-                Taux de satisfaction (évaluation à chaud)
-              </td>
-              <td class="py-4 px-6 text-center text-quiet">≥ 85%</td>
-              <td class="py-4 px-6 text-center font-bold text-primary">89%</td>
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-2">
-                  <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-primary h-2 rounded-full" style="width: 89%"></div>
-                  </div>
-                  <span class="text-xs font-bold text-ink">89%</span>
-                </div>
-              </td>
-            </tr>
-            <!-- Ligne 5 -->
-            <tr class="hover:bg-canvas transition">
-              <td class="py-4 px-6 font-medium text-ink">Kits pédagogiques validés</td>
-              <td class="py-4 px-6 text-center text-quiet">5</td>
-              <td class="py-4 px-6 text-center font-bold text-primary">4</td>
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-2">
-                  <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-amber-400 h-2 rounded-full" style="width: 80%"></div>
-                  </div>
-                  <span class="text-xs font-bold text-ink">80%</span>
-                </div>
-              </td>
-            </tr>
-            <!-- Ligne 6 -->
-            <tr class="hover:bg-canvas transition">
-              <td class="py-4 px-6 font-medium text-ink">Taux de femmes dans le pool (Parité)</td>
-              <td class="py-4 px-6 text-center text-quiet">30 - 40%</td>
-              <td class="py-4 px-6 text-center font-bold text-primary">36%</td>
-              <td class="py-4 px-6">
-                <div class="flex items-center gap-2">
-                  <div class="w-full bg-gray-100 rounded-full h-2">
-                    <div class="bg-primary h-2 rounded-full" style="width: 36%"></div>
-                  </div>
-                  <span class="text-xs font-bold text-ink">36%</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ================= GRAPHIQUES ET ANALYSES ================= -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Graphique 1 : Répartition Hommes / Femmes par filière -->
-      <div class="bg-white rounded-xl shadow-sm border border-line p-6">
-        <h3 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-          Répartition par Genre (Parité)
-        </h3>
-        <div class="h-64">
-          <Bar :data="genderChartData" :options="chartOptions" />
-        </div>
-      </div>
-
-      <!-- Graphique 2 : Taux de réussite par filière -->
-      <div class="bg-white rounded-xl shadow-sm border border-line p-6">
-        <h3 class="text-lg font-bold text-ink mb-4 flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-            />
-          </svg>
-          Taux de réussite (Certification) par Filière
-        </h3>
-        <div class="h-64">
-          <Bar :data="successRateData" :options="chartOptions" />
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= HISTORIQUE DES RAPPORTS TÉLÉCHARGEABLES ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
-      <div class="px-6 py-5 border-b border-line flex justify-between items-center">
-        <h3 class="text-lg font-bold text-ink">Documents & Rapports générés</h3>
-      </div>
-      <ul class="divide-y divide-line">
-        <li
-          v-for="(doc, index) in rapports"
-          :key="index"
-          class="p-4 sm:px-6 hover:bg-canvas transition flex items-center justify-between gap-4"
+    <!-- Par filière -->
+    <section class="app-panel space-y-4" aria-labelledby="by-pathway">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="by-pathway" class="text-lg font-bold text-ink">Par filière</h2>
+        <button
+          class="app-action-secondary"
+          :disabled="!pathways.data.value?.length"
+          @click="exportPathways"
         >
-          <div class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 rounded-lg bg-red-50 text-red-500 flex items-center justify-center shrink-0"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            <div>
-              <p class="font-bold text-ink text-sm">{{ doc.nom }}</p>
-              <p class="text-xs text-quiet mt-0.5">Généré le {{ doc.date }} · {{ doc.taille }}</p>
-            </div>
-          </div>
-          <button
-            class="text-primary hover:bg-primary/10 p-2 rounded-lg transition"
-            title="Télécharger"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-          </button>
-        </li>
-      </ul>
-    </div>
-  </div>
+          Exporter (CSV)
+        </button>
+      </div>
+      <ReportTable
+        :loading="pathways.isPending.value"
+        :rows="pathwayRows"
+        first-column="Filière"
+        empty="Aucune inscription pour le moment."
+      />
+    </section>
+
+    <!-- Par cohorte -->
+    <section class="app-panel space-y-4" aria-labelledby="by-cohort">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="by-cohort" class="text-lg font-bold text-ink">Par cohorte</h2>
+        <button
+          class="app-action-secondary"
+          :disabled="!cohorts.data.value?.length"
+          @click="exportCohorts"
+        >
+          Exporter (CSV)
+        </button>
+      </div>
+      <ReportTable
+        :loading="cohorts.isPending.value"
+        :rows="cohortRows"
+        first-column="Cohorte"
+        empty="Aucune cohorte pour le moment."
+      />
+    </section>
+
+    <p class="app-panel-muted text-sm text-quiet">
+      Les indicateurs demandés par le bailleur qui ne sont pas encore collectés (répartition
+      femmes/hommes, insertion professionnelle) n'apparaissent pas ici : ils demandent d'abord de
+      définir et de collecter ces données.
+    </p>
+  </section>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { Bar } from 'vue-chartjs'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useDashboardByPathway, useDashboardOverview } from '../composables/useDashboard'
 import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-} from 'chart.js'
+  apiMessage,
+  formatPercent,
+  percentNumber,
+  useDashboardByCohort,
+} from '../composables/useAdminOperations'
+import ReportTable, { type ReportRow } from '../components/ReportTable.vue'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+const overview = useDashboardOverview()
+const pathways = useDashboardByPathway()
+const cohorts = useDashboardByCohort()
 
-// ==================== DONNÉES GENRE (Parité TDR) ====================
-// Couleurs Chart.js : options de config natives sans classes Tailwind -
-// valeurs littérales. #198341 = --color-primary (marque), #9ca3af = gris
-// de contraste, #f3f4f6 = grille (gray-100).
-const genderChartData = {
-  labels: ['Cybersécurité', 'Data Analysis', 'IT Support', 'Network', 'IA'],
-  datasets: [
-    {
-      label: 'Hommes',
-      data: [24, 22, 20, 18, 14],
-      backgroundColor: '#198341',
-      borderRadius: 4,
-      barPercentage: 0.6,
-      categoryPercentage: 0.6,
-    },
-    {
-      label: 'Femmes',
-      data: [14, 13, 10, 7, 6],
-      backgroundColor: '#9ca3af', // Gris pour contraster
-      borderRadius: 4,
-      barPercentage: 0.6,
-      categoryPercentage: 0.6,
-    },
-  ],
+const number = new Intl.NumberFormat('fr-FR')
+
+const kpis = computed(() => {
+  const data = overview.data.value
+  return [
+    { label: 'Apprenants', value: data ? number.format(data.learners_total) : '—' },
+    { label: 'Cohortes actives', value: data ? number.format(data.active_cohorts_total) : '—' },
+    { label: 'Cours publiés', value: data ? number.format(data.published_courses_total) : '—' },
+    { label: "Taux d'achèvement", value: data ? formatPercent(data.completion_rate) : '—' },
+    { label: 'Attestations', value: data ? number.format(data.certificates_issued_total) : '—' },
+  ]
+})
+
+const pathwayRows = computed<ReportRow[]>(() =>
+  (pathways.data.value ?? []).map((row) => ({
+    key: row.pathway_key,
+    label: row.name,
+    sublabel: null,
+    enrolled: row.enrolled_count,
+    completed: row.completed_count,
+    rate: row.completion_rate,
+    certificates: row.certificates_issued,
+  })),
+)
+
+const cohortRows = computed<ReportRow[]>(() =>
+  (cohorts.data.value ?? []).map((row) => ({
+    key: row.cohort_key,
+    label: row.name,
+    sublabel: [row.code, row.pathway_name].filter(Boolean).join(' · '),
+    enrolled: row.enrolled_count,
+    completed: row.completed_count,
+    rate: row.completion_rate,
+    certificates: row.certificates_issued,
+  })),
+)
+
+/** CSV with ';' (French Excel default) and a BOM so accents open correctly. */
+function downloadCsv(filename: string, header: string[], lines: Array<Array<string | number>>) {
+  const escape = (value: string | number) => {
+    const text = String(value)
+    return /[";\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  }
+  const body = [header, ...lines].map((line) => line.map(escape).join(';')).join('\r\n')
+  const url = URL.createObjectURL(new Blob(['﻿' + body], { type: 'text/csv;charset=utf-8' }))
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 10_000)
 }
 
-// ==================== DONNÉES TAUX DE RÉUSSITE ====================
-const successRateData = {
-  labels: ['Cybersécurité', 'Data Analysis', 'IT Support', 'Network', 'IA'],
-  datasets: [
-    {
-      label: 'Taux de réussite (%)',
-      data: [85, 80, 88, 78, 84],
-      backgroundColor: 'rgba(25, 131, 65, 0.8)',
-      borderColor: '#198341',
-      borderWidth: 1,
-      borderRadius: 4,
-    },
-  ],
+const today = () => new Date().toISOString().slice(0, 10)
+
+function exportPathways() {
+  downloadCsv(
+    `rapport-filieres-${today()}.csv`,
+    ['Filière', 'Inscrits', 'Terminés', "Taux d'achèvement (%)", 'Attestations'],
+    pathwayRows.value.map((row) => [
+      row.label,
+      row.enrolled,
+      row.completed,
+      percentNumber(row.rate),
+      row.certificates,
+    ]),
+  )
 }
 
-// ==================== OPTIONS GRAPHIQUES ====================
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } },
-  },
-  scales: {
-    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
-    x: { grid: { display: false } },
-  },
+function exportCohorts() {
+  downloadCsv(
+    `rapport-cohortes-${today()}.csv`,
+    ['Cohorte', 'Code et filière', 'Inscrits', 'Terminés', "Taux d'achèvement (%)", 'Attestations'],
+    cohortRows.value.map((row) => [
+      row.label,
+      row.sublabel ?? '',
+      row.enrolled,
+      row.completed,
+      percentNumber(row.rate),
+      row.certificates,
+    ]),
+  )
 }
-
-// ==================== DONNÉES DES RAPPORTS ====================
-const rapports = ref([
-  { nom: 'Rapport global de performance - PADCI (Phase 1)', date: '15/10/2024', taille: '2.4 Mo' },
-  { nom: 'Rapport de sélection des 200 formateurs', date: '10/10/2024', taille: '1.8 Mo' },
-  { nom: 'Rapport de formation - Cohorte 1 (IA)', date: '20/10/2024', taille: '4.2 Mo' },
-  { nom: 'Bilan des certifications Cisco / Oracle', date: '25/10/2024', taille: '1.1 Mo' },
-])
 </script>
-
-<style scoped>
-/* Design entièrement géré par Tailwind */
-</style>

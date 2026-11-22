@@ -24,6 +24,46 @@ declare module 'vue-router' {
 // >500KB bundle (no code-splitting at all). This also means each route's
 // component only downloads when actually navigated to.
 
+/**
+ * Operations screens shared by the admin and super-admin workspaces (each
+ * mounts them in its own shell). Permissions are enforced by the API:
+ * admin and super_admin hold every permission these screens need.
+ */
+function operationsRoutes(prefix: 'admin' | 'superadmin') {
+  return [
+    {
+      path: 'rapports',
+      name: `${prefix}-rapports`,
+      component: () => import('@/features/admin/views/AdminRapports.vue'),
+    },
+    {
+      path: 'catalogue',
+      name: `${prefix}-catalogue`,
+      component: () => import('@/features/admin/views/AdminCatalogue.vue'),
+    },
+    {
+      path: 'inscriptions',
+      name: `${prefix}-inscriptions`,
+      component: () => import('@/features/admin/views/AdminInscriptions.vue'),
+    },
+    {
+      path: 'attestations',
+      name: `${prefix}-attestations`,
+      component: () => import('@/features/admin/views/AdminAttestations.vue'),
+    },
+    {
+      path: 'audit',
+      name: `${prefix}-audit`,
+      component: () => import('@/features/admin/views/AdminAudit.vue'),
+    },
+    {
+      path: 'parametres',
+      name: `${prefix}-parametres`,
+      component: () => import('@/features/admin/views/AdminParametres.vue'),
+    },
+  ]
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
 
@@ -254,16 +294,7 @@ const router = createRouter({
           name: 'admin-utilisateurs',
           component: () => import('@/features/superadmin/views/SuperAdminUtilisateurs.vue'),
         },
-        {
-          path: 'rapports',
-          name: 'admin-rapports',
-          component: () => import('@/features/admin/views/AdminRapports.vue'),
-        },
-        {
-          path: 'parametres',
-          name: 'admin-parametres',
-          component: () => import('@/features/admin/views/AdminParametres.vue'),
-        },
+        ...operationsRoutes('admin'),
       ],
     },
 
@@ -290,15 +321,18 @@ const router = createRouter({
           component: () => import('@/features/superadmin/views/SuperAdminAno.vue'),
         },
         {
+          // Real cohort management (super_admin holds cohorts.manage);
+          // replaces the read-only mockup with invented figures.
           path: 'cohortes',
           name: 'superadmin-cohortes',
-          component: () => import('@/features/superadmin/views/SuperAdminCohortes.vue'),
+          component: () => import('@/features/admin/views/AdminCohortes.vue'),
         },
         {
-          path: 'rapports',
-          name: 'superadmin-rapports',
-          component: () => import('@/features/superadmin/views/SuperAdminRapports.vue'),
+          path: 'moderation-cours',
+          name: 'superadmin-moderation-cours',
+          component: () => import('@/features/moderation/views/CourseReviews.vue'),
         },
+        ...operationsRoutes('superadmin'),
         {
           path: 'utilisateurs',
           name: 'superadmin-utilisateurs',

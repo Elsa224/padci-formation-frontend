@@ -15,7 +15,13 @@
 
 <script setup lang="ts">
 import {
+  Award as AwardIcon,
   BarChart3 as BarChartIcon,
+  BookOpenCheck as BookOpenCheckIcon,
+  ClipboardList as EnrollIcon,
+  Library as CatalogueIcon,
+  ScrollText as AuditIcon,
+  Settings as SettingsIcon,
   CalendarDays as CalendarIcon,
   Landmark as FinanceIcon,
   LayoutDashboard as LayoutDashboardIcon,
@@ -33,6 +39,19 @@ const navigation: WorkspaceNavGroup[] = [
       { label: 'Tableau de bord', to: '/superadmin/dashboard', icon: LayoutDashboardIcon },
       { label: 'Utilisateurs & Accès', to: '/superadmin/utilisateurs', icon: UsersIcon },
       { label: 'Cohortes', to: '/superadmin/cohortes', icon: CalendarIcon },
+      { label: 'Inscriptions', to: '/superadmin/inscriptions', icon: EnrollIcon },
+    ],
+  },
+  {
+    label: 'Pédagogie',
+    items: [
+      { label: 'Catalogue', to: '/superadmin/catalogue', icon: CatalogueIcon },
+      {
+        label: 'Modération des cours',
+        to: '/superadmin/moderation-cours',
+        icon: BookOpenCheckIcon,
+      },
+      { label: 'Attestations', to: '/superadmin/attestations', icon: AwardIcon },
     ],
   },
   {
@@ -41,6 +60,8 @@ const navigation: WorkspaceNavGroup[] = [
       { label: 'Finances', to: '/superadmin/finance', icon: FinanceIcon },
       { label: 'Demandes ANO', to: '/superadmin/ano', icon: GovernanceIcon },
       { label: 'Rapports', to: '/superadmin/rapports', icon: BarChartIcon },
+      { label: "Journal d'audit", to: '/superadmin/audit', icon: AuditIcon },
+      { label: 'Paramètres', to: '/superadmin/parametres', icon: SettingsIcon },
     ],
   },
 ]
