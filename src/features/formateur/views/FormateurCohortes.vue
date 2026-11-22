@@ -2,7 +2,7 @@
   <section class="app-page max-w-5xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Enseignement</p>
+        <p class="app-eyebrow">Enseignement</p>
         <h1 class="app-page-title mt-2">Mes cohortes</h1>
         <p class="app-page-copy">Les cohortes où vous enseignez et leurs apprenants inscrits.</p>
       </div>
@@ -72,7 +72,7 @@
         </p>
         <div v-else class="overflow-x-auto rounded-xl border border-line">
           <table class="w-full min-w-[36rem] text-left text-sm">
-            <thead class="bg-canvas text-xs uppercase tracking-wide text-quiet">
+            <thead class="app-thead">
               <tr>
                 <th class="px-3 py-2">Apprenant</th>
                 <th class="px-3 py-2">Cours</th>

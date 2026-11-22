@@ -36,7 +36,7 @@
         <span
           v-if="pagination?.total !== undefined"
           class="px-2 py-0.5 rounded-full text-[11px]"
-          :class="activeTab === 'users' ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-quiet'"
+          :class="activeTab === 'users' ? 'bg-primary/10 text-primary' : 'bg-canvas text-quiet'"
         >
           {{ pagination.total }}
         </span>
@@ -93,13 +93,11 @@
       </div>
 
       <!-- TABLEAU DES UTILISATEURS -->
-      <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr
-                class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
-              >
+              <tr class="app-thead border-b border-line">
                 <th class="py-4 px-6">Utilisateur</th>
                 <th class="py-4 px-6">Rôle</th>
                 <th class="py-4 px-6">Statut</th>
@@ -236,7 +234,7 @@
 
     <!-- ── VUE 2 : INVITATIONS EN ATTENTE ──────────────────────────────── -->
     <div v-else class="space-y-6">
-      <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
         <div
           class="p-5 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
@@ -259,9 +257,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr
-                class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
-              >
+              <tr class="app-thead border-b border-line">
                 <th class="py-4 px-6">Destinataire</th>
                 <th class="py-4 px-6">Rôle</th>
                 <th class="py-4 px-6">Émis par</th>
@@ -296,7 +292,7 @@
                 <td class="py-4 px-6">
                   <div class="flex items-center gap-2.5">
                     <div
-                      class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-quiet"
+                      class="w-8 h-8 rounded-full bg-canvas flex items-center justify-center text-quiet"
                     >
                       <MailIcon class="w-4 h-4" />
                     </div>

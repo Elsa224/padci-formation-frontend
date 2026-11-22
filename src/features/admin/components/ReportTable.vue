@@ -3,7 +3,7 @@
   <p v-else-if="!rows.length" class="rounded-xl bg-canvas p-6 text-sm text-quiet">{{ empty }}</p>
   <div v-else class="overflow-x-auto rounded-xl border border-line">
     <table class="w-full min-w-[40rem] text-left text-sm">
-      <thead class="bg-canvas text-xs uppercase tracking-wide text-quiet">
+      <thead class="app-thead">
         <tr>
           <th class="px-3 py-2">{{ firstColumn }}</th>
           <th class="px-3 py-2 text-right">Inscrits</th>

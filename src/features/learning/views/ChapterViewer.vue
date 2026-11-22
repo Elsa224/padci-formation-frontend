@@ -30,24 +30,21 @@
 
     <template v-else-if="chapter">
       <!-- CORPS DU CHAPITRE -->
-      <div class="bg-white rounded-2xl border border-line p-6 sm:p-8 shadow-sm space-y-6">
+      <article class="app-panel space-y-6 sm:p-10">
         <div class="space-y-2 border-b border-line pb-5">
           <div class="flex items-center gap-2">
-            <span
-              class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-primary/10 text-primary"
-            >
-              {{ chapter.type }}
-            </span>
-            <span v-if="chapter.duration_seconds" class="text-xs text-quiet">
-              Durée estimée : {{ Math.round(chapter.duration_seconds / 60) }} min
+            <span class="app-chip app-chip-leaf">{{ chapterTypeLabel(chapter.type) }}</span>
+            <span v-if="chapter.duration_seconds" class="text-sm text-quiet">
+              {{ Math.round(chapter.duration_seconds / 60) }} min de lecture
             </span>
           </div>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-ink">{{ chapter.title }}</h1>
+          <h1 class="app-page-title max-w-[30ch]">{{ chapter.title }}</h1>
         </div>
 
         <!-- CONTENU DU CHAPITRE -->
-        <div class="prose prose-sm max-w-none text-ink leading-relaxed space-y-4">
-          <div v-if="chapter.body" class="whitespace-pre-wrap">{{ chapter.body }}</div>
+        <div>
+          <!-- renderMarkdown escapes all HTML first: only its own tags are emitted -->
+          <div v-if="chapter.body" class="app-prose" v-html="renderMarkdown(chapter.body)" />
           <div v-else class="text-quiet italic py-8 text-center bg-canvas rounded-xl">
             Aucun texte supplémentaire pour cette ressource.
           </div>
@@ -118,12 +115,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
       <!-- PIED DE NAVIGATION & PROGRESSION -->
-      <div
-        class="bg-white rounded-2xl border border-line p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4"
-      >
+      <div class="app-panel flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <router-link
             v-if="prevChapter"
@@ -158,6 +153,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { FileText as FileTextIcon, Link as LinkIcon } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
 import { safeHttpUrl } from '@/lib/safeUrl'
+import { renderMarkdown } from '@/lib/markdown'
 import {
   useChapterContent,
   useCourseOutline,
@@ -165,6 +161,14 @@ import {
   type ChapterResource,
   type OutlineChapter,
 } from '../composables/useLearningCourse'
+
+function chapterTypeLabel(type: string): string {
+  return (
+    { lesson: 'Leçon', video: 'Vidéo', document: 'Document', external_link: 'Lien externe' }[
+      type
+    ] ?? type
+  )
+}
 
 const route = useRoute()
 const router = useRouter()

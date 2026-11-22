@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Contrôle</p>
+        <p class="app-eyebrow">Contrôle</p>
         <h1 class="app-page-title mt-2">Journal d'audit</h1>
         <p class="app-page-copy">
           Actions sensibles et connexions, en lecture seule. Les entrées ne peuvent être ni
@@ -65,7 +65,7 @@
       </p>
       <div v-else class="overflow-x-auto rounded-xl border border-line">
         <table class="w-full min-w-[48rem] text-left text-sm">
-          <thead class="bg-canvas text-xs uppercase tracking-wide text-quiet">
+          <thead class="app-thead">
             <tr>
               <th class="px-3 py-2">Date</th>
               <th class="px-3 py-2">Action</th>
@@ -136,7 +136,7 @@
       </p>
       <div v-else class="overflow-x-auto rounded-xl border border-line">
         <table class="w-full min-w-[44rem] text-left text-sm">
-          <thead class="bg-canvas text-xs uppercase tracking-wide text-quiet">
+          <thead class="app-thead">
             <tr>
               <th class="px-3 py-2">Date</th>
               <th class="px-3 py-2">Événement</th>

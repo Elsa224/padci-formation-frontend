@@ -9,7 +9,7 @@
     </div>
 
     <!-- ================= SECTION : PROFIL ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line bg-canvas/50">
         <h2 class="text-lg font-bold text-ink flex items-center gap-2">
           <CircleUserIcon class="text-primary" :size="20" /> Profil
@@ -51,7 +51,7 @@
     </div>
 
     <!-- ================= SECTION : SÉCURITÉ ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line bg-canvas/50">
         <h2 class="text-lg font-bold text-ink flex items-center gap-2">
           <ShieldHalfIcon class="text-primary" :size="20" /> Sécurité

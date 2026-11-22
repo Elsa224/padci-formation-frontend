@@ -85,7 +85,7 @@ const roleBadge = computed(() => {
     default:
       return {
         label: invitation.value?.role_label || 'Collaborateur',
-        bg: 'bg-slate-50 text-slate-700 ring-1 ring-slate-200',
+        bg: 'bg-canvas text-body ring-1 ring-line',
         icon: '👤',
       }
   }
@@ -139,7 +139,7 @@ async function handleSubmit() {
 
 <template>
   <div
-    class="min-h-[100dvh] flex flex-col md:flex-row relative bg-slate-50 text-ink selection:bg-primary/20 selection:text-primary"
+    class="min-h-[100dvh] flex flex-col md:flex-row relative bg-canvas text-ink selection:bg-primary/20 selection:text-primary"
   >
     <!-- ================= COLONNE FORMULAIRE / ONBOARDING (GAUCHE) ================= -->
     <div
@@ -149,25 +149,23 @@ async function handleSubmit() {
         <!-- Logo Header -->
         <div class="flex items-center gap-3 mb-8">
           <img :src="logoEmsp" alt="EMSP LMS" class="h-10 w-auto object-contain" />
-          <div class="h-6 w-px bg-slate-200"></div>
-          <span class="text-xs font-semibold uppercase tracking-wider text-quiet">
-            Plateforme Institutionnelle
-          </span>
+          <div class="h-6 w-px bg-line"></div>
+          <span class="app-label"> Plateforme Institutionnelle </span>
         </div>
 
         <!-- ── ÉTAT 1 : CHARGEMENT ────────────────────────────────────────── -->
         <div
           v-if="isLoadingDetails"
-          class="rounded-[2rem] p-2 ring-1 ring-black/5 bg-slate-100/60 animate-pulse"
+          class="rounded-[2rem] p-2 ring-1 ring-black/5 bg-canvas/60 animate-pulse"
         >
           <div class="rounded-[calc(2rem-0.5rem)] bg-white p-8 sm:p-10 space-y-6">
-            <div class="h-5 w-32 bg-slate-200 rounded-full"></div>
-            <div class="h-8 w-3/4 bg-slate-200 rounded-lg"></div>
-            <div class="h-4 w-1/2 bg-slate-100 rounded-lg"></div>
+            <div class="h-5 w-32 bg-line rounded-full"></div>
+            <div class="h-8 w-3/4 bg-line rounded-lg"></div>
+            <div class="h-4 w-1/2 bg-canvas rounded-lg"></div>
             <div class="space-y-4 pt-4">
-              <div class="h-12 bg-slate-100 rounded-xl"></div>
-              <div class="h-12 bg-slate-100 rounded-xl"></div>
-              <div class="h-12 bg-slate-100 rounded-xl"></div>
+              <div class="h-12 bg-canvas rounded-xl"></div>
+              <div class="h-12 bg-canvas rounded-xl"></div>
+              <div class="h-12 bg-canvas rounded-xl"></div>
             </div>
             <p class="text-sm text-center text-quiet pt-2">
               Vérification de l'invitation en cours...
@@ -200,7 +198,7 @@ async function handleSubmit() {
               </p>
             </div>
 
-            <div class="pt-4 border-t border-slate-100">
+            <div class="pt-4 border-t border-line">
               <router-link
                 to="/"
                 class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all duration-300 shadow-md hover:shadow-lg"
@@ -244,7 +242,7 @@ async function handleSubmit() {
         <!-- ── ÉTAT 4 : FORMULAIRE D'ONBOARDING PRINCIPAL ────────────────── -->
         <div
           v-else-if="invitation"
-          class="rounded-[2rem] p-2 ring-1 ring-black/5 bg-slate-50/80 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-xl shadow-slate-200/50"
+          class="rounded-[2rem] p-2 ring-1 ring-black/5 bg-canvas/80 backdrop-blur-sm transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] shadow-xl shadow-slate-200/50"
         >
           <div class="rounded-[calc(2rem-0.5rem)] bg-white p-7 sm:p-10 space-y-6">
             <!-- Header du formulaire -->
@@ -267,7 +265,7 @@ async function handleSubmit() {
 
             <!-- Carte récapitulative e-mail & expiration -->
             <div
-              class="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+              class="p-3.5 rounded-xl bg-canvas border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
             >
               <div class="flex items-center gap-2 text-ink font-medium">
                 <LockIcon class="w-4 h-4 text-quiet shrink-0" />
@@ -284,7 +282,7 @@ async function handleSubmit() {
               <!-- Nom et Prénoms (2 colonnes) -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                  <label for="last_name" class="block text-xs font-semibold text-slate-700">
+                  <label for="last_name" class="block text-xs font-semibold text-body">
                     Nom <span class="text-red-500">*</span>
                   </label>
                   <div class="relative">
@@ -297,13 +295,13 @@ async function handleSubmit() {
                       type="text"
                       required
                       placeholder="Dupont"
-                      class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
+                      class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-canvas border border-line rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
                     />
                   </div>
                 </div>
 
                 <div class="space-y-1.5">
-                  <label for="first_name" class="block text-xs font-semibold text-slate-700">
+                  <label for="first_name" class="block text-xs font-semibold text-body">
                     Prénoms <span class="text-red-500">*</span>
                   </label>
                   <div class="relative">
@@ -316,7 +314,7 @@ async function handleSubmit() {
                       type="text"
                       required
                       placeholder="Jean-Michel"
-                      class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
+                      class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-canvas border border-line rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -324,7 +322,7 @@ async function handleSubmit() {
 
               <!-- Mot de passe -->
               <div class="space-y-1.5 pt-2">
-                <label for="password" class="block text-xs font-semibold text-slate-700">
+                <label for="password" class="block text-xs font-semibold text-body">
                   Mot de passe <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
@@ -337,7 +335,7 @@ async function handleSubmit() {
                     :type="showPassword ? 'text' : 'password'"
                     required
                     placeholder="••••••••••••"
-                    class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
+                    class="w-full pl-10 pr-10 py-2.5 text-sm bg-canvas border border-line rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
                   />
                   <button
                     type="button"
@@ -355,10 +353,7 @@ async function handleSubmit() {
 
               <!-- Confirmation Mot de passe -->
               <div class="space-y-1.5 pt-2">
-                <label
-                  for="password_confirmation"
-                  class="block text-xs font-semibold text-slate-700"
-                >
+                <label for="password_confirmation" class="block text-xs font-semibold text-body">
                   Confirmer le mot de passe <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
@@ -371,7 +366,7 @@ async function handleSubmit() {
                     :type="showConfirmPassword ? 'text' : 'password'"
                     required
                     placeholder="••••••••••••"
-                    class="w-full pl-10 pr-10 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
+                    class="w-full pl-10 pr-10 py-2.5 text-sm bg-canvas border border-line rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
                   />
                   <button
                     type="button"
@@ -455,7 +450,7 @@ async function handleSubmit() {
           continent.
         </p>
 
-        <div class="pt-6 grid grid-cols-2 gap-4 border-t border-white/10 text-xs text-slate-400">
+        <div class="pt-6 grid grid-cols-2 gap-4 border-t border-white/10 text-xs text-quiet">
           <div>
             <p class="text-white font-semibold text-sm">72 Heures</p>
             <p class="mt-0.5">Délai de sécurisation du lien d'onboarding.</p>

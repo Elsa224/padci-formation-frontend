@@ -2,8 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Espace formateur</p>
-        <h1 class="app-page-title mt-2">Bienvenue, {{ auth.user?.name ?? 'formateur' }}</h1>
+        <h1 class="app-page-title">Bienvenue, {{ auth.user?.name ?? 'formateur' }}</h1>
         <p class="app-page-copy">
           Préparez vos cours, suivez leur validation et repérez les copies à corriger.
         </p>
@@ -14,17 +13,22 @@
     </header>
 
     <!-- Indicateurs : uniquement des valeurs fournies par l'API -->
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <article v-for="kpi in kpis" :key="kpi.label" class="app-panel">
-        <div v-if="kpi.loading" class="app-skeleton h-14" />
-        <template v-else>
-          <p class="text-sm font-medium text-quiet">{{ kpi.label }}</p>
-          <p class="mt-1 text-3xl font-bold text-ink" data-test="kpi-value">
-            {{ kpi.value ?? '—' }}
-          </p>
-        </template>
+    <section
+      class="grid grid-cols-2 gap-x-6 gap-y-7 rounded-[18px] border border-line bg-white p-6 shadow-panel lg:grid-cols-4 lg:divide-x lg:divide-line"
+      aria-label="Indicateurs"
+    >
+      <article v-for="(kpi, index) in kpis" :key="kpi.label" :class="index > 0 ? 'lg:pl-6' : ''">
+        <p class="text-sm font-medium text-quiet">{{ kpi.label }}</p>
+        <div v-if="kpi.loading" class="app-skeleton mt-2 h-8 w-16" />
+        <p
+          v-else
+          class="mt-1.5 text-[1.9rem] leading-none font-bold text-ink tabular-nums"
+          data-test="kpi-value"
+        >
+          {{ kpi.value ?? '—' }}
+        </p>
       </article>
-    </div>
+    </section>
 
     <div class="grid gap-6 lg:grid-cols-2">
       <!-- Derniers cours créés -->

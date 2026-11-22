@@ -1,106 +1,59 @@
 <template>
-  <div class="space-y-6">
-    <!-- ================= EN-TÊTE ================= -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div class="app-page">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Tableau de bord</h1>
-        <p class="text-sm text-quiet mt-1">
-          Vue d'ensemble du programme : apprenants, cohortes, cours et certifications.
+        <h1 class="app-page-title">Tableau de bord</h1>
+        <p class="app-page-copy">
+          Apprenants, cohortes, cours et attestations du programme, en temps réel.
         </p>
       </div>
-    </div>
+      <RouterLink to="/admin/rapports" class="app-action-secondary">Voir les rapports</RouterLink>
+    </header>
 
-    <!-- ================= STATISTIQUES PRINCIPALES (KPIs réels) ================= -->
-    <div v-if="isOverviewPending" class="text-center text-quiet py-6">
-      Chargement des indicateurs…
-    </div>
-    <div v-else-if="isOverviewError" class="text-center text-red-600 py-6">
-      {{ (overviewError as ApiError)?.message ?? 'Impossible de charger les indicateurs.' }}
-    </div>
-    <div v-else-if="overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Apprenants</p>
-            <p class="text-3xl font-bold text-ink mt-1">{{ overview.learners_total }}</p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Cohortes actives</p>
-            <p class="text-3xl font-bold text-ink mt-1">{{ overview.active_cohorts_total }}</p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Taux de complétion</p>
-            <p class="text-3xl font-bold text-ink mt-1">
-              {{ Math.round(overview.completion_rate * 100) }}%
-            </p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Certificats délivrés</p>
-            <p class="text-3xl font-bold text-ink mt-1">{{ overview.certificates_issued_total }}</p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Indicateurs principaux : une seule bande, lue d'un coup d'œil -->
+    <p
+      v-if="isOverviewError"
+      class="rounded-[18px] bg-red-50 p-4 text-sm text-danger-ink"
+      role="alert"
+    >
+      {{ (overviewError as ApiError)?.message ?? 'Indicateurs indisponibles. Rechargez la page.' }}
+    </p>
+    <section
+      v-else
+      class="grid grid-cols-2 gap-x-6 gap-y-7 rounded-[18px] border border-line bg-white p-6 shadow-panel lg:grid-cols-4 lg:divide-x lg:divide-line"
+      aria-label="Indicateurs principaux"
+    >
+      <StatTile
+        label="Apprenants"
+        :value="overview?.learners_total ?? '—'"
+        :loading="isOverviewPending"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="Cohortes actives"
+        :value="overview?.active_cohorts_total ?? '—'"
+        :loading="isOverviewPending"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="Taux d'achèvement"
+        tone="leaf"
+        :value="overview ? `${Math.round(overview.completion_rate * 100)} %` : '—'"
+        :loading="isOverviewPending"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="Attestations délivrées"
+        tone="savane"
+        :value="overview?.certificates_issued_total ?? '—'"
+        :loading="isOverviewPending"
+      />
+    </section>
 
     <!-- ================= GRAPHIQUES ================= -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Répartition par filière (réel, GET /admin/dashboard/reports/pathways) -->
-      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="lg:col-span-2 app-panel">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold text-ink">Inscrits par filière</h3>
         </div>
@@ -125,7 +78,7 @@
       </div>
 
       <!-- Statut des candidatures (réel, totaux par statut via GET /admin/applications) -->
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <h3 class="text-lg font-bold text-ink mb-4">Statut des candidatures</h3>
         <div
           v-if="isStatusCountsPending"
@@ -149,7 +102,7 @@
     </div>
 
     <!-- ================= DERNIÈRES CANDIDATURES ACCEPTÉES (réel) ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line flex items-center justify-between">
         <h3 class="text-lg font-bold text-ink">Dernières candidatures acceptées</h3>
         <router-link
@@ -170,7 +123,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider">
+            <tr class="app-thead">
               <th class="py-3 px-6">Candidat</th>
               <th class="py-3 px-6">Filière</th>
               <th class="py-3 px-6">Session</th>
@@ -229,6 +182,7 @@ import {
   ArcElement,
 } from 'chart.js'
 import type { ApiError } from '@/api/http'
+import StatTile from '@/components/app/StatTile.vue'
 import { useApplications } from '../composables/useApplications'
 import {
   useApplicationStatusCounts,

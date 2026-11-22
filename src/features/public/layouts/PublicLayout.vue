@@ -1,25 +1,21 @@
 <template>
-  <div class="min-h-screen bg-[#f6f8f7] text-slate-900">
-    <header class="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+  <div class="min-h-screen bg-[#f6f8f7] text-ink">
+    <header class="sticky top-0 z-30 border-b border-line/80 bg-white/90 backdrop-blur-xl">
       <div
         class="mx-auto flex h-[4.5rem] max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-7 lg:px-10"
       >
         <RouterLink to="/catalogue" class="flex min-w-0 items-center gap-3">
           <img :src="padciLogo" alt="PADCI LMS" class="h-9 w-auto object-contain" />
           <div class="min-w-0">
-            <p class="truncate text-sm font-bold tracking-tight text-slate-900">PADCI Formation</p>
-            <p
-              class="hidden text-[11px] font-semibold uppercase tracking-[0.12em] text-primary sm:block"
-            >
-              Plateforme de préinscription
-            </p>
+            <p class="truncate text-[0.95rem] font-bold text-ink">PADCI Formation</p>
+            <p class="hidden text-xs text-quiet sm:block">Plateforme de préinscription</p>
           </div>
         </RouterLink>
 
         <nav class="flex items-center gap-2">
           <RouterLink
             to="/catalogue"
-            class="hidden rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 sm:inline-flex"
+            class="hidden rounded-lg px-3 py-2 text-sm font-semibold text-body transition hover:bg-canvas hover:text-ink sm:inline-flex"
             active-class="bg-primary/10 text-primary"
           >
             Catalogue
@@ -35,7 +31,7 @@
           <template v-else>
             <RouterLink
               to="/connexion"
-              class="hidden rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 sm:inline-flex"
+              class="hidden rounded-xl px-3 py-2 text-sm font-semibold text-body transition hover:bg-canvas sm:inline-flex"
               >Se connecter</RouterLink
             >
             <RouterLink
@@ -52,9 +48,9 @@
       <slot><router-view /></slot>
     </main>
 
-    <footer class="border-t border-slate-200/80 bg-white">
+    <footer class="border-t border-line/80 bg-white">
       <div
-        class="mx-auto flex max-w-[1600px] flex-col gap-2 px-4 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-7 lg:px-10"
+        class="mx-auto flex max-w-[1600px] flex-col gap-2 px-4 py-6 text-xs text-quiet sm:flex-row sm:items-center sm:justify-between sm:px-7 lg:px-10"
       >
         <p>
           © {{ new Date().getFullYear() }} PADCI Formation. Plateforme institutionnelle de

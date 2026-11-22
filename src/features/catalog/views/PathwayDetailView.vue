@@ -95,7 +95,7 @@
           class="flex flex-col justify-between gap-4 border-b border-line pb-5 sm:flex-row sm:items-end"
         >
           <div>
-            <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Admissions</p>
+            <p class="app-eyebrow">Admissions</p>
             <h2 id="sessions-title" class="mt-1 text-2xl font-bold text-ink">
               Choisissez votre session
             </h2>
@@ -145,7 +145,7 @@
                   </span>
                   <span
                     v-if="cohort.session"
-                    class="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-quiet"
+                    class="rounded-full border border-line bg-canvas px-2.5 py-0.5 text-xs font-semibold text-quiet"
                   >
                     Session {{ cohort.session }}
                   </span>
@@ -178,7 +178,7 @@
                     <button
                       type="button"
                       disabled
-                      class="inline-flex w-full cursor-not-allowed items-center justify-center rounded-xl border border-line bg-slate-100 px-4 py-2.5 text-xs font-semibold text-quiet sm:w-auto"
+                      class="inline-flex w-full cursor-not-allowed items-center justify-center rounded-xl border border-line bg-canvas px-4 py-2.5 text-xs font-semibold text-quiet sm:w-auto"
                       data-testid="btn-already-enrolled"
                     >
                       Vous suivez déjà {{ activeFormationName }}
@@ -241,7 +241,7 @@
               </div>
 
               <div
-                class="mt-2 h-2.5 w-full overflow-hidden rounded-full border border-slate-200 bg-slate-100"
+                class="mt-2 h-2.5 w-full overflow-hidden rounded-full border border-line bg-canvas"
                 role="progressbar"
                 :aria-valuenow="getEnrolledCount(cohort)"
                 :aria-valuemin="0"
@@ -260,7 +260,7 @@
 
       <section class="app-panel" aria-labelledby="courses-title">
         <div class="border-b border-line pb-5">
-          <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Programme</p>
+          <p class="app-eyebrow">Programme</p>
           <h2 id="courses-title" class="mt-1 text-2xl font-bold text-ink">Cours du parcours</h2>
         </div>
         <div v-if="isCoursesPending" class="mt-5 grid gap-3 sm:grid-cols-2">
@@ -371,7 +371,7 @@ function getCohortStatusBadge(cohort: PublicCohort): {
   }
   return {
     label: 'Planifiée',
-    class: 'border-slate-200 bg-slate-100 text-slate-700',
+    class: 'border-line bg-canvas text-body',
   }
 }
 

@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Certification</p>
+        <p class="app-eyebrow">Certification</p>
         <h1 class="app-page-title mt-2">Attestations et certifications</h1>
         <p class="app-page-copy">
           Les attestations sont délivrées automatiquement selon les critères du cours. Vous pouvez

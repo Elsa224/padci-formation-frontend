@@ -6,6 +6,11 @@ import * as useEnrollmentsModule from '../composables/useEnrollments'
 import * as useLearnerAttendanceModule from '../composables/useLearnerAttendance'
 import * as useLearnerApplicationsModule from '@/features/admissions/composables/useLearnerApplications'
 
+// The "Reprendre" block fetches the course outline; not under test here.
+vi.mock('../components/ResumeCourseHero.vue', () => ({
+  default: { template: '<div data-test="resume-hero-stub" />' },
+}))
+
 vi.mock('vue-router', () => ({
   useRoute: vi.fn(() => ({})),
   useRouter: vi.fn(() => ({ push: vi.fn() })),
@@ -160,7 +165,7 @@ describe('LearnerDashboard - Section Mon assiduité', () => {
     expect(item0.text()).toContain('09:00 - 12:00')
     const badge0 = item0.find('[data-test="attendance-status-badge"]')
     expect(badge0.text()).toBe('Présent')
-    expect(badge0.classes()).toContain('text-emerald-700')
+    expect(badge0.classes()).toContain('app-chip-leaf')
 
     // Second session
     const item1 = items[1]!
@@ -230,10 +235,10 @@ describe('LearnerDashboard - Section Mon assiduité', () => {
 
     const absentBadge = items[0]!.find('[data-test="attendance-status-badge"]')
     expect(absentBadge.text()).toBe('Absent')
-    expect(absentBadge.classes()).toContain('text-red-700')
+    expect(absentBadge.classes()).toContain('app-chip-danger')
 
     const excusedBadge = items[1]!.find('[data-test="attendance-status-badge"]')
     expect(excusedBadge.text()).toBe('Excusé')
-    expect(excusedBadge.classes()).toContain('text-blue-700')
+    expect(excusedBadge.classes()).toContain('text-sky-700')
   })
 })

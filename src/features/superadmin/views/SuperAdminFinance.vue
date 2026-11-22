@@ -16,7 +16,7 @@
       <div
         v-for="total in budgetTotals"
         :key="total.currency"
-        class="bg-white rounded-xl shadow-sm p-6 border border-line relative overflow-hidden"
+        class="app-panel relative overflow-hidden"
       >
         <div
           class="absolute top-0 right-0 w-20 h-20 bg-orange-50 rounded-bl-full -mr-4 -mt-4"
@@ -40,14 +40,11 @@
         </p>
       </div>
 
-      <div
-        v-if="budgetTotals.length === 0"
-        class="bg-white rounded-xl shadow-sm p-6 border border-line text-sm text-quiet md:col-span-2"
-      >
+      <div v-if="budgetTotals.length === 0" class="app-panel text-sm text-quiet md:col-span-2">
         Aucune ligne budgétaire créée pour l'instant.
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <p class="text-quiet text-sm font-medium">Décaissements en attente</p>
         <div class="flex items-end gap-2 mt-1">
           <p class="text-2xl font-bold text-ink">{{ pendingDisbursementsCount }}</p>
@@ -57,7 +54,7 @@
     </div>
 
     <!-- TABLEAU DES DÉCAISSEMENTS -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line flex items-center justify-between">
         <h3 class="text-lg font-bold text-ink">Demandes de décaissement</h3>
         <span class="text-xs font-medium bg-gray-100 text-quiet px-3 py-1 rounded-full"
@@ -67,7 +64,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider">
+            <tr class="app-thead">
               <th class="py-3 px-6">Date</th>
               <th class="py-3 px-6">Bénéficiaire</th>
               <th class="py-3 px-6">Objet</th>

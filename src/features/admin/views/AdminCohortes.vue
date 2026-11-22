@@ -161,7 +161,7 @@
       <div
         v-for="cohort in cohorts"
         :key="cohort.key"
-        class="bg-white rounded-xl shadow-sm border border-line overflow-hidden hover:shadow-md transition flex flex-col"
+        class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel hover:shadow-md transition flex flex-col"
       >
         <!-- En-tête de la carte -->
         <div class="p-5 border-b border-line flex justify-between items-start bg-canvas/50">
@@ -350,9 +350,7 @@
 
           <!-- Filière -->
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-              Filière *
-            </label>
+            <label class="app-label mb-1 block"> Filière * </label>
             <select
               v-model="createForm.pathway_key"
               required
@@ -369,9 +367,7 @@
           <!-- Code & Nom -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Code Cohorte *
-              </label>
+              <label class="app-label mb-1 block"> Code Cohorte * </label>
               <input
                 v-model="createForm.code"
                 type="text"
@@ -382,9 +378,7 @@
               />
             </div>
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Nom de la cohorte *
-              </label>
+              <label class="app-label mb-1 block"> Nom de la cohorte * </label>
               <input
                 v-model="createForm.name"
                 type="text"
@@ -398,9 +392,7 @@
 
           <!-- Capacité d'accueil (défaut 100) -->
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-              Capacité d'accueil *
-            </label>
+            <label class="app-label mb-1 block"> Capacité d'accueil * </label>
             <input
               v-model.number="createForm.capacity"
               type="number"
@@ -416,9 +408,7 @@
           <!-- Dates en ligne (obligatoires) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Date de début (en ligne) *
-              </label>
+              <label class="app-label mb-1 block"> Date de début (en ligne) * </label>
               <input
                 v-model="createForm.starts_at"
                 type="date"
@@ -428,9 +418,7 @@
               />
             </div>
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-                Date de fin (en ligne) *
-              </label>
+              <label class="app-label mb-1 block"> Date de fin (en ligne) * </label>
               <input
                 v-model="createForm.ends_at"
                 type="date"
@@ -481,9 +469,7 @@
 
           <!-- Statut -->
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-quiet mb-1">
-              Statut initial
-            </label>
+            <label class="app-label mb-1 block"> Statut initial </label>
             <select
               v-model="createForm.status"
               class="app-input w-full"
@@ -539,9 +525,7 @@
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-primary">
-                  Apprenants de la cohorte
-                </span>
+                <span class="app-eyebrow"> Apprenants de la cohorte </span>
                 <span
                   v-if="selectedCohort"
                   class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
