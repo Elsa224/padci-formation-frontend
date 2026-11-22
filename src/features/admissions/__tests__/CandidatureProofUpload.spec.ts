@@ -344,7 +344,7 @@ describe('CandidatureProofUpload', () => {
     expect(mockMutate).toHaveBeenCalledTimes(1)
     const payload = mockMutate.mock.calls[0]![0]
     expect(payload.pathway_key).toBe('dev-web')
-    expect(payload.cohort_key).toBe('dw-promo-1')
+    expect(payload.cohort_key).toBeUndefined()
     expect(payload.motivation).toBe('Très motivé pour cette session!')
     expect(payload.proof_media_key).toBe('media_proof_final_789')
     expect(payload.equipment).toMatchObject({

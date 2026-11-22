@@ -118,41 +118,18 @@
               {{ pathway.description }}
             </p>
 
-            <!-- SÉLECTION DE SESSION (OPTIONNELLE) -->
-            <div class="space-y-1.5 pt-2 border-t border-primary/10">
-              <label class="block text-xs font-semibold text-ink" for="cohort-select">
-                Session souhaitée <span class="font-normal text-quiet">(optionnel)</span>
-              </label>
-              <select
-                id="cohort-select"
-                v-model="chosenCohortKey"
-                class="app-input text-xs sm:text-sm"
-              >
-                <option value="">
-                  Candidature libre (sans session attribuée / liste d'attente)
-                </option>
-                <option
-                  v-for="cohort in cohorts"
-                  :key="cohort.key"
-                  :value="cohort.key"
-                  :disabled="cohort.is_full"
-                >
-                  {{ cohort.name }} {{ cohort.is_full ? '(Complète)' : '' }} — du
-                  {{ cohort.starts_at }} au {{ cohort.ends_at }}
-                  {{
-                    cohort.available_seats !== undefined ? `(${cohort.available_seats} places)` : ''
-                  }}
-                </option>
-              </select>
-
-              <p v-if="selectedCohort" class="text-xs text-quiet">
-                Session sélectionnée :
-                <strong class="text-ink">{{ selectedCohort.name }}</strong> (du
-                {{ selectedCohort.starts_at }} au {{ selectedCohort.ends_at }})
+            <!-- ATTRIBUTION AUTOMATIQUE DE SESSION -->
+            <div
+              class="mt-2 rounded-xl border border-primary/20 bg-primary/[0.04] p-3.5 text-xs text-primary"
+            >
+              <p class="font-bold flex items-center gap-1.5">
+                <span class="inline-block h-2 w-2 rounded-full bg-primary"></span>
+                Attribution automatique de votre session
               </p>
-              <p v-else class="text-xs text-primary font-medium">
-                Candidature directe : vous intégrez le vivier de la filière et serez affecté à la
-                prochaine cohorte ouverte ou mis en liste d'attente.
+              <p class="mt-1 text-quiet leading-relaxed text-[11px]">
+                Votre candidature est enregistrée pour ce parcours. Le système se charge de vous
+                attribuer automatiquement une place dans la première session ouverte dès validation
+                de votre dossier.
               </p>
             </div>
           </div>
@@ -521,23 +498,9 @@
               <span class="font-bold text-ink">{{ pathway?.name }}</span>
             </div>
             <div class="flex justify-between p-4">
-              <span class="text-quiet">Session souhaitée</span>
-              <span class="font-semibold text-ink">
-                {{
-                  selectedCohort
-                    ? selectedCohort.name
-                    : 'Candidature directe (sans session attribuée)'
-                }}
-              </span>
-            </div>
-            <div class="flex justify-between bg-canvas p-4">
-              <span class="text-quiet">Dates</span>
-              <span class="text-ink">
-                {{
-                  selectedCohort
-                    ? `Du ${selectedCohort.starts_at} au ${selectedCohort.ends_at}`
-                    : 'Attribution ultérieure / liste d’attente'
-                }}
+              <span class="text-quiet">Session</span>
+              <span class="font-semibold text-primary">
+                Attribution automatique par le système
               </span>
             </div>
             <div class="flex justify-between p-4">
@@ -806,7 +769,7 @@ function submit() {
   submitMutation.mutate(
     {
       pathway_key: pathwayKey.value,
-      cohort_key: selectedCohort.value?.key || undefined,
+      cohort_key: undefined,
       motivation: motivation.value.trim() || undefined,
       proof_media_key: proofMediaKey.value || undefined,
       equipment: hasComputer.value

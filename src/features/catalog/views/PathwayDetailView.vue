@@ -179,7 +179,7 @@
                   class="app-action-secondary flex w-full items-center justify-center gap-2 border-amber-300 text-amber-900 hover:bg-amber-100/50 sm:w-auto"
                   @click="goToCandidature(cohort)"
                 >
-                  Postuler à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
+                  Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
                 </button>
                 <button
                   v-else-if="cohort.available || cohort.status === 'open'"
@@ -187,7 +187,7 @@
                   class="app-action-primary flex w-full items-center justify-center gap-2 sm:w-auto"
                   @click="goToCandidature(cohort)"
                 >
-                  Postuler à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
+                  Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
                 </button>
                 <span
                   v-else
@@ -365,8 +365,8 @@ function formatSeatsText(seats: number | undefined): string {
   return `${count} places disponibles`
 }
 
-function goToCandidature(cohort: PublicCohort) {
-  const target = `/candidature?pathway=${pathwayKey.value}&cohort=${cohort.key}`
+function goToCandidature(_cohort?: PublicCohort) {
+  const target = `/candidature?pathway=${pathwayKey.value}`
   router.push(auth.token ? target : `/connexion?redirect=${encodeURIComponent(target)}`)
 }
 </script>

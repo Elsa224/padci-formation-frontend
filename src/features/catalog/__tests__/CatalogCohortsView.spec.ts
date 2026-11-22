@@ -96,7 +96,7 @@ describe('PathwayDetailView', () => {
     expect(wrapper.text()).toContain('75 / 100 réservées')
     expect(wrapper.text()).toContain('Ouverte')
     expect(wrapper.text()).toContain('75% remplie')
-    expect(wrapper.text()).toContain('Postuler à cette formation')
+    expect(wrapper.text()).toContain('Participer à cette formation')
 
     const progressbar = wrapper.find('[role="progressbar"]')
     expect(progressbar.exists()).toBe(true)
@@ -348,7 +348,7 @@ describe('PathwayDetailView', () => {
     await button.trigger('click')
 
     expect(mockPush).toHaveBeenCalledWith(
-      '/connexion?redirect=' + encodeURIComponent('/candidature?pathway=dev-web&cohort=dw-promo-1'),
+      '/connexion?redirect=' + encodeURIComponent('/candidature?pathway=dev-web'),
     )
   })
 })
