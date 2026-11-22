@@ -32,6 +32,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import {
+  Award as AwardIcon,
   Compass as CompassIcon,
   FileText as FileTextIcon,
   LayoutDashboard as LayoutDashboardIcon,
@@ -50,6 +51,7 @@ const navigation: WorkspaceNavGroup[] = [
     items: [
       { label: 'Tableau de bord', to: '/formations/dashboard', icon: LayoutDashboardIcon },
       { label: 'Mes candidatures', to: '/mes-candidatures', icon: FileTextIcon },
+      { label: 'Mes attestations', to: '/formations/attestations', icon: AwardIcon },
       { label: 'Catalogue', to: '/catalogue', icon: CompassIcon },
     ],
   },

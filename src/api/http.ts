@@ -84,6 +84,8 @@ http.interceptors.response.use(
   // Success responses are always `{ success: true, data, message, meta }` —
   // callers want `data`, not the envelope.
   (response) => {
+    // Binary downloads (certificate PDF…) carry no JSON envelope.
+    if (response.config.responseType === 'blob') return response
     ;(response as AxiosResponse & { apiMeta?: ApiMeta }).apiMeta = response.data?.meta ?? null
     response.data = response.data?.data
     return response

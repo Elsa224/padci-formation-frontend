@@ -89,6 +89,12 @@ const router = createRouter({
       name: 'contact',
       component: () => import('@/features/public/views/Contact.vue'),
     },
+    {
+      // Printed on every certificate (CERTIFICATE_VERIFY_URL?code=…): public.
+      path: '/verifier',
+      name: 'verify-certificate',
+      component: () => import('@/features/public/views/VerifierAttestation.vue'),
+    },
 
     // ==================== CATALOGUE PUBLIC (ADR-012) ====================
     {
@@ -162,6 +168,12 @@ const router = createRouter({
           component: () => import('@/features/learning/views/LearnerDashboard.vue'),
         },
         {
+          // Static segment: matched before ':courseKey'.
+          path: 'attestations',
+          name: 'mes-attestations',
+          component: () => import('@/features/learning/views/MesAttestations.vue'),
+        },
+        {
           path: ':courseKey',
           name: 'course-overview',
           component: () => import('@/features/learning/views/CourseOverview.vue'),
@@ -170,6 +182,11 @@ const router = createRouter({
           path: ':courseKey/chapitres/:chapterKey',
           name: 'chapter-viewer',
           component: () => import('@/features/learning/views/ChapterViewer.vue'),
+        },
+        {
+          path: ':courseKey/evaluations/:attemptKey',
+          name: 'assessment-attempt',
+          component: () => import('@/features/learning/views/AttemptView.vue'),
         },
         {
           path: '/profil',
