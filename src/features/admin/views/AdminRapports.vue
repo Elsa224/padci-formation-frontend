@@ -61,6 +61,7 @@
         :rows="cohortRows"
         first-column="Cohorte"
         empty="Aucune cohorte pour le moment."
+        :show-attendance="true"
       />
     </section>
 
@@ -121,6 +122,8 @@ const cohortRows = computed<ReportRow[]>(() =>
     completed: row.completed_count,
     rate: row.completion_rate,
     certificates: row.certificates_issued,
+    attendance_rate: row.attendance_rate,
+    attendance_sessions_count: row.attendance_sessions_count,
   })),
 )
 
@@ -160,7 +163,16 @@ function exportPathways() {
 function exportCohorts() {
   downloadCsv(
     `rapport-cohortes-${today()}.csv`,
-    ['Cohorte', 'Code et filière', 'Inscrits', 'Terminés', "Taux d'achèvement (%)", 'Attestations'],
+    [
+      'Cohorte',
+      'Code et filière',
+      'Inscrits',
+      'Terminés',
+      "Taux d'achèvement (%)",
+      'Attestations',
+      "Taux d'assiduité (%)",
+      'Séances de présence',
+    ],
     cohortRows.value.map((row) => [
       row.label,
       row.sublabel ?? '',
@@ -168,6 +180,10 @@ function exportCohorts() {
       row.completed,
       percentNumber(row.rate),
       row.certificates,
+      row.attendance_rate !== null && row.attendance_rate !== undefined
+        ? percentNumber(row.attendance_rate)
+        : '—',
+      row.attendance_sessions_count ?? 0,
     ]),
   )
 }

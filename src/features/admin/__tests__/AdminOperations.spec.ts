@@ -78,6 +78,8 @@ describe('AdminRapports', () => {
           completed_count: 17,
           completion_rate: 0.425,
           certificates_issued: 15,
+          attendance_rate: 0.85,
+          attendance_sessions_count: 4,
         },
       ]) as never,
     )
@@ -87,13 +89,14 @@ describe('AdminRapports', () => {
     const wrapper = mount(AdminRapports)
     expect(wrapper.text()).toContain('120')
     expect(wrapper.text()).toContain('42,5 %')
+    expect(wrapper.text()).toContain('85 %')
     expect(wrapper.findAll('[data-test="report-row"]')).toHaveLength(1)
 
     const exportButtons = wrapper.findAll('button').filter((b) => b.text().includes('Exporter'))
     await exportButtons[1]!.trigger('click')
     const blob = vi.mocked(URL.createObjectURL).mock.calls[0]![0] as Blob
     const text = await blob.text()
-    expect(text).toContain('IT Support — Cohorte 1;ITS-2026-C1 · IT Support;40;17;42,5;15')
+    expect(text).toContain('IT Support — Cohorte 1;ITS-2026-C1 · IT Support;40;17;42,5;15;85;4')
   })
 })
 

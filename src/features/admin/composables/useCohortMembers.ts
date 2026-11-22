@@ -9,6 +9,10 @@ export interface CohortMember {
   email: string
   status: string
   joined_at: string | null
+  attendance_rate?: number | null
+  progress_rate?: number | null
+  completed_chapters_count?: number
+  total_chapters_count?: number
 }
 
 export interface CohortMemberFilters {

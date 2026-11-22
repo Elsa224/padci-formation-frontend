@@ -83,6 +83,10 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
       email: 'alice.martin@example.com',
       status: 'active',
       joined_at: '2026-05-10T09:30:00Z',
+      progress_rate: 0.75,
+      completed_chapters_count: 6,
+      total_chapters_count: 8,
+      attendance_rate: 1.0,
     },
     {
       key: 'usr-2',
@@ -90,6 +94,10 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
       email: 'bob.durand@example.com',
       status: 'enrolled',
       joined_at: '2026-05-12T14:00:00Z',
+      progress_rate: 0.25,
+      completed_chapters_count: 2,
+      total_chapters_count: 8,
+      attendance_rate: 0.5,
     },
   ]
 
@@ -171,6 +179,10 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
       'alice.martin@example.com',
     )
     expect(rows[0]!.find('[data-testid="cohort-member-status"]').text()).toBe('Actif')
+    expect(rows[0]!.find('[data-testid="cohort-member-progress"]').text()).toContain('Cours : 75%')
+    expect(rows[0]!.find('[data-testid="cohort-member-attendance"]').text()).toContain(
+      'Assiduité 100%',
+    )
     expect(rows[0]!.find('[data-testid="cohort-member-joined"]').text()).toContain(
       'Inscrit le 10/05/2026',
     )
@@ -182,6 +194,10 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
       'bob.durand@example.com',
     )
     expect(rows[1]!.find('[data-testid="cohort-member-status"]').text()).toBe('Inscrit')
+    expect(rows[1]!.find('[data-testid="cohort-member-progress"]').text()).toContain('Cours : 25%')
+    expect(rows[1]!.find('[data-testid="cohort-member-attendance"]').text()).toContain(
+      'Assiduité 50%',
+    )
     expect(rows[1]!.find('[data-testid="cohort-member-joined"]').text()).toContain(
       'Inscrit le 12/05/2026',
     )

@@ -57,6 +57,8 @@ export interface CohortMetrics {
   /** 0..1 ratio. */
   completion_rate: number
   certificates_issued: number
+  attendance_sessions_count?: number
+  attendance_rate?: number | null
 }
 
 export function useDashboardByCohort() {

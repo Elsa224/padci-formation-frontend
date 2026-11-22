@@ -10,6 +10,7 @@
           <th class="px-3 py-2 text-right">Terminés</th>
           <th class="px-3 py-2">Achèvement</th>
           <th class="px-3 py-2 text-right">Attestations</th>
+          <th v-if="showAttendance" class="px-3 py-2 text-right">Assiduité</th>
         </tr>
       </thead>
       <tbody>
@@ -39,6 +40,26 @@
             </div>
           </td>
           <td class="px-3 py-2 text-right tabular-nums">{{ row.certificates }}</td>
+          <td
+            v-if="showAttendance"
+            class="px-3 py-2 text-right tabular-nums"
+            data-test="attendance-rate-cell"
+          >
+            <span
+              v-if="row.attendance_rate !== null && row.attendance_rate !== undefined"
+              class="font-semibold"
+              :class="
+                row.attendance_rate >= 0.8
+                  ? 'text-emerald-700'
+                  : row.attendance_rate >= 0.5
+                    ? 'text-amber-700'
+                    : 'text-red-700'
+              "
+            >
+              {{ formatPercent(row.attendance_rate) }}
+            </span>
+            <span v-else class="text-quiet text-xs">—</span>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -57,7 +78,15 @@ export interface ReportRow {
   /** 0..1 */
   rate: number
   certificates: number
+  attendance_rate?: number | null
+  attendance_sessions_count?: number
 }
 
-defineProps<{ loading: boolean; rows: ReportRow[]; firstColumn: string; empty: string }>()
+defineProps<{
+  loading: boolean
+  rows: ReportRow[]
+  firstColumn: string
+  empty: string
+  showAttendance?: boolean
+}>()
 </script>

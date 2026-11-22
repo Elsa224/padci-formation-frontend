@@ -71,11 +71,13 @@
           Aucun apprenant inscrit dans cette cohorte.
         </p>
         <div v-else class="overflow-x-auto rounded-xl border border-line">
-          <table class="w-full min-w-[32rem] text-left text-sm">
+          <table class="w-full min-w-[36rem] text-left text-sm">
             <thead class="bg-canvas text-xs uppercase tracking-wide text-quiet">
               <tr>
                 <th class="px-3 py-2">Apprenant</th>
                 <th class="px-3 py-2">Cours</th>
+                <th class="px-3 py-2">Progression</th>
+                <th class="px-3 py-2">Assiduité</th>
                 <th class="px-3 py-2">Statut</th>
               </tr>
             </thead>
@@ -91,6 +93,44 @@
                   <p class="text-xs text-quiet">{{ enrollment.user?.email }}</p>
                 </td>
                 <td class="px-3 py-2 text-ink">{{ enrollment.course?.title ?? '—' }}</td>
+                <td class="px-3 py-2">
+                  <div
+                    v-if="
+                      enrollment.progress_rate !== null && enrollment.progress_rate !== undefined
+                    "
+                    class="flex items-center gap-2"
+                  >
+                    <div class="h-1.5 w-16 overflow-hidden rounded-full bg-line">
+                      <div
+                        class="h-full rounded-full bg-primary"
+                        :style="{ width: `${enrollment.progress_rate * 100}%` }"
+                      />
+                    </div>
+                    <span class="text-xs font-semibold tabular-nums text-ink">
+                      {{ Math.round(enrollment.progress_rate * 100) }}%
+                    </span>
+                  </div>
+                  <span v-else class="text-xs text-quiet">—</span>
+                </td>
+                <td class="px-3 py-2">
+                  <span
+                    v-if="
+                      enrollment.attendance_rate !== null &&
+                      enrollment.attendance_rate !== undefined
+                    "
+                    class="inline-block px-2 py-0.5 rounded-full text-xs font-bold"
+                    :class="
+                      enrollment.attendance_rate >= 0.8
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        : enrollment.attendance_rate >= 0.5
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-red-50 text-red-700 border border-red-200'
+                    "
+                  >
+                    {{ Math.round(enrollment.attendance_rate * 100) }}%
+                  </span>
+                  <span v-else class="text-xs text-quiet">—</span>
+                </td>
                 <td class="px-3 py-2">
                   <span class="rounded-full bg-canvas px-2 py-0.5 text-xs font-semibold text-quiet">
                     {{ enrollmentStatusLabels[enrollment.status] ?? enrollment.status }}
@@ -126,6 +166,8 @@ interface CohortEnrollment {
   status: string
   user?: { key: string; name: string; email: string }
   course?: { key: string; title: string }
+  attendance_rate?: number | null
+  progress_rate?: number | null
 }
 
 const enrollmentStatusLabels: Record<string, string> = {

@@ -379,8 +379,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Attempts awaiting grading, scoped to the courses the current
-     *     trainer/admin may see (Course::scopeVisibleTo) */
+    /**
+     * Attempts awaiting grading, scoped to the courses the current
+     *     trainer/admin may see (Course::scopeVisibleTo)
+     */
     get: operations['admin.assessments.attempts.pending_grading']
     put?: never
     post?: never
@@ -669,9 +671,11 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Sessions open to candidates for a pathway, newest first. Exposes dates,
+    /**
+     * Sessions open to candidates for a pathway, newest first. Exposes dates,
      *     capacity, active enrollment counts, available seats and computed
-     *     availability flag. Trainers remain admin-only on CohortResource */
+     *     availability flag. Trainers remain admin-only on CohortResource
+     */
     get: operations['catalog.pathways.cohorts']
     put?: never
     post?: never
@@ -1424,8 +1428,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** Signed, public link from the verification e-mail. A browser is sent back
-     *     to the SPA; an API client receives JSON */
+    /**
+     * Signed, public link from the verification e-mail. A browser is sent back
+     *     to the SPA; an API client receives JSON
+     */
     get: operations['verification.verify']
     put?: never
     post?: never
@@ -1444,8 +1450,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Public on purpose: a freshly registered account has no token yet. Always
-     *     answers 202, whether or not an unverified account exists */
+    /**
+     * Public on purpose: a freshly registered account has no token yet. Always
+     *     answers 202, whether or not an unverified account exists
+     */
     post: operations['verification.send']
     delete?: never
     options?: never
@@ -1846,8 +1854,10 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** Runs *between* password check and token issuance: deliberately not
-     *     behind auth:sanctum, since the caller does not have a token yet */
+    /**
+     * Runs *between* password check and token issuance: deliberately not
+     *     behind auth:sanctum, since the caller does not have a token yet
+     */
     post: operations['auth.mfa.challenge']
     delete?: never
     options?: never
@@ -2613,7 +2623,6 @@ export interface components {
     /**
      * ChapterType
      * @description Nature of a chapter. `quiz` and `exam` are placeholders for the Assessment module (P4): the chapter references an assessment, it never stores answers.
-     *
      * @enum {string}
      */
     ChapterType: 'lesson' | 'video' | 'document' | 'external_link'
@@ -2624,6 +2633,10 @@ export interface components {
       email: string
       status: string | null
       joined_at: string | null
+      attendance_rate: string | null
+      progress_rate: string | null
+      completed_chapters_count: string | 0
+      total_chapters_count: string | 0
     }
     /** CohortResource */
     CohortResource: {
@@ -2776,7 +2789,6 @@ export interface components {
     /**
      * CourseVisibility
      * @description Listing visibility. It does not grant access: even a public course requires an authenticated account and an active enrollment to open its content.
-     *
      * @enum {string}
      */
     CourseVisibility: 'public' | 'restricted' | 'hidden'
@@ -2876,6 +2888,8 @@ export interface components {
           | 'archived'
       }
       grants?: string[]
+      attendance_rate: string | null
+      progress_rate: string | null
       enrolled_at: string
       completed_at: string | null
       created_at: string | null
@@ -2925,7 +2939,6 @@ export interface components {
     /**
      * ExternalCertificationProvider
      * @description Fixed list of external certification bodies tracked by FR-046. `Other` requires a free-text `provider_label` on the record.
-     *
      * @enum {string}
      */
     ExternalCertificationProvider: 'cisco' | 'oracle' | 'other'
@@ -2953,8 +2966,10 @@ export interface components {
     }
     /** GradeAnswerRequest */
     GradeAnswerRequest: {
-      /** @description Upper bound is the question's own points (checked in
-       *     AnswerGrading, since it depends on the frozen snapshot). */
+      /**
+       * @description Upper bound is the question's own points (checked in
+       *     AnswerGrading, since it depends on the frozen snapshot).
+       */
       awarded_points: number
       note?: string | null
     }
@@ -2970,9 +2985,11 @@ export interface components {
         duration_minutes: unknown
         max_attempts: unknown
       }
-      /** @description The exam date/mode/location stay hidden from learners until
+      /**
+       * @description The exam date/mode/location stay hidden from learners until
        *     the schedule is actually published, even if a trainer/admin
-       *     already fixed them internally. */
+       *     already fixed them internally.
+       */
       scheduled_at: string | null
       delivery_mode: string | null
       location: string | null
@@ -3095,9 +3112,11 @@ export interface components {
       name: string
       slug: string
       description: string | null
-      /** @description Minimum computer specs for this pathway (processor/RAM/storage),
+      /**
+       * @description Minimum computer specs for this pathway (processor/RAM/storage),
        *     seeded and admin-editable — replaces the hardcoded frontend
-       *     dropdown. Shape: {min_cpu, min_ram_gb, min_storage_gb, notes}. */
+       *     dropdown. Shape: {min_cpu, min_ram_gb, min_storage_gb, notes}.
+       */
       equipment_requirements: unknown[] | null
       requires_equipment_validation: boolean
       icon: string | null
@@ -3259,7 +3278,6 @@ export interface components {
     /**
      * ResourceVisibility
      * @description Who may open a resource. `preview` is reachable by any authenticated visitor of a published course; `enrolled` requires an active enrollment; `download` additionally allows offline copies (Learning module enforces this).
-     *
      * @enum {string}
      */
     ResourceVisibility: 'preview' | 'enrolled' | 'download'
@@ -3270,7 +3288,6 @@ export interface components {
     /**
      * Role
      * @description Application roles. Every role is assigned by an administrator; none is self-service. Roles are global capabilities only: ownership and context are enforced by Policies. Product mapping (EMSP LMS): - super_admin  : plateforme, rôles critiques, paramètres, signature ANO - admin        : opérations quotidiennes (utilisateurs, cours, cohortes) - moderateur   : revue et publication des cours (si la modération est activée) - formateur    : création et animation de ses propres cours - apprenant    : suivi des cours, exercices et évaluations
-     *
      * @enum {string}
      */
     Role: 'super_admin' | 'admin' | 'moderateur' | 'formateur' | 'apprenant'
@@ -3298,13 +3315,17 @@ export interface components {
     /** StoreApplicationRequest */
     StoreApplicationRequest: {
       pathway_key: string
-      /** @description The candidate may pick a session or apply to the pathway directly;
-       *     cohort assignment happens upon admission approval or standby queue. */
+      /**
+       * @description The candidate may pick a session or apply to the pathway directly;
+       *     cohort assignment happens upon admission approval or standby queue.
+       */
       cohort_key?: string | null
       proof_media_key?: string | null
       motivation?: string | null
-      /** @description A declaration is checked by the workflow only if the selected
-       *     pathway requires a human hardware review. */
+      /**
+       * @description A declaration is checked by the workflow only if the selected
+       *     pathway requires a human hardware review.
+       */
       equipment?: {
         device_type?: string | null
         cpu_model?: string | null
@@ -3320,9 +3341,11 @@ export interface components {
         virtualization_supported?: boolean | null
         notes?: string | null
       } | null
-      /** @description Free-form context (equipment, availability, prerequisites...).
+      /**
+       * @description Free-form context (equipment, availability, prerequisites...).
        *     Structural fields stay columns; this blob is versioned with the
-       *     admission form and never queried by the platform. */
+       *     admission form and never queried by the platform.
+       */
       payload?: string[] | null
     }
     /** StoreAssessmentRequest */
@@ -3338,9 +3361,11 @@ export interface components {
         prompt: string
         points?: number
         explanation?: string | null
-        /** @description "min 2 options, exactly one correct" is enforced per-type in
+        /**
+         * @description "min 2 options, exactly one correct" is enforced per-type in
          *     AssessmentAuthoring: a free-text question legitimately has zero
-         *     options, so the shape here only bounds the array size. */
+         *     options, so the shape here only bounds the array size.
+         */
         options?: {
           body: string
           is_correct?: boolean
@@ -6456,7 +6481,10 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Error overview. */
+            /**
+             * @description Error overview.
+             * @example
+             */
             message: string
           }
         }
@@ -7037,7 +7065,10 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Error overview. */
+            /**
+             * @description Error overview.
+             * @example
+             */
             message: string
           }
         }
@@ -7092,7 +7123,10 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Error overview. */
+            /**
+             * @description Error overview.
+             * @example
+             */
             message: string
           }
         }
@@ -9690,7 +9724,10 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Error overview. */
+            /**
+             * @description Error overview.
+             * @example Ce fichier n’est pas encore disponible au téléchargement.
+             */
             message: string
           }
         }
@@ -10680,7 +10717,10 @@ export interface operations {
         }
         content: {
           'application/json': {
-            /** @description Error overview. */
+            /**
+             * @description Error overview.
+             * @example Le stockage de la photo est indisponible.
+             */
             message: string
           }
         }

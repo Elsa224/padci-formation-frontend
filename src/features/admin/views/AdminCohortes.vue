@@ -700,14 +700,53 @@
                 </p>
               </div>
             </div>
-            <div class="shrink-0 text-right">
-              <span
-                class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border"
-                :class="memberStatusBadgeClass(member.status)"
-                data-testid="cohort-member-status"
+            <div class="flex items-center gap-3 shrink-0">
+              <!-- Progression cours -->
+              <div
+                v-if="member.progress_rate !== null && member.progress_rate !== undefined"
+                class="hidden sm:flex flex-col items-end text-right"
+                data-testid="cohort-member-progress"
               >
-                {{ memberStatusLabel(member.status) }}
-              </span>
+                <span class="text-[11px] font-semibold text-ink">
+                  Cours : {{ Math.round(member.progress_rate * 100) }}%
+                </span>
+                <span class="text-[10px] text-quiet">
+                  {{ member.completed_chapters_count ?? 0 }}/{{
+                    member.total_chapters_count ?? 0
+                  }}
+                  chap.
+                </span>
+              </div>
+
+              <!-- Taux d'assiduité -->
+              <div
+                v-if="member.attendance_rate !== null && member.attendance_rate !== undefined"
+                class="hidden sm:flex flex-col items-end text-right"
+                data-testid="cohort-member-attendance"
+              >
+                <span
+                  class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
+                  :class="
+                    member.attendance_rate >= 0.8
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : member.attendance_rate >= 0.5
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        : 'bg-red-50 text-red-700 border border-red-200'
+                  "
+                >
+                  Assiduité {{ Math.round(member.attendance_rate * 100) }}%
+                </span>
+              </div>
+
+              <div class="text-right">
+                <span
+                  class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border"
+                  :class="memberStatusBadgeClass(member.status)"
+                  data-testid="cohort-member-status"
+                >
+                  {{ memberStatusLabel(member.status) }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
