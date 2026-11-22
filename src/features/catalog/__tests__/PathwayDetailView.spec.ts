@@ -3,6 +3,8 @@ import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import PathwayDetailView from '../views/PathwayDetailView.vue'
 import * as useCatalogModule from '../composables/useCatalog'
+import * as authStoreModule from '@/stores/auth'
+import * as useLearnerApplicationsModule from '@/features/admissions/composables/useLearnerApplications'
 
 const mockPush = vi.fn()
 
@@ -21,6 +23,13 @@ vi.mock('vue-router', () => ({
 vi.mock('@/stores/auth', () => ({
   useAuthStore: vi.fn(() => ({
     token: null,
+  })),
+}))
+
+vi.mock('@/features/admissions/composables/useLearnerApplications', () => ({
+  useLearnerApplications: vi.fn(() => ({
+    data: ref({ items: [] }),
+    isPending: ref(false),
   })),
 }))
 
@@ -168,5 +177,71 @@ describe('PathwayDetailView - Offline Scheduling and Cohorts Display', () => {
 
     const offlineBadge = wrapper.find('[data-testid="cohort-offline-dates"]')
     expect(offlineBadge.exists()).toBe(false)
+  })
+
+  it('locks and replaces "Participer à cette formation" button when learner already has an active formation', () => {
+    vi.mocked(authStoreModule.useAuthStore).mockReturnValue({
+      token: 'jwt-learner',
+    } as never)
+
+    vi.mocked(useLearnerApplicationsModule.useLearnerApplications).mockReturnValue({
+      data: ref({
+        items: [
+          {
+            id: 99,
+            key: 'app-99',
+            status: 'in_review',
+            motivation: null,
+            payload: null,
+            pathway: {
+              id: 5,
+              key: 'cyber-sec',
+              code: 'CS-01',
+              name: 'Cybersécurité',
+              slug: 'cybersecurite',
+            },
+          },
+        ],
+      }),
+      isPending: ref(false),
+    } as never)
+
+    vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
+      data: ref([
+        {
+          id: 10,
+          key: 'dw-2026-c1',
+          code: 'DW-2026-C1',
+          name: 'Développeur Web — Cohorte 1',
+          capacity: 30,
+          enrolled_count: 5,
+          available_seats: 25,
+          is_full: false,
+          starts_at: '2026-03-01',
+          ends_at: '2026-08-31',
+          status: 'open',
+          available: true,
+        },
+      ]),
+      isPending: ref(false),
+    } as never)
+
+    const wrapper = mount(PathwayDetailView, {
+      global: {
+        stubs: {
+          RouterLink: true,
+        },
+      },
+    })
+
+    const lockedBtn = wrapper.find('[data-testid="btn-already-enrolled"]')
+    expect(lockedBtn.exists()).toBe(true)
+    expect(lockedBtn.attributes('disabled')).toBeDefined()
+    expect(lockedBtn.text()).toContain('Vous suivez déjà Cybersécurité')
+
+    const candidaturesLink = wrapper.find('[data-testid="link-to-candidatures"]')
+    expect(candidaturesLink.exists()).toBe(true)
+
+    expect(wrapper.text()).not.toContain('Participer à cette formation')
   })
 })

@@ -18,6 +18,25 @@
     </header>
 
     <div
+      v-if="activeFormationName"
+      class="mb-6 flex flex-col items-start justify-between gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-sm text-ink sm:flex-row sm:items-center"
+      data-testid="banner-already-enrolled"
+    >
+      <div class="flex items-center gap-2 font-medium">
+        <span>
+          Vous suivez déjà <strong>{{ activeFormationName }}</strong
+          >. Une seule formation est possible pour le moment.
+        </span>
+      </div>
+      <router-link
+        to="/mes-candidatures"
+        class="shrink-0 text-xs font-semibold text-primary underline"
+      >
+        Voir mes candidatures →
+      </router-link>
+    </div>
+
+    <div
       v-if="isPending"
       class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
       aria-label="Chargement du catalogue"
@@ -136,9 +155,24 @@ import {
 } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
 import { usePathways } from '../composables/useCatalog'
+import { useAuthStore } from '@/stores/auth'
+import { useLearnerApplications } from '@/features/admissions/composables/useLearnerApplications'
 
+const auth = useAuthStore()
 const { data, isPending, isError, error } = usePathways()
 const pathways = computed(() => data.value?.items ?? [])
+
+const { data: myAppsData } = useLearnerApplications()
+const activeFormation = computed(() => {
+  if (!auth.token) return null
+  const items = myAppsData.value?.items ?? []
+  return (
+    items.find((a) =>
+      ['submitted', 'in_review', 'waitlisted', 'standby', 'accepted'].includes(a.status),
+    ) ?? null
+  )
+})
+const activeFormationName = computed(() => activeFormation.value?.pathway?.name ?? null)
 
 function equipmentSummary(cpu?: string, ram?: number, storage?: number): string {
   return (

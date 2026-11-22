@@ -173,28 +173,49 @@
               </div>
 
               <div class="shrink-0 pt-1 sm:pt-0">
-                <button
-                  v-if="isCohortFull(cohort)"
-                  type="button"
-                  class="app-action-secondary flex w-full items-center justify-center gap-2 border-amber-300 text-amber-900 hover:bg-amber-100/50 sm:w-auto"
-                  @click="goToCandidature(cohort)"
-                >
-                  Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
-                </button>
-                <button
-                  v-else-if="cohort.available || cohort.status === 'open'"
-                  type="button"
-                  class="app-action-primary flex w-full items-center justify-center gap-2 sm:w-auto"
-                  @click="goToCandidature(cohort)"
-                >
-                  Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
-                </button>
-                <span
-                  v-else
-                  class="inline-flex w-full items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet sm:w-auto"
-                >
-                  Inscriptions fermées
-                </span>
+                <template v-if="activeFormationName">
+                  <div class="flex flex-col items-stretch gap-1 sm:items-end">
+                    <button
+                      type="button"
+                      disabled
+                      class="inline-flex w-full cursor-not-allowed items-center justify-center rounded-xl border border-line bg-slate-100 px-4 py-2.5 text-xs font-semibold text-quiet sm:w-auto"
+                      data-testid="btn-already-enrolled"
+                    >
+                      Vous suivez déjà {{ activeFormationName }}
+                    </button>
+                    <router-link
+                      to="/mes-candidatures"
+                      class="text-center text-xs font-semibold text-primary hover:underline sm:text-right"
+                      data-testid="link-to-candidatures"
+                    >
+                      Mes candidatures →
+                    </router-link>
+                  </div>
+                </template>
+                <template v-else>
+                  <button
+                    v-if="isCohortFull(cohort)"
+                    type="button"
+                    class="app-action-secondary flex w-full items-center justify-center gap-2 border-amber-300 text-amber-900 hover:bg-amber-100/50 sm:w-auto"
+                    @click="goToCandidature(cohort)"
+                  >
+                    Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
+                  </button>
+                  <button
+                    v-else-if="cohort.available || cohort.status === 'open'"
+                    type="button"
+                    class="app-action-primary flex w-full items-center justify-center gap-2 sm:w-auto"
+                    @click="goToCandidature(cohort)"
+                  >
+                    Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
+                  </button>
+                  <span
+                    v-else
+                    class="inline-flex w-full items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet sm:w-auto"
+                  >
+                    Inscriptions fermées
+                  </span>
+                </template>
               </div>
             </div>
 
@@ -281,6 +302,7 @@ import {
 } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
 import { useAuthStore } from '@/stores/auth'
+import { useLearnerApplications } from '@/features/admissions/composables/useLearnerApplications'
 import {
   usePathway,
   usePathwayCohorts,
@@ -292,6 +314,18 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const pathwayKey = computed(() => String(route.params.key ?? ''))
+
+const { data: myAppsData } = useLearnerApplications()
+const activeFormation = computed(() => {
+  if (!auth.token) return null
+  const items = myAppsData.value?.items ?? []
+  return (
+    items.find((a) =>
+      ['submitted', 'in_review', 'waitlisted', 'standby', 'accepted'].includes(a.status),
+    ) ?? null
+  )
+})
+const activeFormationName = computed(() => activeFormation.value?.pathway?.name ?? null)
 const {
   data: pathway,
   isPending: isPathwayPending,
