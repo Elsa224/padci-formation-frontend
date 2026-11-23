@@ -5,6 +5,7 @@ import { ref } from 'vue'
 vi.mock('vue-chartjs', () => ({ Bar: { template: '<div />' }, Doughnut: { template: '<div />' } }))
 const counts = ref<Record<string, number>>({ submitted: 0, in_review: 0 })
 const courses = ref<Record<string, number>>({ submitted: 0, in_review: 0 })
+const reports = ref(0)
 const q = <T>(data: T) => ({
   data: ref(data),
   isPending: ref(false),
@@ -23,6 +24,9 @@ vi.mock('../composables/useDashboard', () => ({
   useApplicationStatusCounts: () => ({ data: counts, isPending: ref(false), isError: ref(false) }),
 }))
 vi.mock('../composables/useApplications', () => ({ useApplications: () => q({ items: [] }) }))
+vi.mock('@/features/cohorts/composables/useTrainerReports', () => ({
+  usePendingReportCount: () => ({ data: reports }),
+}))
 vi.mock('@/features/moderation/composables/useModerationQueues', () => ({
   useCourseStatusCounts: () => ({ data: courses }),
 }))
@@ -40,6 +44,7 @@ describe('AdminDashboard — À traiter', () => {
   it('counts applications and courses waiting for a decision', async () => {
     counts.value = { submitted: 2, in_review: 1 }
     courses.value = { submitted: 1, in_review: 0 }
+    reports.value = 2
     const { default: AdminDashboard } = await import('../views/AdminDashboard.vue')
     const todo = mount(AdminDashboard, { global: { stubs } })
       .find('[data-test="admin-todo"]')
@@ -47,5 +52,6 @@ describe('AdminDashboard — À traiter', () => {
     expect(todo).toContain('3')
     expect(todo).toContain('candidatures à décider')
     expect(todo).toContain('cours à valider')
+    expect(todo).toContain('rapports de formateurs à valider')
   })
 })

@@ -33,6 +33,7 @@ import {
   Award as AwardIcon,
   Compass as CompassIcon,
   FileText as FileTextIcon,
+  GraduationCap as GraduationCapIcon,
   LayoutDashboard as LayoutDashboardIcon,
   Settings as SettingsIcon,
   User as UserIcon,
@@ -49,6 +50,7 @@ const navigation: WorkspaceNavGroup[] = [
     items: [
       { label: 'Tableau de bord', to: '/formations/dashboard', icon: LayoutDashboardIcon },
       { label: 'Mes candidatures', to: '/mes-candidatures', icon: FileTextIcon },
+      { label: 'Mes notes', to: '/formations/notes', icon: GraduationCapIcon },
       { label: 'Mes attestations', to: '/formations/attestations', icon: AwardIcon },
       { label: 'Catalogue', to: '/catalogue', icon: CompassIcon },
     ],

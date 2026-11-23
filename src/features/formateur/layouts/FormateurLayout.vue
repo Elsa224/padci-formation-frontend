@@ -18,6 +18,8 @@ import {
   BookOpen as BookOpenIcon,
   ClipboardCheck as ClipboardCheckIcon,
   Compass as CompassIcon,
+  FileUp as FileUpIcon,
+  GraduationCap as GraduationCapIcon,
   LayoutDashboard as LayoutDashboardIcon,
   UsersRound as UsersIcon,
 } from '@lucide/vue'
@@ -32,6 +34,8 @@ const navigation: WorkspaceNavGroup[] = [
       { label: 'Tableau de bord', to: '/formateur/dashboard', icon: LayoutDashboardIcon },
       { label: 'Mes cours', to: '/formateur/cours', icon: BookOpenIcon },
       { label: 'Copies à corriger', to: '/formateur/corrections', icon: ClipboardCheckIcon },
+      { label: 'Notes', to: '/formateur/notes', icon: GraduationCapIcon },
+      { label: 'Rapports', to: '/formateur/rapports', icon: FileUpIcon },
       { label: 'Mes cohortes', to: '/formateur/cohortes', icon: UsersIcon },
       { label: 'Catalogue', to: '/catalogue', icon: CompassIcon },
     ],

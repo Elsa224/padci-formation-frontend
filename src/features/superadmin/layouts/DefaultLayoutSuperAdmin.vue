@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 import {
+  FileCheck as ReportsIcon,
   Award as AwardIcon,
   BarChart3 as BarChartIcon,
   BookOpenCheck as BookOpenCheckIcon,
@@ -52,6 +53,11 @@ const navigation: WorkspaceNavGroup[] = [
         icon: BookOpenCheckIcon,
       },
       { label: 'Attestations', to: '/superadmin/attestations', icon: AwardIcon },
+      {
+        label: 'Rapports formateurs',
+        to: '/superadmin/rapports-formateurs',
+        icon: ReportsIcon,
+      },
     ],
   },
   {

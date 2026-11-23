@@ -18,7 +18,7 @@
       data-test="admin-todo"
     >
       <h2 id="admin-todo-title" class="text-sm font-semibold text-savane">À traiter</h2>
-      <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+      <ul class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <li v-for="item in todo" :key="item.key">
           <RouterLink
             :to="item.to"
@@ -217,6 +217,7 @@ import type { ApiError } from '@/api/http'
 import { ChevronRight as ChevronRightIcon } from '@lucide/vue'
 import StatTile from '@/components/app/StatTile.vue'
 import { useCourseStatusCounts } from '@/features/moderation/composables/useModerationQueues'
+import { usePendingReportCount } from '@/features/cohorts/composables/useTrainerReports'
 import { useApplications } from '../composables/useApplications'
 import {
   useApplicationStatusCounts,
@@ -346,6 +347,7 @@ const doughnutOptions = {
 
 // ==================== À TRAITER ====================
 const courseCounts = useCourseStatusCounts(['submitted', 'in_review'])
+const pendingReports = usePendingReportCount()
 const todo = computed(() => {
   const items = []
   const counts = statusCounts.value as Record<string, number> | undefined
@@ -368,6 +370,16 @@ const todo = computed(() => {
       label: courses === 1 ? 'cours à valider' : 'cours à valider',
       action: 'Modérer',
       to: '/admin/moderation-cours',
+    })
+  }
+  const reports = pendingReports.data.value ?? 0
+  if (reports > 0) {
+    items.push({
+      key: 'reports',
+      count: reports,
+      label: reports === 1 ? 'rapport de formateur à valider' : 'rapports de formateurs à valider',
+      action: 'Valider',
+      to: '/admin/rapports-formateurs',
     })
   }
   return items

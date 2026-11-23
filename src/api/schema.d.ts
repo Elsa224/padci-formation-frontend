@@ -2239,6 +2239,94 @@ export interface paths {
     patch: operations['admin.users.update']
     trace?: never
   }
+  '/grades': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** GET /grades — notes de l'apprenant connecté */
+    get: operations['grades.mine']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/cohorts/{cohort}/grades': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** GET /admin/cohorts/{cohort}/grades?course_key=… — une ligne par apprenant
+     *     inscrit au cours dans cette cohorte, avec sa note s'il en a une */
+    get: operations['admin.cohorts.grades.index']
+    /** PUT /admin/cohorts/{cohort}/grades — enregistre un lot de notes */
+    put: operations['admin.cohorts.grades.upsert']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/cohorts/{cohort}/reports': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** GET /admin/cohorts/{cohort}/reports — rapports d'une cohorte */
+    get: operations['admin.cohorts.reports.index']
+    put?: never
+    /** POST /admin/cohorts/{cohort}/reports — dépôt par un formateur de la cohorte */
+    post: operations['admin.cohorts.reports.store']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/trainer-reports': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** GET /admin/trainer-reports — tous les rapports (administration) */
+    get: operations['admin.trainer-reports.index']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/admin/trainer-reports/{report}/decide': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /** POST /admin/trainer-reports/{report}/decide — validation ou rejet */
+    post: operations['admin.trainer-reports.decide']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -3360,6 +3448,10 @@ export interface components {
     /** StoreApplicationRequest */
     StoreApplicationRequest: {
       pathway_key: string
+      /** @description A learner applies to a pathway, never to a session: the cohort
+       *     is assigned on acceptance, first open cohort with a free seat
+       *     in arrival order (FIFO), else standby. Any cohort_key sent by a
+       *     client is not validated and never reaches the workflow. */
       proof_media_key?: string | null
       motivation?: string | null
       /** @description A declaration is checked by the workflow only if the selected
@@ -3763,6 +3855,82 @@ export interface components {
       mfa_required: boolean
       last_login_at: string | null
       created_at: string | null
+    }
+    /** CourseGradeResource */
+    CourseGradeResource: {
+      key: string
+      score: number
+      appreciation: string | null
+      updated_at: string | null
+      course?: {
+        key: string
+        title: string
+      }
+      cohort?: {
+        key: string
+        name: string
+      }
+      grader?: {
+        key: string
+        name: string
+      } | null
+    }
+    /** DecideTrainerReportRequest */
+    DecideTrainerReportRequest: {
+      /** @enum {string} */
+      decision: 'approved' | 'rejected'
+      /** @description Un rejet dit au formateur quoi corriger. */
+      note?: string | null
+    }
+    /** StoreTrainerReportRequest */
+    StoreTrainerReportRequest: {
+      title: string
+      /** @description Module, semaine ou période couverte par le rapport. */
+      period_label?: string | null
+      summary?: string | null
+      /** @description PDF déjà déposé par le formateur via POST /media. */
+      media_key: string
+    }
+    /** TrainerReportResource */
+    TrainerReportResource: {
+      key: string
+      title: string
+      period_label: string | null
+      summary: string | null
+      /** @enum {string} */
+      status: 'submitted' | 'approved' | 'rejected'
+      review_note: string | null
+      reviewed_at: string | null
+      created_at: string | null
+      cohort?: {
+        key: string
+        code: string
+        name: string
+      }
+      author?: {
+        key: string
+        name: string
+      }
+      reviewer?: {
+        key: string
+        name: string
+      } | null
+      media?: components['schemas']['MediaFileResource']
+    }
+    /**
+     * TrainerReportStatus
+     * @enum {string}
+     */
+    TrainerReportStatus: 'submitted' | 'approved' | 'rejected'
+    /** UpsertCourseGradesRequest */
+    UpsertCourseGradesRequest: {
+      course_key: string
+      grades: {
+        learner_key: string
+        /** @description null efface la note de cet apprenant. */
+        score?: number | null
+        appreciation?: string | null
+      }[]
     }
   }
   responses: {
@@ -9778,6 +9946,18 @@ export interface operations {
           'application/octet-stream': string
         }
       }
+      /** @description An error */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            /** @description Error overview. */
+            message: string
+          }
+        }
+      }
       404: components['responses']['ModelNotFoundException']
       /** @description An error */
       409: {
@@ -11199,6 +11379,314 @@ export interface operations {
             message: 'Profil mis à jour.'
             data:
               | components['schemas']['UserResource']
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'grades.mine': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | (components['schemas']['CourseGradeResource'] & Record<string, never>)[]
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+    }
+  }
+  'admin.cohorts.grades.index': {
+    parameters: {
+      query: {
+        course_key: string
+      }
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | string[]
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'admin.cohorts.grades.upsert': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpsertCourseGradesRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | string[]
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'admin.cohorts.reports.index': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | (components['schemas']['TrainerReportResource'] & Record<string, never>)[]
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+    }
+  }
+  'admin.cohorts.reports.store': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The cohort key */
+        cohort: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['StoreTrainerReportRequest']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            /** @constant */
+            message: 'Rapport d’avancement déposé.'
+            data:
+              | (components['schemas']['TrainerReportResource'] & Record<string, never>)
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      404: components['responses']['ModelNotFoundException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'admin.trainer-reports.index': {
+    parameters: {
+      query?: {
+        status?: components['schemas']['TrainerReportStatus'] | null
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            message: null
+            data:
+              | (components['schemas']['TrainerReportResource'] & Record<string, never>)[]
+              | string
+              | {
+                  [key: string]: string
+                }
+              | null
+            meta: unknown[]
+            links: {
+              first: string | null
+              last: string | null
+              prev: string | null
+              next: string
+            }
+          }
+        }
+      }
+      401: components['responses']['AuthenticationException']
+      403: components['responses']['AuthorizationException']
+      422: components['responses']['ValidationException']
+    }
+  }
+  'admin.trainer-reports.decide': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The report key */
+        report: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DecideTrainerReportRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            success: boolean
+            /** @constant */
+            message: 'Décision enregistrée.'
+            data:
+              | (components['schemas']['TrainerReportResource'] & Record<string, never>)
               | string
               | {
                   [key: string]: string

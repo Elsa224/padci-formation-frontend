@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import {
   Award as AwardIcon,
+  FileCheck as ReportsIcon,
   BarChart3 as BarChartIcon,
   ClipboardList as EnrollIcon,
   Library as CatalogueIcon,
@@ -47,6 +48,7 @@ const navigation: WorkspaceNavGroup[] = [
       { label: 'Modération des cours', to: '/admin/moderation-cours', icon: BookOpenCheckIcon },
       { label: 'Catalogue', to: '/admin/catalogue', icon: CatalogueIcon },
       { label: 'Attestations', to: '/admin/attestations', icon: AwardIcon },
+      { label: 'Rapports formateurs', to: '/admin/rapports-formateurs', icon: ReportsIcon },
     ],
   },
   {
