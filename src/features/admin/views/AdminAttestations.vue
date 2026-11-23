@@ -28,12 +28,11 @@
         </label>
       </div>
       <div v-if="certificates.isPending.value" class="app-skeleton h-24" />
-      <p
+      <EmptyState
         v-else-if="!certificates.data.value?.items.length"
-        class="rounded-xl bg-canvas p-5 text-sm text-quiet"
-      >
-        Aucune attestation.
-      </p>
+        title="Aucune attestation délivrée"
+        description="Elles sont délivrées automatiquement quand un apprenant remplit les critères d'un cours."
+      />
       <ul v-else class="divide-y divide-line">
         <li
           v-for="certificate in certificates.data.value.items"
@@ -219,12 +218,11 @@
       </form>
 
       <div v-if="external.isPending.value" class="app-skeleton h-16" />
-      <p
+      <EmptyState
         v-else-if="!external.data.value?.items.length"
-        class="rounded-xl bg-canvas p-5 text-sm text-quiet"
-      >
-        Aucune certification enregistrée.
-      </p>
+        title="Aucune certification enregistrée"
+        description="Enregistrez ici une certification obtenue hors plateforme (Cisco, Oracle…)."
+      />
       <ul v-else class="divide-y divide-line">
         <li
           v-for="item in external.data.value.items"
@@ -255,6 +253,7 @@
 </template>
 
 <script setup lang="ts">
+import EmptyState from '@/components/app/EmptyState.vue'
 import { computed, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import ConfirmButton from '../components/ConfirmButton.vue'

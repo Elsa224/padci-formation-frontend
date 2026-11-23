@@ -32,6 +32,10 @@ vi.mock('../composables/useApplications', async (importOriginal) => {
   }
 })
 
+vi.mock('../composables/useDashboard', () => ({
+  useApplicationStatusCounts: () => ({ data: ref({ submitted: 2, in_review: 1 }) }),
+}))
+
 vi.mock('../composables/useCohorts', async (importOriginal) => {
   const actual = await importOriginal<typeof useCohortsModule>()
   return {

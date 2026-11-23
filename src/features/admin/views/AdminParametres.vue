@@ -19,7 +19,7 @@
       </div>
 
       <div v-if="settings.isPending.value" class="app-skeleton h-12" />
-      <p v-else-if="settings.isError.value" class="text-sm text-danger-ink" role="alert">
+      <p v-else-if="settings.isError.value" class="app-alert app-alert-danger" role="alert">
         {{ apiMessage(settings.error.value, 'Réglage indisponible pour votre compte.') }}
       </p>
       <label
@@ -40,14 +40,14 @@
           id="course-moderation"
           type="checkbox"
           role="switch"
-          class="h-5 w-5 accent-[var(--color-primary,#198341)]"
+          class="app-switch"
           :checked="settings.data.value.course_moderation_enabled"
           :disabled="update.isPending.value"
           data-test="moderation-toggle"
           @change="toggle($event.target as HTMLInputElement)"
         />
       </label>
-      <p v-if="error" class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink" role="alert">
+      <p v-if="error" class="app-alert app-alert-danger" role="alert">
         {{ error }}
       </p>
     </section>

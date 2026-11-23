@@ -100,6 +100,9 @@ import { useAnoRequests } from '../composables/useAnoRequests'
 import { useBudgetLines } from '../composables/useBudgetLines'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+// Graphiques dans la police et les couleurs de texte de l'application.
+ChartJS.defaults.font.family = getComputedStyle(document.body).fontFamily
+ChartJS.defaults.color = '#56645d'
 
 // ==================== KPIs (module Operations, partagé avec AdminDashboard) ====================
 const { data: overview } = useDashboardOverview()
