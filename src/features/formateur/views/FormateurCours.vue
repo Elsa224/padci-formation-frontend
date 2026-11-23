@@ -176,7 +176,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { Plus as PlusIcon } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import { useCatalogPathways } from '@/features/public/composables/useCatalogPathways'
@@ -195,7 +195,9 @@ import {
 } from '../composables/useTrainerCourses'
 
 const router = useRouter()
-const status = ref<CourseStatus | ''>('')
+const route = useRoute()
+// ?statut=… depuis le tableau de bord (ex. cours rejetés à reprendre).
+const status = ref<CourseStatus | ''>((route.query.statut as CourseStatus | undefined) ?? '')
 const page = ref(1)
 watch(status, () => {
   page.value = 1

@@ -244,9 +244,14 @@ const router = createRouter({
     {
       path: '/moderation',
       component: () => import('@/features/moderation/layouts/ModeratorLayout.vue'),
-      redirect: '/moderation/materiel',
+      redirect: '/moderation/tableau-de-bord',
       meta: { requiresAuth: true, roles: ['moderateur', 'super_admin'] },
       children: [
+        {
+          path: 'tableau-de-bord',
+          name: 'moderation-dashboard',
+          component: () => import('@/features/moderation/views/ModeratorDashboard.vue'),
+        },
         {
           path: 'materiel',
           name: 'moderation-equipment',

@@ -6,7 +6,7 @@
 export function homeFor(roles: readonly string[]): string {
   if (roles.includes('super_admin')) return '/superadmin/dashboard'
   if (roles.includes('admin')) return '/admin/dashboard'
-  if (roles.includes('moderateur')) return '/moderation/materiel'
+  if (roles.includes('moderateur')) return '/moderation/tableau-de-bord'
   if (roles.includes('formateur')) return '/formateur/dashboard'
   return '/formations/dashboard'
 }
