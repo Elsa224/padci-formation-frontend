@@ -83,7 +83,11 @@
             <button type="button" class="app-action-secondary" @click="revokeTarget = null">
               Annuler
             </button>
-            <button class="app-action-primary" :disabled="revokeMutation.isPending.value">
+            <button
+              class="app-action-primary"
+              :disabled="revokeMutation.isPending.value"
+              :aria-busy="revokeMutation.isPending.value"
+            >
               Révoquer
             </button>
           </form>
@@ -207,6 +211,7 @@
           <button
             class="app-action-primary"
             :disabled="createExternal.isPending.value || !externalForm.user_key"
+            :aria-busy="createExternal.isPending.value"
           >
             Enregistrer
           </button>

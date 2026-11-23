@@ -81,6 +81,7 @@
               v-if="profile.has_profile_photo"
               class="app-action-secondary"
               :disabled="remove.isPending.value"
+              :aria-busy="remove.isPending.value"
               @click="remove.mutate()"
             >
               Supprimer

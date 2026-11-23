@@ -39,6 +39,7 @@
             <button
               type="submit"
               :disabled="updateProfileMutation.isPending.value"
+              :aria-busy="updateProfileMutation.isPending.value"
               class="app-action-primary gap-2"
             >
               <SaveIcon :size="18" />
@@ -89,6 +90,7 @@
             <button
               type="submit"
               :disabled="changePasswordMutation.isPending.value"
+              :aria-busy="changePasswordMutation.isPending.value"
               class="app-action-primary"
             >
               Changer le mot de passe
@@ -122,6 +124,7 @@
             v-else
             @click="disableMfa"
             :disabled="mfaDisableMutation.isPending.value"
+            :aria-busy="mfaDisableMutation.isPending.value"
             class="app-action-secondary shrink-0 text-danger-ink"
           >
             Désactiver

@@ -168,6 +168,7 @@
             <div class="flex flex-wrap gap-2">
               <button
                 :disabled="equipmentResponseMutation.isPending.value"
+                :aria-busy="equipmentResponseMutation.isPending.value"
                 class="app-action-primary text-xs"
               >
                 {{

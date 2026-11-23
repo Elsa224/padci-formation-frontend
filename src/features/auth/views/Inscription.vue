@@ -70,6 +70,7 @@
           v-if="verificationUrl === null"
           type="button"
           :disabled="resendPending || resendDone"
+          :aria-busy="resendPending"
           class="mt-5 text-sm font-medium text-primary hover:underline transition disabled:opacity-60 disabled:hover:no-underline"
           :class="{ 'text-quiet': resendDone }"
           @click="resend"
@@ -343,6 +344,7 @@
       <button
         type="submit"
         :disabled="isPending || !peutEnvoyer"
+        :aria-busy="isPending"
         class="app-action-primary min-h-12 w-full text-base group"
       >
         <svg

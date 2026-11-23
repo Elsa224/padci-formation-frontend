@@ -41,6 +41,7 @@
           <button
             class="app-action-primary"
             :disabled="submit.isPending.value"
+            :aria-busy="submit.isPending.value"
             data-test="finish"
             @click="confirming = true"
           >
@@ -76,6 +77,7 @@
           <button
             class="app-action-primary"
             :disabled="submit.isPending.value"
+            :aria-busy="submit.isPending.value"
             data-test="confirm-finish"
             @click="finish"
           >

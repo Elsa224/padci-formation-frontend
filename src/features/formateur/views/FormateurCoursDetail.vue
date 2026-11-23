@@ -35,6 +35,7 @@
             v-if="course.data.value.status === 'rejected'"
             class="app-action-secondary"
             :disabled="revert.isPending.value"
+            :aria-busy="revert.isPending.value"
             @click="run(() => revert.mutateAsync(courseKey), 'Cours repassé en brouillon.')"
           >
             Repasser en brouillon
@@ -43,6 +44,7 @@
             v-if="canSubmit(course.data.value.status)"
             class="app-action-primary"
             :disabled="submit.isPending.value"
+            :aria-busy="submit.isPending.value"
             @click="submitCourse"
           >
             Soumettre à validation
@@ -112,7 +114,11 @@
           <button type="button" class="app-action-secondary" @click="ficheOpen = false">
             Annuler
           </button>
-          <button class="app-action-primary" :disabled="updateCourse.isPending.value">
+          <button
+            class="app-action-primary"
+            :disabled="updateCourse.isPending.value"
+            :aria-busy="updateCourse.isPending.value"
+          >
             Enregistrer
           </button>
         </div>
@@ -299,6 +305,7 @@
                   <button
                     class="app-action-primary"
                     :disabled="addDocumentMutation.isPending.value"
+                    :aria-busy="addDocumentMutation.isPending.value"
                   >
                     {{ addDocumentMutation.isPending.value ? 'Envoi…' : 'Déposer' }}
                   </button>
@@ -326,7 +333,11 @@
                     placeholder="https://…"
                     aria-label="Lien du support"
                   />
-                  <button class="app-action-primary" :disabled="createResource.isPending.value">
+                  <button
+                    class="app-action-primary"
+                    :disabled="createResource.isPending.value"
+                    :aria-busy="createResource.isPending.value"
+                  >
                     Ajouter
                   </button>
                 </form>
@@ -375,7 +386,11 @@
                 <button type="button" class="app-action-secondary" @click="chapterTarget = null">
                   Annuler
                 </button>
-                <button class="app-action-primary" :disabled="createChapter.isPending.value">
+                <button
+                  class="app-action-primary"
+                  :disabled="createChapter.isPending.value"
+                  :aria-busy="createChapter.isPending.value"
+                >
                   Ajouter le chapitre
                 </button>
               </div>
@@ -403,7 +418,11 @@
             placeholder="Titre du nouveau module"
             aria-label="Titre du nouveau module"
           />
-          <button class="app-action-primary" :disabled="createModule.isPending.value">
+          <button
+            class="app-action-primary"
+            :disabled="createModule.isPending.value"
+            :aria-busy="createModule.isPending.value"
+          >
             Ajouter un module
           </button>
         </form>

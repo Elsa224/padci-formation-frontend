@@ -43,6 +43,7 @@
         v-if="!resendDone"
         type="button"
         :disabled="resendPending"
+        :aria-busy="resendPending"
         class="mt-2 font-medium text-primary hover:underline disabled:opacity-60"
         @click="resendLink"
       >
@@ -154,6 +155,7 @@
       <button
         type="submit"
         :disabled="isPending"
+        :aria-busy="isPending"
         class="app-action-primary min-h-12 w-full text-base group"
       >
         {{ isPending ? 'Connexion…' : 'Se connecter' }}
@@ -196,6 +198,7 @@
       <button
         type="submit"
         :disabled="isPending"
+        :aria-busy="isPending"
         class="app-action-primary min-h-12 w-full text-base"
       >
         {{ isPending ? 'Vérification…' : 'Valider' }}

@@ -335,6 +335,41 @@ body {
     @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-savane px-5 py-2.5 text-sm font-bold text-forest transition duration-150 hover:brightness-105 active:translate-y-px disabled:pointer-events-none disabled:border-transparent disabled:bg-[#e3eae5] disabled:text-quiet disabled:shadow-none;
   }
 
+  /* En cours d'envoi (aria-busy) : le bouton garde sa couleur, seul le curseur
+     et le libellé (« Connexion… ») changent. Le gris neutre est réservé à
+     une action réellement indisponible. */
+  .app-action-primary[aria-busy='true'] {
+    @apply cursor-progress bg-primary text-white opacity-90 shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)];
+  }
+  .app-action-accent[aria-busy='true'] {
+    @apply cursor-progress bg-savane text-forest opacity-90;
+  }
+  .app-action-secondary[aria-busy='true'] {
+    @apply cursor-progress border-line-control bg-white text-ink opacity-90;
+  }
+
+  /* Indicateur de chargement : une roue devant le libellé de tout bouton
+     occupé (app-action-* ou Button shadcn), sans changer les templates. */
+  :is(
+      .app-action-primary,
+      .app-action-secondary,
+      .app-action-accent,
+      [data-slot='button']
+    )[aria-busy='true']::before {
+    content: '';
+    @apply size-4 shrink-0 animate-spin rounded-full border-2 border-current border-r-transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :is(
+        .app-action-primary,
+        .app-action-secondary,
+        .app-action-accent,
+        [data-slot='button']
+      )[aria-busy='true']::before {
+      @apply animate-none border-r-current opacity-60;
+    }
+  }
+
   .app-input {
     @apply min-h-11 w-full rounded-xl border border-line-strong bg-white px-3.5 py-2 text-sm text-ink transition placeholder:text-quiet/70 hover:border-quiet/50 focus:border-primary focus:ring-4 focus:ring-primary/12 focus:outline-none;
   }

@@ -91,6 +91,7 @@
             <button
               @click="confirmReject(ano)"
               :disabled="rejectMutation.isPending.value"
+              :aria-busy="rejectMutation.isPending.value"
               class="px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-danger transition disabled:opacity-50"
             >
               Confirmer le rejet
@@ -142,6 +143,7 @@
             <button
               @click="confirmerSignature"
               :disabled="signMutation.isPending.value"
+              :aria-busy="signMutation.isPending.value"
               class="flex-1 px-4 py-2.5 bg-savane text-white rounded-xl font-medium hover:bg-savane transition shadow-md shadow-savane/20 disabled:opacity-50"
             >
               Confirmer

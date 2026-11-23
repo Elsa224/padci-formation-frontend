@@ -64,6 +64,7 @@
               v-else
               class="app-action-primary"
               :disabled="start.isPending.value"
+              :aria-busy="start.isPending.value"
               data-test="start-assessment"
               @click="startAssessment(assessment.key)"
             >
@@ -102,6 +103,7 @@
           v-else
           class="app-action-secondary"
           :disabled="requestCertificate.isPending.value"
+          :aria-busy="requestCertificate.isPending.value"
           @click="askCertificate"
         >
           Demander mon attestation

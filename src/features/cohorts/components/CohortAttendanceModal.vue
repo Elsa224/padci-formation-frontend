@@ -138,6 +138,7 @@
                 <button
                   class="app-action-primary"
                   :disabled="createSessionMutation.isPending.value"
+                  :aria-busy="createSessionMutation.isPending.value"
                   data-test="submit-new-session"
                 >
                   {{ createSessionMutation.isPending.value ? 'Création…' : 'Créer la séance' }}
@@ -279,6 +280,7 @@
                   <button
                     class="app-action-primary"
                     :disabled="updateBatchMutation.isPending.value"
+                    :aria-busy="updateBatchMutation.isPending.value"
                     data-test="submit-attendance-batch"
                   >
                     {{

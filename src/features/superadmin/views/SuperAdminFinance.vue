@@ -180,6 +180,7 @@
             <button
               @click="confirmerValidation"
               :disabled="markPaidMutation.isPending.value"
+              :aria-busy="markPaidMutation.isPending.value"
               class="flex-1 px-4 py-2.5 bg-savane text-white rounded-xl font-medium hover:bg-savane transition shadow-md shadow-savane/20 disabled:opacity-50"
             >
               Valider le paiement

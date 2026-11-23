@@ -73,7 +73,12 @@
         <button type="button" class="app-action-secondary" @click="isCreateOpen = false">
           Annuler
         </button>
-        <button type="submit" class="app-action-primary" :disabled="create.isPending.value">
+        <button
+          type="submit"
+          class="app-action-primary"
+          :disabled="create.isPending.value"
+          :aria-busy="create.isPending.value"
+        >
           {{ create.isPending.value ? 'Création…' : 'Créer le brouillon' }}
         </button>
       </div>
@@ -136,6 +141,7 @@
                 v-if="canSubmit(course.status)"
                 class="app-action-secondary"
                 :disabled="submit.isPending.value"
+                :aria-busy="submit.isPending.value"
                 @click="submitCourse(course.key)"
               >
                 Soumettre

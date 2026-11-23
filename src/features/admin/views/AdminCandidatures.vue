@@ -586,6 +586,7 @@
                   <button
                     type="button"
                     :disabled="decideEquipmentMutation.isPending.value"
+                    :aria-busy="decideEquipmentMutation.isPending.value"
                     @click="
                       decideEquipment(
                         'rejected',
@@ -599,6 +600,7 @@
                   <button
                     type="button"
                     :disabled="decideEquipmentMutation.isPending.value"
+                    :aria-busy="decideEquipmentMutation.isPending.value"
                     @click="decideEquipment('approved')"
                     class="app-action-primary min-h-9 px-3.5 py-1.5 text-xs"
                     data-testid="btn-approve-equipment"
@@ -822,6 +824,7 @@
             v-if="detail.status === 'submitted'"
             @click="startReview"
             :disabled="startReviewMutation.isPending.value"
+            :aria-busy="startReviewMutation.isPending.value"
             class="rounded-xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-canvas disabled:opacity-50"
           >
             Démarrer la revue
@@ -850,6 +853,7 @@
               <button
                 @click="decide('waitlisted')"
                 :disabled="decideMutation.isPending.value"
+                :aria-busy="decideMutation.isPending.value"
                 class="rounded-xl border border-warning-line bg-white px-5 py-2.5 text-sm font-semibold text-warning-ink transition hover:bg-warning-soft disabled:opacity-50"
               >
                 Liste d'attente
@@ -857,6 +861,7 @@
               <button
                 @click="decide('accepted')"
                 :disabled="decideMutation.isPending.value || !canAccept"
+                :aria-busy="decideMutation.isPending.value"
                 :title="
                   canAccept
                     ? 'Approuver la candidature'
@@ -878,6 +883,7 @@
               <button
                 @click="confirmReject"
                 :disabled="decideMutation.isPending.value"
+                :aria-busy="decideMutation.isPending.value"
                 class="rounded-xl bg-danger px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-danger/20 transition hover:bg-danger disabled:opacity-50"
                 data-testid="btn-confirm-reject"
               >

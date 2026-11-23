@@ -116,6 +116,7 @@
                   type="submit"
                   class="app-action-primary"
                   :disabled="busy"
+                  :aria-busy="busy"
                   data-test="approve-course"
                 >
                   {{ pendingAction === 'approve' ? 'Publication…' : 'Approuver et publier' }}
@@ -124,6 +125,7 @@
                   type="button"
                   class="app-action-secondary text-danger-ink hover:border-danger-line hover:bg-danger-soft"
                   :disabled="busy"
+                  :aria-busy="busy"
                   data-test="reject-course"
                   @click="decide(course, 'reject')"
                 >
