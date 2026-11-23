@@ -77,7 +77,7 @@ test('inscription → email non vérifié → vérification → connexion', asyn
   //    erreur générique d'identification.
   await page.getByRole('link', { name: 'Aller à la connexion' }).click()
   await expect(page).toHaveURL('/')
-  await page.getByPlaceholder('Email professionnel').fill(email)
+  await page.getByPlaceholder('Adresse e-mail').fill(email)
   await page.locator('input[placeholder="Mot de passe"]').fill(password)
   await page.getByRole('button', { name: /Se connecter/ }).click()
   await expect(page.getByText('Adresse email non vérifiée', { exact: false })).toBeVisible()
@@ -91,7 +91,7 @@ test('inscription → email non vérifié → vérification → connexion', asyn
   await expect(page.getByText('Adresse vérifiée ✓', { exact: false })).toBeVisible()
 
   // 4. Connexion cette fois acceptée → dashboard apprenant.
-  await page.getByPlaceholder('Email professionnel').fill(email)
+  await page.getByPlaceholder('Adresse e-mail').fill(email)
   await page.locator('input[placeholder="Mot de passe"]').fill(password)
   await page.getByRole('button', { name: /Se connecter/ }).click()
   await expect(page).toHaveURL(/\/formations\/dashboard/)
@@ -142,7 +142,7 @@ test('mot de passe oublié → email (Mailpit) → réinitialisation → connexi
 
   // 1. Mot de passe oublié
   await page.goto('/mot-de-passe-oublie')
-  await page.getByPlaceholder('Email professionnel').fill(email)
+  await page.getByPlaceholder('Adresse e-mail').fill(email)
   await page.getByRole('button', { name: 'Envoyer le lien' }).click()
   await expect(page.getByText('Email envoyé !')).toBeVisible()
 
@@ -159,7 +159,7 @@ test('mot de passe oublié → email (Mailpit) → réinitialisation → connexi
 
   // 4. Connexion avec le nouveau mot de passe (l'ancien est révoqué côté backend).
   await page.goto('/connexion')
-  await page.getByPlaceholder('Email professionnel').fill(email)
+  await page.getByPlaceholder('Adresse e-mail').fill(email)
   await page.locator('input[placeholder="Mot de passe"]').fill(newPassword)
   await page.getByRole('button', { name: /Se connecter/ }).click()
   await expect(page).toHaveURL(/\/formations\/dashboard/)

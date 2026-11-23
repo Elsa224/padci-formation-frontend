@@ -25,7 +25,7 @@
       <div v-if="code && result.isPending.value" class="app-skeleton h-28" />
       <div
         v-else-if="code && result.isError.value"
-        class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+        class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
         role="alert"
         data-test="verify-not-found"
       >
@@ -34,12 +34,12 @@
       <div
         v-else-if="result.data.value"
         class="app-panel space-y-2"
-        :class="result.data.value.valid ? '' : 'border-red-200'"
+        :class="result.data.value.valid ? '' : 'border-danger-line'"
         data-test="verify-result"
       >
         <p
           class="text-sm font-bold"
-          :class="result.data.value.valid ? 'text-primary' : 'text-red-700'"
+          :class="result.data.value.valid ? 'text-primary' : 'text-danger-ink'"
         >
           {{ result.data.value.valid ? 'Attestation valide' : 'Attestation non valide' }}
         </p>

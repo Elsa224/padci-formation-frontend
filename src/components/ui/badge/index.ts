@@ -19,6 +19,9 @@ export const badgeVariants = cva(
         leaf: 'bg-mint text-primary-shade',
         savane: 'bg-savane-soft text-savane-ink',
         neutral: 'bg-canvas text-quiet ring-1 ring-line ring-inset',
+        danger: 'bg-danger-soft text-danger-ink',
+        warning: 'bg-warning-soft text-warning-ink',
+        info: 'bg-info-soft text-info-ink',
       },
     },
     defaultVariants: {

@@ -7,7 +7,7 @@
     <div v-if="course.isPending.value" class="app-skeleton h-32" />
     <div
       v-else-if="course.isError.value"
-      class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+      class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
       role="alert"
     >
       {{ apiErrorMessage(course.error.value, 'Impossible de charger ce cours.') }}
@@ -50,7 +50,11 @@
         </div>
       </header>
 
-      <p v-if="actionError" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+      <p
+        v-if="actionError"
+        class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
+        role="alert"
+      >
         {{ actionError }}
       </p>
       <p v-if="!editable" class="app-panel-muted text-sm text-quiet">
@@ -121,7 +125,7 @@
         <div v-if="modules.isPending.value" class="space-y-3">
           <div v-for="n in 2" :key="n" class="app-skeleton h-20" />
         </div>
-        <p v-else-if="modules.isError.value" class="text-sm text-red-700" role="alert">
+        <p v-else-if="modules.isError.value" class="text-sm text-danger-ink" role="alert">
           {{ apiErrorMessage(modules.error.value, 'Impossible de charger le contenu.') }}
         </p>
         <p

@@ -34,7 +34,7 @@
         <button type="button" class="app-action-secondary" @click="applySearch">Filtrer</button>
       </form>
 
-      <p v-if="error" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+      <p v-if="error" class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink" role="alert">
         {{ error }}
       </p>
 
@@ -111,7 +111,7 @@
                   <button
                     v-for="available in actionsFor(enrollment.status)"
                     :key="available"
-                    :class="available === 'revoke' ? 'text-red-700' : 'text-primary'"
+                    :class="available === 'revoke' ? 'text-danger-ink' : 'text-primary'"
                     :data-test="`action-${available}`"
                     @click="ask(enrollment.key, available)"
                   >
@@ -196,9 +196,9 @@ function tone(status: EnrollmentStatus) {
   return status === 'active'
     ? 'bg-primary/10 text-primary'
     : status === 'suspended'
-      ? 'bg-amber-50 text-amber-800'
+      ? 'bg-warning-soft text-warning-ink'
       : status === 'revoked'
-        ? 'bg-red-50 text-red-700'
+        ? 'bg-danger-soft text-danger-ink'
         : 'bg-canvas text-quiet'
 }
 

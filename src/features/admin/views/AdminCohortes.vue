@@ -66,19 +66,13 @@
     <!-- ================= FILTRES ================= -->
     <div class="bg-white rounded-xl shadow-sm border border-line p-4">
       <div class="flex flex-col md:flex-row gap-4">
-        <select
-          v-model="filterPathwayKey"
-          class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[200px]"
-        >
+        <select v-model="filterPathwayKey" class="app-input md:w-56">
           <option value="">Toutes les filières</option>
           <option v-for="pathway in pathways" :key="pathway.key" :value="pathway.key">
             {{ pathway.name }}
           </option>
         </select>
-        <select
-          v-model="filterStatus"
-          class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[170px]"
-        >
+        <select v-model="filterStatus" class="app-input md:w-48">
           <option value="">Tous les statuts</option>
           <option v-for="status in statusOptions" :key="status.value" :value="status.value">
             {{ status.label }}
@@ -149,7 +143,7 @@
 
     <!-- ================= ÉTATS ================= -->
     <div v-if="isPending" class="text-center text-quiet py-10">Chargement des cohortes…</div>
-    <div v-else-if="isError" class="text-center text-red-600 py-10">
+    <div v-else-if="isError" class="text-center text-danger-ink py-10">
       {{ (error as ApiError)?.message ?? 'Impossible de charger les cohortes.' }}
     </div>
     <div v-else-if="cohorts.length === 0" class="text-center text-quiet py-10">
@@ -176,10 +170,7 @@
               <p class="text-xs text-quiet">{{ cohort.session ?? cohort.code }}</p>
             </div>
           </div>
-          <span
-            class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0"
-            :class="statusBadgeClass(cohort.status)"
-          >
+          <span class="app-chip shrink-0" :class="statusBadgeClass(cohort.status)">
             {{ statusLabel(cohort.status) }}
           </span>
         </div>
@@ -218,7 +209,7 @@
                 :class="
                   (availableSeats(cohort) ?? 0) > 0
                     ? 'bg-primary/10 text-primary'
-                    : 'bg-red-100 text-red-700'
+                    : 'bg-danger-soft text-danger-ink'
                 "
               >
                 {{
@@ -245,7 +236,7 @@
           <!-- Phase présentielle tag -->
           <div
             v-if="cohort.offline_starts_at"
-            class="mt-2.5 flex items-center gap-2 rounded-lg bg-mint border border-primary/25 px-3 py-1.5 text-xs font-semibold text-primary-shade"
+            class="app-alert app-alert-success mt-2.5 flex items-center gap-2"
             data-testid="cohort-offline-tag"
           >
             <svg
@@ -341,10 +332,7 @@
         </div>
 
         <form @submit.prevent="submitCreateCohort" class="space-y-4">
-          <div
-            v-if="createError"
-            class="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600"
-          >
+          <div v-if="createError" class="app-alert app-alert-danger">
             {{ createError }}
           </div>
 
@@ -432,9 +420,7 @@
           <!-- Phase présentielle / Ateliers (optionnel) -->
           <div class="rounded-xl border border-line bg-canvas/40 p-3.5 space-y-3">
             <div>
-              <h4 class="text-xs font-bold uppercase tracking-wider text-ink">
-                Phase présentielle / Ateliers (optionnel)
-              </h4>
+              <h4 class="text-xs font-bold text-ink">Phase présentielle / Ateliers (optionnel)</h4>
               <p class="text-[11px] text-quiet mt-0.5">
                 Généralement après les cours en ligne pour les ateliers pratiques.
               </p>
@@ -528,7 +514,7 @@
                 <span class="app-eyebrow"> Apprenants de la cohorte </span>
                 <span
                   v-if="selectedCohort"
-                  class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                  class="app-chip"
                   :class="statusBadgeClass(selectedCohort.status)"
                 >
                   {{ statusLabel(selectedCohort.status) }}
@@ -584,7 +570,7 @@
             </div>
           </div>
           <div class="flex items-center gap-2.5">
-            <div class="p-2 rounded-lg bg-blue-50 text-blue-700">
+            <div class="p-2 rounded-lg bg-info-soft text-info-ink">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -614,7 +600,7 @@
               v-model="membersSearchQuery"
               type="text"
               placeholder="Rechercher par nom ou email…"
-              class="w-full pl-9 pr-4 py-2 border border-line rounded-lg text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              class="app-input w-full pl-9 pr-4"
               data-testid="cohort-members-search"
             />
             <svg
@@ -633,7 +619,7 @@
           </div>
           <select
             v-model="membersStatusFilter"
-            class="px-3 py-2 border border-line rounded-lg text-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white"
+            class="app-input"
             data-testid="cohort-members-status-filter"
           >
             <option value="">Tous les statuts</option>
@@ -649,7 +635,7 @@
           <div v-if="isMembersPending" class="py-12 text-center text-quiet text-sm">
             Chargement des apprenants…
           </div>
-          <div v-else-if="isMembersError" class="py-12 text-center text-red-600 text-sm">
+          <div v-else-if="isMembersError" class="py-12 text-center text-danger-ink text-sm">
             {{ (membersError as ApiError)?.message ?? 'Impossible de charger les apprenants.' }}
           </div>
           <div
@@ -712,8 +698,8 @@
                     member.attendance_rate >= 0.8
                       ? 'bg-mint text-primary-shade border border-primary/25'
                       : member.attendance_rate >= 0.5
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-red-50 text-red-700 border border-red-200'
+                        ? 'bg-warning-soft text-warning-ink border border-warning-line'
+                        : 'bg-danger-soft text-danger-ink border border-danger-line'
                   "
                 >
                   Assiduité {{ Math.round(member.attendance_rate * 100) }}%
@@ -722,7 +708,7 @@
 
               <div class="text-right">
                 <span
-                  class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border"
+                  class="app-chip inline-block border"
                   :class="memberStatusBadgeClass(member.status)"
                   data-testid="cohort-member-status"
                 >
@@ -806,9 +792,9 @@ function statusBadgeClass(status: string): string {
       return 'bg-primary/10 text-primary'
     case 'open':
     case 'running':
-      return 'bg-blue-100 text-blue-700'
+      return 'bg-info-soft text-info-ink'
     case 'cancelled':
-      return 'bg-red-100 text-red-700'
+      return 'bg-danger-soft text-danger-ink'
     default:
       return 'bg-canvas text-quiet'
   }
@@ -1067,11 +1053,11 @@ function memberStatusBadgeClass(status: string): string {
     case 'active':
       return 'bg-mint text-primary-shade border-primary/25'
     case 'enrolled':
-      return 'bg-blue-50 text-blue-700 border-blue-200'
+      return 'bg-info-soft text-info-ink border-info-line'
     case 'suspended':
-      return 'bg-amber-50 text-amber-700 border-amber-200'
+      return 'bg-warning-soft text-warning-ink border-warning-line'
     case 'completed':
-      return 'bg-purple-50 text-purple-700 border-purple-200'
+      return 'bg-forest-soft text-forest border-forest/20'
     default:
       return 'bg-canvas text-body border-line'
   }

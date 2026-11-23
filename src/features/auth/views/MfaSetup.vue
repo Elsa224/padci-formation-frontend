@@ -68,7 +68,7 @@ async function finishAndContinue(): Promise<void> {
         Configurez la double authentification avec votre application d'authentification.
       </p>
       <div class="mt-6 space-y-5">
-        <p v-if="errorMessage" role="alert" class="text-sm text-red-600">{{ errorMessage }}</p>
+        <p v-if="errorMessage" role="alert" class="text-sm text-danger-ink">{{ errorMessage }}</p>
 
         <!-- Codes de récupération : affichés une seule fois, après confirmation -->
         <div v-if="recoveryCodes" class="space-y-4">

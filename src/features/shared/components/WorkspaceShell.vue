@@ -192,7 +192,7 @@
             <div class="border-t border-line pt-1">
               <button
                 type="button"
-                class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-red-700 transition hover:bg-red-50"
+                class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-danger-ink transition hover:bg-danger-soft"
                 role="menuitem"
                 @click="handleLogout"
               >

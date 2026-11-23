@@ -10,7 +10,7 @@
       </div>
     </header>
 
-    <p v-if="error" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+    <p v-if="error" class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink" role="alert">
       {{ error }}
     </p>
 
@@ -48,7 +48,7 @@
                 {{ certificate.course?.title }} · délivrée le
                 {{ formatDateTime(certificate.issued_at) }}
               </p>
-              <p v-if="certificate.status === 'revoked'" class="mt-1 text-xs text-red-700">
+              <p v-if="certificate.status === 'revoked'" class="mt-1 text-xs text-danger-ink">
                 Révoquée le {{ formatDateTime(certificate.revoked_at) }}
                 <template v-if="certificate.revoked_by">
                   par {{ certificate.revoked_by.name }}</template
@@ -60,7 +60,7 @@
             </div>
             <button
               v-if="certificate.status === 'issued' && revokeTarget !== certificate.key"
-              class="text-xs font-semibold text-red-700"
+              class="text-xs font-semibold text-danger-ink"
               data-test="revoke"
               @click="askRevoke(certificate.key)"
             >
@@ -69,7 +69,7 @@
           </div>
           <form
             v-if="revokeTarget === certificate.key"
-            class="flex flex-wrap gap-2 rounded-lg bg-red-50 p-3"
+            class="flex flex-wrap gap-2 rounded-lg bg-danger-soft p-3"
             data-test="revoke-form"
             @submit.prevent="revoke(certificate.key)"
           >
@@ -240,7 +240,7 @@
           <ConfirmButton
             label="Supprimer"
             confirm="Supprimer cette certification ?"
-            button-class="text-xs font-semibold text-red-700"
+            button-class="text-xs font-semibold text-danger-ink"
             @confirm="removeExternal(item.key)"
           />
         </li>

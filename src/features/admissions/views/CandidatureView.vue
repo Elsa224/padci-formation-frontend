@@ -110,9 +110,7 @@
           </div>
 
           <div class="space-y-3 rounded-xl border border-primary/20 bg-primary/[0.035] p-4">
-            <span class="text-xs font-bold uppercase text-primary tracking-wide">{{
-              pathway?.code
-            }}</span>
+            <span class="text-xs font-bold text-primary">{{ pathway?.code }}</span>
             <h3 class="text-base font-bold text-ink">{{ pathway?.name }}</h3>
             <p v-if="pathway?.description" class="text-xs text-quiet">
               {{ pathway.description }}
@@ -190,11 +188,7 @@
           </div>
 
           <div class="space-y-4">
-            <p
-              v-if="submitError"
-              class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-danger-ink"
-              role="alert"
-            >
+            <p v-if="submitError" class="app-alert app-alert-danger" role="alert">
               {{ submitError }}
             </p>
 
@@ -405,7 +399,7 @@
                     <!-- PDF / Doc icon -->
                     <div
                       v-else
-                      class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg border border-line bg-red-50 text-red-600"
+                      class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg border border-line bg-danger-soft text-danger-ink"
                     >
                       <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
@@ -456,7 +450,7 @@
                       type="button"
                       data-testid="remove-proof-btn"
                       @click="removeProof"
-                      class="rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-danger-ink hover:bg-red-100 transition"
+                      class="app-alert app-alert-danger"
                     >
                       Supprimer
                     </button>
@@ -469,7 +463,7 @@
               </div>
             </template>
 
-            <div v-else class="p-3 bg-amber-50 text-amber-800 rounded-xl text-xs">
+            <div v-else class="p-3 bg-warning-soft text-warning-ink rounded-xl text-xs">
               Votre candidature peut être déposée sans équipement personnel. L'équipe admissions
               vous indiquera les modalités de la session si elle est retenue.
             </div>
@@ -549,10 +543,7 @@
             </div>
           </div>
 
-          <p
-            v-if="submitError"
-            class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-danger-ink"
-          >
+          <p v-if="submitError" class="app-alert app-alert-danger">
             {{ submitError }}
           </p>
 

@@ -21,7 +21,11 @@
       </button>
     </div>
 
-    <p v-if="actionError" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+    <p
+      v-if="actionError"
+      class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
+      role="alert"
+    >
       {{ actionError }}
     </p>
 
@@ -57,7 +61,7 @@
                 :class="
                   assessment.schedule_published_at
                     ? 'bg-primary/10 text-primary'
-                    : 'bg-amber-50 text-amber-800'
+                    : 'bg-warning-soft text-warning-ink'
                 "
               >
                 {{ assessment.schedule_published_at ? 'annoncé' : 'non annoncé' }}
@@ -90,7 +94,10 @@
               >
                 Publier
               </button>
-              <button class="text-xs font-semibold text-red-700" @click="askDelete(assessment.key)">
+              <button
+                class="text-xs font-semibold text-danger-ink"
+                @click="askDelete(assessment.key)"
+              >
                 Supprimer
               </button>
             </template>
@@ -106,9 +113,9 @@
 
         <div
           v-if="deleteTarget === assessment.key"
-          class="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-red-50 p-3 text-sm"
+          class="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-danger-soft p-3 text-sm"
         >
-          <span class="text-red-800">Supprimer ce brouillon et ses questions ?</span>
+          <span class="text-danger-ink">Supprimer ce brouillon et ses questions ?</span>
           <span class="flex gap-2">
             <button class="app-action-secondary" @click="deleteTarget = null">Annuler</button>
             <button
@@ -284,7 +291,7 @@
             </label>
             <button
               type="button"
-              class="text-xs font-semibold text-red-700"
+              class="text-xs font-semibold text-danger-ink"
               :disabled="draft.questions.length === 1"
               @click="draft.questions.splice(qIndex, 1)"
             >
@@ -360,7 +367,7 @@
 
       <ul
         v-if="draftErrors.length"
-        class="list-disc space-y-1 rounded-lg bg-red-50 p-3 pl-7 text-sm text-red-800"
+        class="list-disc space-y-1 rounded-lg bg-danger-soft p-3 pl-7 text-sm text-danger-ink"
         role="alert"
         data-test="draft-errors"
       >

@@ -24,7 +24,7 @@
 
     <!-- ÉTAT DE CHARGEMENT / ERREUR -->
     <div v-if="isPending" class="text-center py-16 text-quiet">Chargement du chapitre…</div>
-    <div v-else-if="isError" class="text-center py-16 text-red-600">
+    <div v-else-if="isError" class="text-center py-16 text-danger-ink">
       {{ (error as ApiError)?.message ?? 'Impossible de charger ce chapitre.' }}
     </div>
 

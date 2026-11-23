@@ -64,7 +64,7 @@
       <div class="flex-1 overflow-y-auto p-6">
         <p
           v-if="actionError"
-          class="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-800"
+          class="mb-4 rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
           role="alert"
         >
           {{ actionError }}
@@ -171,7 +171,7 @@
               class="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3"
             >
               <div>
-                <span class="text-xs font-bold uppercase text-primary">
+                <span class="text-xs font-bold text-primary">
                   {{ sessionDetail.data.value.date }}
                 </span>
                 <h3 class="text-base font-bold text-ink">
@@ -333,16 +333,16 @@
                       session.stats.rate >= 80
                         ? 'text-primary-shade'
                         : session.stats.rate >= 50
-                          ? 'text-amber-700'
-                          : 'text-red-700'
+                          ? 'text-warning-ink'
+                          : 'text-danger-ink'
                     "
                   >
                     Assiduité : {{ session.stats.rate }}%
                   </span>
                   <span class="text-primary-shade">{{ session.stats.present }} Présent(s)</span>
-                  <span class="text-amber-700">{{ session.stats.late }} Retard(s)</span>
-                  <span class="text-blue-700">{{ session.stats.excused }} Excusé(s)</span>
-                  <span class="text-red-700">{{ session.stats.absent }} Absent(s)</span>
+                  <span class="text-warning-ink">{{ session.stats.late }} Retard(s)</span>
+                  <span class="text-info-ink">{{ session.stats.excused }} Excusé(s)</span>
+                  <span class="text-danger-ink">{{ session.stats.absent }} Absent(s)</span>
                 </div>
               </div>
 
@@ -358,7 +358,7 @@
                 <ConfirmButton
                   label="Supprimer"
                   confirm="Supprimer cette séance ?"
-                  button-class="rounded-lg p-1.5 text-xs text-red-600 hover:bg-red-50 hover:text-red-700"
+                  button-class="rounded-lg p-1.5 text-xs text-danger-ink hover:bg-danger-soft hover:text-danger-ink"
                   data-test="delete-session-btn"
                   @confirm="handleDeleteSession(session.key)"
                 />
@@ -416,13 +416,13 @@
                     <td class="p-3 text-center font-medium text-primary-shade">
                       {{ l.present }}
                     </td>
-                    <td class="p-3 text-center font-medium text-amber-700">
+                    <td class="p-3 text-center font-medium text-warning-ink">
                       {{ l.late }}
                     </td>
-                    <td class="p-3 text-center font-medium text-blue-700">
+                    <td class="p-3 text-center font-medium text-info-ink">
                       {{ l.excused }}
                     </td>
-                    <td class="p-3 text-center font-medium text-red-700">
+                    <td class="p-3 text-center font-medium text-danger-ink">
                       {{ l.absent }}
                     </td>
                     <td class="p-3 text-right font-bold">
@@ -432,8 +432,8 @@
                           l.rate >= 80
                             ? 'bg-mint text-primary-shade'
                             : l.rate >= 50
-                              ? 'bg-amber-50 text-amber-800'
-                              : 'bg-red-50 text-red-700'
+                              ? 'bg-warning-soft text-warning-ink'
+                              : 'bg-danger-soft text-danger-ink'
                         "
                       >
                         {{ l.rate }}%
@@ -603,8 +603,8 @@ async function handleDeleteSession(sessionKey: string) {
 
 const statusActiveClasses: Record<AttendanceStatus, string> = {
   present: 'bg-primary text-white shadow-sm',
-  late: 'bg-amber-500 text-white shadow-sm',
-  excused: 'bg-blue-600 text-white shadow-sm',
-  absent: 'bg-red-600 text-white shadow-sm',
+  late: 'bg-warning text-white shadow-sm',
+  excused: 'bg-info text-white shadow-sm',
+  absent: 'bg-danger text-white shadow-sm',
 }
 </script>

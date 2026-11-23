@@ -15,7 +15,7 @@
     </div>
     <div
       v-else-if="pending.isError.value"
-      class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+      class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
       role="alert"
     >
       {{ apiErrorMessage(pending.error.value, 'Impossible de charger les copies.') }}
@@ -44,7 +44,7 @@
             >
           </p>
         </div>
-        <span class="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-800">
+        <span class="app-chip app-chip-warning">
           {{ attempt.pending_answers.length }} à corriger
         </span>
       </div>
@@ -91,7 +91,7 @@
         </div>
         <p
           v-if="errors[answer.answer_key]"
-          class="rounded-lg bg-red-50 p-2 text-sm text-red-800"
+          class="rounded-lg bg-danger-soft p-2 text-sm text-danger-ink"
           role="alert"
         >
           {{ errors[answer.answer_key] }}

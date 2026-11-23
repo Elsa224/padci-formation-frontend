@@ -43,7 +43,7 @@ const dotClass = computed(
       leaf: 'bg-primary',
       savane: 'bg-savane',
       danger: 'bg-danger-ink',
-      info: 'bg-sky-600',
+      info: 'bg-info',
     })[props.tone],
 )
 </script>

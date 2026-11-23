@@ -6,7 +6,7 @@
       <div v-if="assessments.isPending.value" class="space-y-3">
         <div v-for="n in 2" :key="n" class="app-skeleton h-16" />
       </div>
-      <p v-else-if="assessments.isError.value" class="text-sm text-red-700" role="alert">
+      <p v-else-if="assessments.isError.value" class="text-sm text-danger-ink" role="alert">
         {{ apiMessage(assessments.error.value, 'Impossible de charger les évaluations.') }}
       </p>
       <p
@@ -72,7 +72,7 @@
           </div>
           <p
             v-if="startError?.key === assessment.key"
-            class="w-full rounded-xl bg-red-50 p-3 text-sm text-red-800"
+            class="w-full rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
             role="alert"
           >
             {{ startError.message }}
@@ -108,7 +108,7 @@
         </button>
         <p
           v-if="certificateError"
-          class="w-full rounded-xl bg-amber-50 p-3 text-sm text-amber-900"
+          class="w-full rounded-xl bg-warning-soft p-3 text-sm text-warning-ink"
           role="alert"
         >
           {{ certificateError }}

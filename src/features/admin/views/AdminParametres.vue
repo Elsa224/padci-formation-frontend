@@ -19,7 +19,7 @@
       </div>
 
       <div v-if="settings.isPending.value" class="app-skeleton h-12" />
-      <p v-else-if="settings.isError.value" class="text-sm text-red-700" role="alert">
+      <p v-else-if="settings.isError.value" class="text-sm text-danger-ink" role="alert">
         {{ apiMessage(settings.error.value, 'Réglage indisponible pour votre compte.') }}
       </p>
       <label
@@ -47,7 +47,7 @@
           @change="toggle($event.target as HTMLInputElement)"
         />
       </label>
-      <p v-if="error" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+      <p v-if="error" class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink" role="alert">
         {{ error }}
       </p>
     </section>

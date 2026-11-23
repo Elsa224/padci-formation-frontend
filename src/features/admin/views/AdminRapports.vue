@@ -19,7 +19,7 @@
         </template>
       </article>
     </div>
-    <p v-if="overview.isError.value" class="text-sm text-red-700" role="alert">
+    <p v-if="overview.isError.value" class="text-sm text-danger-ink" role="alert">
       {{ apiMessage(overview.error.value, 'Impossible de charger les indicateurs.') }}
     </p>
 

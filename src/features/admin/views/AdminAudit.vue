@@ -53,7 +53,7 @@
         </button>
       </form>
       <div v-if="audit.isPending.value" class="app-skeleton h-40" />
-      <p v-else-if="audit.isError.value" class="text-sm text-red-700" role="alert">
+      <p v-else-if="audit.isError.value" class="text-sm text-danger-ink" role="alert">
         {{ apiMessage(audit.error.value, 'Journal indisponible pour votre compte.') }}
       </p>
       <p
@@ -124,7 +124,7 @@
         </button>
       </form>
       <div v-if="auth.isPending.value" class="app-skeleton h-40" />
-      <p v-else-if="auth.isError.value" class="text-sm text-red-700" role="alert">
+      <p v-else-if="auth.isError.value" class="text-sm text-danger-ink" role="alert">
         {{ apiMessage(auth.error.value, 'Journal indisponible pour votre compte.') }}
       </p>
       <p

@@ -22,7 +22,7 @@ const ICONES: Record<EtatCritere, Component> = {
 
 const CLASSES: Record<EtatCritere, string> = {
   remplie: 'text-primary font-medium',
-  manquante: 'text-red-600',
+  manquante: 'text-danger-ink',
   'au-repos': 'text-quiet',
 }
 

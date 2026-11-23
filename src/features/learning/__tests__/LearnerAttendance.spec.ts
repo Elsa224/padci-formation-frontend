@@ -174,7 +174,7 @@ describe('LearnerDashboard - Section Mon assiduité', () => {
     expect(item1.text()).toContain('Retard de 10 min')
     const badge1 = item1.find('[data-test="attendance-status-badge"]')
     expect(badge1.text()).toBe('En retard')
-    expect(badge1.classes()).toContain('text-amber-700')
+    expect(badge1.classes()).toContain('text-warning-ink')
   })
 
   it('renders correctly semantic badges for absent and excused statuses', () => {
@@ -239,6 +239,6 @@ describe('LearnerDashboard - Section Mon assiduité', () => {
 
     const excusedBadge = items[1]!.find('[data-test="attendance-status-badge"]')
     expect(excusedBadge.text()).toBe('Excusé')
-    expect(excusedBadge.classes()).toContain('text-sky-700')
+    expect(excusedBadge.classes()).toContain('text-info-ink')
   })
 })

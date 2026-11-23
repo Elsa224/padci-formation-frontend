@@ -34,7 +34,7 @@
         </button>
         <button
           type="button"
-          class="font-semibold text-red-700"
+          class="font-semibold text-danger-ink"
           data-test="delete"
           @click="mode = 'confirm'"
         >
@@ -43,7 +43,7 @@
       </span>
       <span
         v-if="mode === 'confirm'"
-        class="flex flex-wrap items-center gap-2 rounded-lg bg-red-50 px-2 py-1 text-xs text-red-800"
+        class="flex flex-wrap items-center gap-2 rounded-lg bg-danger-soft px-2 py-1 text-xs text-danger-ink"
         role="alert"
       >
         {{ confirmText }}
