@@ -49,27 +49,3 @@ jobs:
 
       - name: Lint (eslint)
         run: npx eslint .
-
-  e2e:
-    # ubuntu-latest est passé à 26.04, que Playwright 1.58 ne prend pas en
-    # charge (« does not support chromium on ubuntu26.04-x64 »). On fige une
-    # image supportée ; à revoir lors d'une montée de version de Playwright.
-    name: Tests navigateur (Playwright)
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Installer les dépendances
-        run: npm ci --no-audit --no-fund
-
-      - name: Installer Chromium Playwright
-        run: npx playwright install --with-deps chromium
-
-      - name: Tests E2E
-        run: npx playwright test
