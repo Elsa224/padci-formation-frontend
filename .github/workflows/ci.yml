@@ -17,7 +17,7 @@ concurrency:
 jobs:
   quality:
     name: Types, lint, tests et build (Node 22)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -51,8 +51,11 @@ jobs:
         run: npx eslint .
 
   e2e:
+    # ubuntu-latest est passé à 26.04, que Playwright 1.58 ne prend pas en
+    # charge (« does not support chromium on ubuntu26.04-x64 »). On fige une
+    # image supportée ; à revoir lors d'une montée de version de Playwright.
     name: Tests navigateur (Playwright)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
