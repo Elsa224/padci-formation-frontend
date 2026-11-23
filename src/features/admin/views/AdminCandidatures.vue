@@ -3,8 +3,7 @@
     <!-- ================= EN-TÊTE ================= -->
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Admissions</p>
-        <h1 id="admin-applications-title" class="app-page-title mt-2">File de candidatures</h1>
+        <h1 id="admin-applications-title" class="app-page-title">File de candidatures</h1>
         <p class="app-page-copy">
           File d'admission : revue et décision sur les candidatures soumises par les apprenants.
         </p>
@@ -601,7 +600,7 @@
                     type="button"
                     :disabled="decideEquipmentMutation.isPending.value"
                     @click="decideEquipment('approved')"
-                    class="rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-emerald-700 transition disabled:opacity-50 flex items-center gap-1.5"
+                    class="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-primary-shade transition disabled:opacity-50 flex items-center gap-1.5"
                     data-testid="btn-approve-equipment"
                   >
                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -706,7 +705,7 @@
                     :href="proofUrl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="mt-2 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-primary-shade transition"
+                    class="app-action-primary mt-2"
                   >
                     Ouvrir le document dans un nouvel onglet
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -825,7 +824,7 @@
             v-if="detail.status === 'submitted'"
             @click="startReview"
             :disabled="startReviewMutation.isPending.value"
-            class="rounded-xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-100 disabled:opacity-50"
+            class="rounded-xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-canvas disabled:opacity-50"
           >
             Démarrer la revue
           </button>
@@ -864,7 +863,7 @@
                     ? 'Approuver la candidature'
                     : 'La revue matériel doit être approuvée avant l’admission'
                 "
-                class="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-primary/30 transition hover:bg-primary-shade disabled:opacity-50"
+                class="app-action-primary"
                 data-testid="btn-approve-application"
               >
                 Approuver la candidature
@@ -873,7 +872,7 @@
             <template v-else>
               <button
                 @click="cancelReject"
-                class="rounded-xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-gray-100"
+                class="rounded-xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-canvas"
               >
                 Annuler
               </button>
@@ -990,7 +989,7 @@ function statusBadgeClass(status: string): string {
     case 'rejected':
       return 'bg-red-100 text-red-700'
     default:
-      return 'bg-gray-100 text-ink'
+      return 'bg-canvas text-ink'
   }
 }
 
@@ -1005,7 +1004,7 @@ function statusDotClass(status: string): string {
     case 'rejected':
       return 'bg-red-500'
     default:
-      return 'bg-gray-400'
+      return 'bg-quiet'
   }
 }
 
@@ -1161,7 +1160,7 @@ function equipmentBadgeClass(status: string | undefined): string {
     case 'rejected':
       return 'bg-red-100 text-red-700'
     default:
-      return 'bg-gray-100 text-quiet'
+      return 'bg-canvas text-quiet'
   }
 }
 

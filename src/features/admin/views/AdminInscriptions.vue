@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Admissions</p>
-        <h1 class="app-page-title mt-2">Inscriptions</h1>
+        <h1 class="app-page-title">Inscriptions</h1>
         <p class="app-page-copy">
           Suspendre, rétablir, révoquer ou clôturer l'accès d'un apprenant à un cours. Chaque action
           est tracée dans le journal d'audit.

@@ -14,7 +14,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 </script>
 
 <template>
-  <div class="flex min-h-screen items-center justify-center bg-neutral-50 p-6">
+  <div class="flex min-h-screen items-center justify-center bg-canvas p-6">
     <Card class="w-full max-w-md">
       <CardHeader>
         <CardTitle>Connectivité API</CardTitle>
@@ -23,16 +23,16 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
         </CardDescription>
       </CardHeader>
       <CardContent class="space-y-4">
-        <div v-if="isPending" class="text-sm text-neutral-500">Connexion à l'API…</div>
+        <div v-if="isPending" class="text-sm text-quiet">Connexion à l'API…</div>
 
         <div v-else-if="isError" class="space-y-2">
           <Badge variant="destructive">Échec</Badge>
-          <p class="text-sm text-neutral-700">{{ (error as Error)?.message }}</p>
+          <p class="text-sm text-body">{{ (error as Error)?.message }}</p>
         </div>
 
         <div v-else-if="data" class="space-y-2">
-          <Badge class="bg-green-600 text-white">API en ligne</Badge>
-          <p class="text-sm text-neutral-700">Aller-retour : {{ data.latencyMs }} ms</p>
+          <Badge class="bg-primary text-white">API en ligne</Badge>
+          <p class="text-sm text-body">Aller-retour : {{ data.latencyMs }} ms</p>
         </div>
 
         <Button :disabled="isFetching" @click="() => refetch()">

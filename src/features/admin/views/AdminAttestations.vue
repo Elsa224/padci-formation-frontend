@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Certification</p>
-        <h1 class="app-page-title mt-2">Attestations et certifications</h1>
+        <h1 class="app-page-title">Attestations et certifications</h1>
         <p class="app-page-copy">
           Les attestations sont délivrées automatiquement selon les critères du cours. Vous pouvez
           en révoquer une et enregistrer les certifications obtenues hors plateforme.

@@ -1,6 +1,13 @@
 <template>
-  <div class="app-page max-w-6xl">
-    <!-- ================= 1. EN-TÊTE DU PROFIL ================= -->
+  <div class="app-page">
+    <header class="app-page-header">
+      <div>
+        <h1 class="app-page-title">Mon profil</h1>
+        <p class="app-page-copy">Vos informations personnelles et votre photo.</p>
+      </div>
+    </header>
+
+    <!-- ================= 1. CARTE DU PROFIL ================= -->
     <div class="app-panel overflow-hidden p-0">
       <div class="h-20 bg-primary/[0.08] border-b border-line"></div>
 
@@ -18,7 +25,7 @@
             class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white p-1 shadow-lg shrink-0 relative z-10"
           >
             <div
-              class="w-full h-full rounded-full bg-gray-200 flex items-center justify-center overflow-hidden"
+              class="w-full h-full rounded-full bg-line flex items-center justify-center overflow-hidden"
             >
               <img
                 v-if="photo.data.value"
@@ -33,18 +40,16 @@
           </div>
 
           <div class="flex-1 text-center sm:text-left mb-2">
-            <h1 class="text-2xl sm:text-3xl font-bold text-ink">{{ profile.name }}</h1>
+            <h2 class="text-2xl font-bold text-ink">{{ profile.name }}</h2>
             <p class="text-sm text-quiet font-medium mt-1">{{ roleLabel(profile.roles) }}</p>
             <div class="flex items-center justify-center sm:justify-start gap-2 mt-2">
               <span
                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold"
-                :class="
-                  profile.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-quiet'
-                "
+                :class="profile.is_active ? 'bg-mint text-primary-shade' : 'bg-canvas text-quiet'"
               >
                 <span
                   class="w-1.5 h-1.5 rounded-full"
-                  :class="profile.is_active ? 'bg-green-500' : 'bg-gray-400'"
+                  :class="profile.is_active ? 'bg-primary' : 'bg-quiet'"
                 ></span>
                 {{ profile.is_active ? 'Compte actif' : 'Compte désactivé' }}
               </span>

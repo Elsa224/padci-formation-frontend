@@ -34,7 +34,7 @@
              (EmailVerificationController côté backend) -->
         <p
           v-if="emailVerified"
-          class="mb-4 rounded-lg bg-green-50 border border-primary/30 text-primary text-sm px-4 py-3"
+          class="mb-4 rounded-lg bg-mint border border-primary/30 text-primary text-sm px-4 py-3"
         >
           Adresse vérifiée ✓ - vous pouvez vous connecter.
         </p>

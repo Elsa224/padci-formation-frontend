@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-5xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Enseignement</p>
-        <h1 class="app-page-title mt-2">Mes cohortes</h1>
+        <h1 class="app-page-title">Mes cohortes</h1>
         <p class="app-page-copy">Les cohortes où vous enseignez et leurs apprenants inscrits.</p>
       </div>
     </header>
@@ -121,7 +120,7 @@
                     class="inline-block px-2 py-0.5 rounded-full text-xs font-bold"
                     :class="
                       enrollment.attendance_rate >= 0.8
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        ? 'bg-mint text-primary-shade border border-primary/25'
                         : enrollment.attendance_rate >= 0.5
                           ? 'bg-amber-50 text-amber-700 border border-amber-200'
                           : 'bg-red-50 text-red-700 border border-red-200'

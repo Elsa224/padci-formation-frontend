@@ -76,10 +76,10 @@ async function finishAndContinue(): Promise<void> {
             class="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary"
             >Activée</span
           >
-          <p class="text-sm text-neutral-700">
+          <p class="text-sm text-body">
             Conservez ces codes de récupération en lieu sûr - ils ne seront plus jamais affichés.
           </p>
-          <div class="grid grid-cols-2 gap-2 rounded-lg bg-neutral-100 p-4 font-mono text-sm">
+          <div class="grid grid-cols-2 gap-2 rounded-lg bg-canvas p-4 font-mono text-sm">
             <span v-for="rc in recoveryCodes" :key="rc">{{ rc }}</span>
           </div>
           <button class="app-action-primary w-full" @click="finishAndContinue">
@@ -89,7 +89,7 @@ async function finishAndContinue(): Promise<void> {
 
         <!-- Étape 1 : scanner / saisir le secret -->
         <div v-else-if="secret" class="space-y-4">
-          <p class="text-sm text-neutral-600">
+          <p class="text-sm text-quiet">
             Ajoutez ce secret dans votre application d'authentification (Google Authenticator,
             Authy…), puis saisissez le code généré.
           </p>
@@ -123,7 +123,7 @@ async function finishAndContinue(): Promise<void> {
           </form>
         </div>
 
-        <p v-else class="text-sm text-neutral-500">Préparation…</p>
+        <p v-else class="text-sm text-quiet">Préparation…</p>
       </div>
     </section>
   </main>

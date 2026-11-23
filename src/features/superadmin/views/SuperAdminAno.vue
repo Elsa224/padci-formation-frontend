@@ -1,16 +1,16 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- EN-TÊTE -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Validation des ANO</h1>
-        <p class="text-sm text-quiet mt-1">Avis de Non-Objection (UCP / Banque Mondiale)</p>
+        <h1 class="app-page-title">Validation des ANO</h1>
+        <p class="app-page-copy">Avis de Non-Objection (UCP / Banque Mondiale)</p>
       </div>
       <div class="flex items-center gap-2 text-sm text-quiet">
         <span class="font-medium text-ink">{{ pendingCount }}</span> dossier(s) en attente de
         signature
       </div>
-    </div>
+    </header>
 
     <p
       v-if="!canSign"
@@ -66,12 +66,12 @@
             <button
               @click="ouvrirConfirmation(ano)"
               :disabled="!canSign || isMutating(ano.key)"
-              class="px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition shadow-sm shadow-orange-500/30 disabled:opacity-50"
+              class="px-4 py-2 bg-savane text-white rounded-lg text-sm font-medium hover:bg-savane transition shadow-sm shadow-savane/20 disabled:opacity-50"
             >
               Signer l'ANO
             </button>
           </template>
-          <span v-else class="px-4 py-2 bg-gray-100 text-quiet rounded-lg text-sm font-medium">
+          <span v-else class="px-4 py-2 bg-canvas text-quiet rounded-lg text-sm font-medium">
             {{ ano.status === 'signed' ? 'Déjà validé' : 'Rejetée' }}
           </span>
         </div>
@@ -82,12 +82,12 @@
             v-model="rejectReason"
             rows="2"
             placeholder="Motif du rejet"
-            class="w-full border border-line rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+            class="w-full border border-line rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-savane/20 focus:border-savane"
           ></textarea>
           <div class="flex gap-2 mt-2">
             <button
               @click="rejectingKey = null"
-              class="px-4 py-2 bg-gray-100 text-ink rounded-lg text-sm font-medium hover:bg-gray-200 transition"
+              class="px-4 py-2 bg-canvas text-ink rounded-lg text-sm font-medium hover:bg-line transition"
             >
               Annuler
             </button>
@@ -118,14 +118,9 @@
       <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-modal">
         <div class="p-6 text-center">
           <div
-            class="w-16 h-16 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-4"
+            class="w-16 h-16 mx-auto bg-savane-soft rounded-full flex items-center justify-center mb-4"
           >
-            <svg
-              class="w-8 h-8 text-orange-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg class="w-8 h-8 text-savane" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -149,14 +144,14 @@
           <div class="flex gap-3">
             <button
               @click="showConfirmModal = false"
-              class="flex-1 px-4 py-2.5 bg-gray-100 text-ink rounded-xl font-medium hover:bg-gray-200 transition"
+              class="flex-1 px-4 py-2.5 bg-canvas text-ink rounded-xl font-medium hover:bg-line transition"
             >
               Annuler
             </button>
             <button
               @click="confirmerSignature"
               :disabled="signMutation.isPending.value"
-              class="flex-1 px-4 py-2.5 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition shadow-md shadow-orange-500/30 disabled:opacity-50"
+              class="flex-1 px-4 py-2.5 bg-savane text-white rounded-xl font-medium hover:bg-savane transition shadow-md shadow-savane/20 disabled:opacity-50"
             >
               Confirmer
             </button>
@@ -198,13 +193,13 @@ function badgeText(ano: AnoRequest): string {
 }
 
 function badgeClass(ano: AnoRequest): string {
-  if (ano.status === 'signed') return 'text-green-600'
+  if (ano.status === 'signed') return 'text-primary-shade'
   if (ano.status === 'rejected') return 'text-red-600'
-  return ano.priority === 'haute' ? 'text-orange-600' : 'text-quiet'
+  return ano.priority === 'haute' ? 'text-savane-ink' : 'text-quiet'
 }
 
 function cardBorderClass(ano: AnoRequest): string {
-  if (ano.status === 'pending' && ano.priority === 'haute') return 'border-l-4 border-orange-500'
+  if (ano.status === 'pending' && ano.priority === 'haute') return 'border-l-4 border-savane'
   if (ano.status === 'signed') return 'border border-line opacity-75'
   if (ano.status === 'rejected') return 'border-l-4 border-red-300'
   return 'border-l-4 border-line'

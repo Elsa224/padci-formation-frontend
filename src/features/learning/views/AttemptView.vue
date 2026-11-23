@@ -1,5 +1,5 @@
 <template>
-  <section class="app-page max-w-3xl">
+  <section class="app-page">
     <RouterLink :to="`/formations/${courseKey}`" class="text-sm font-semibold text-primary">
       &larr; Retour au cours
     </RouterLink>

@@ -202,7 +202,11 @@
           </div>
         </div>
       </header>
-      <main class="mx-auto w-full max-w-[1600px] px-4 py-7 sm:px-7 sm:py-9 lg:px-10"><slot /></main>
+      <!-- Seul endroit qui fixe la largeur et les marges du contenu : toutes les
+           pages ont ainsi exactement le même cadre. -->
+      <main class="mx-auto w-full max-w-[1280px] px-4 py-7 sm:px-7 sm:py-9 lg:px-10">
+        <slot />
+      </main>
     </div>
   </div>
 </template>

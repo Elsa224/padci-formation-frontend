@@ -331,7 +331,7 @@
                     class="font-semibold"
                     :class="
                       session.stats.rate >= 80
-                        ? 'text-emerald-700'
+                        ? 'text-primary-shade'
                         : session.stats.rate >= 50
                           ? 'text-amber-700'
                           : 'text-red-700'
@@ -339,7 +339,7 @@
                   >
                     Assiduité : {{ session.stats.rate }}%
                   </span>
-                  <span class="text-emerald-700">{{ session.stats.present }} Présent(s)</span>
+                  <span class="text-primary-shade">{{ session.stats.present }} Présent(s)</span>
                   <span class="text-amber-700">{{ session.stats.late }} Retard(s)</span>
                   <span class="text-blue-700">{{ session.stats.excused }} Excusé(s)</span>
                   <span class="text-red-700">{{ session.stats.absent }} Absent(s)</span>
@@ -413,7 +413,7 @@
                       <p class="font-semibold text-ink">{{ l.learner.name }}</p>
                       <p class="text-xs text-quiet">{{ l.learner.email }}</p>
                     </td>
-                    <td class="p-3 text-center font-medium text-emerald-700">
+                    <td class="p-3 text-center font-medium text-primary-shade">
                       {{ l.present }}
                     </td>
                     <td class="p-3 text-center font-medium text-amber-700">
@@ -430,7 +430,7 @@
                         class="rounded-full px-2.5 py-0.5 text-xs font-bold"
                         :class="
                           l.rate >= 80
-                            ? 'bg-emerald-50 text-emerald-700'
+                            ? 'bg-mint text-primary-shade'
                             : l.rate >= 50
                               ? 'bg-amber-50 text-amber-800'
                               : 'bg-red-50 text-red-700'
@@ -602,7 +602,7 @@ async function handleDeleteSession(sessionKey: string) {
 }
 
 const statusActiveClasses: Record<AttendanceStatus, string> = {
-  present: 'bg-emerald-600 text-white shadow-sm',
+  present: 'bg-primary text-white shadow-sm',
   late: 'bg-amber-500 text-white shadow-sm',
   excused: 'bg-blue-600 text-white shadow-sm',
   absent: 'bg-red-600 text-white shadow-sm',

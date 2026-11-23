@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Catalogue</p>
-        <h1 class="app-page-title mt-2">Programmes et filières</h1>
+        <h1 class="app-page-title">Programmes et filières</h1>
         <p class="app-page-copy">
           La structure de l'offre : un programme regroupe des filières, chaque filière porte ses
           cours, ses cohortes et ses exigences matérielles.

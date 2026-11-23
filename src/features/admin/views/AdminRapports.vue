@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Pilotage</p>
-        <h1 class="app-page-title mt-2">Rapports et indicateurs</h1>
+        <h1 class="app-page-title">Rapports et indicateurs</h1>
         <p class="app-page-copy">
           Inscriptions, achèvement et attestations, calculés en direct par la plateforme.
         </p>

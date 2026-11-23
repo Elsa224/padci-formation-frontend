@@ -1,23 +1,19 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- EN-TÊTE -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Gestion des Accès</h1>
-        <p class="text-sm text-quiet mt-1">Rôles, permissions et invitations de la plateforme.</p>
+        <h1 class="app-page-title">Gestion des Accès</h1>
+        <p class="app-page-copy">Rôles, permissions et invitations de la plateforme.</p>
       </div>
 
       <div class="flex items-center gap-3">
-        <button
-          type="button"
-          @click="showInviteModal = true"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs text-white bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-        >
+        <button type="button" @click="showInviteModal = true" class="app-action-primary">
           <UserPlusIcon class="w-4 h-4" />
           <span>Inviter un collaborateur</span>
         </button>
       </div>
-    </div>
+    </header>
 
     <!-- ONGLETS DE NAVIGATION -->
     <div class="flex items-center gap-2 border-b border-line pb-px">
@@ -58,7 +54,7 @@
           v-if="pendingInvitations.length > 0"
           class="px-2 py-0.5 rounded-full text-[11px] font-bold"
           :class="
-            activeTab === 'invitations' ? 'bg-primary text-white' : 'bg-orange-100 text-orange-700'
+            activeTab === 'invitations' ? 'bg-primary text-white' : 'bg-savane-soft text-savane-ink'
           "
         >
           {{ pendingInvitations.length }}
@@ -159,13 +155,11 @@
                 <td class="py-4 px-6">
                   <span
                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
-                    :class="
-                      user.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-quiet'
-                    "
+                    :class="user.is_active ? 'bg-mint text-primary-shade' : 'bg-canvas text-quiet'"
                   >
                     <span
                       class="w-1.5 h-1.5 rounded-full"
-                      :class="user.is_active ? 'bg-green-500' : 'bg-gray-400'"
+                      :class="user.is_active ? 'bg-primary' : 'bg-quiet'"
                     ></span>
                     {{ user.is_active ? 'Actif' : 'Désactivé' }}
                   </span>
@@ -436,15 +430,15 @@ function primaryRole(user: AdminUser): AppRole {
 function roleColors(role: AppRole): { bg: string; text: string } {
   switch (role) {
     case 'super_admin':
-      return { bg: 'bg-orange-100', text: 'text-orange-700' }
+      return { bg: 'bg-savane-soft', text: 'text-savane-ink' }
     case 'admin':
       return { bg: 'bg-blue-100', text: 'text-blue-700' }
     case 'moderateur':
       return { bg: 'bg-purple-100', text: 'text-purple-700' }
     case 'formateur':
-      return { bg: 'bg-emerald-100', text: 'text-emerald-700' }
+      return { bg: 'bg-mint', text: 'text-primary-shade' }
     default:
-      return { bg: 'bg-gray-100', text: 'text-quiet' }
+      return { bg: 'bg-canvas', text: 'text-quiet' }
   }
 }
 

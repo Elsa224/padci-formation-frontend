@@ -1,15 +1,15 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- ================= EN-TÊTE ================= -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Gestion des Cohortes</h1>
-        <p class="text-sm text-quiet mt-1">Sessions par filière : effectifs, statut et dates.</p>
+        <h1 class="app-page-title">Gestion des Cohortes</h1>
+        <p class="app-page-copy">Sessions par filière : effectifs, statut et dates.</p>
       </div>
       <div>
         <button
           @click="openCreateModal"
-          class="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:bg-primary-shade"
+          class="app-action-primary"
           data-testid="btn-open-create-cohort"
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,7 +23,7 @@
           Nouvelle cohorte
         </button>
       </div>
-    </div>
+    </header>
 
     <!-- ================= NOTIFICATION DE DRAINAGE STANDBY ================= -->
     <div
@@ -200,7 +200,7 @@
             </div>
 
             <!-- Jauge de remplissage -->
-            <div v-if="cohort.capacity" class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div v-if="cohort.capacity" class="w-full bg-canvas rounded-full h-2 overflow-hidden">
               <div
                 class="bg-primary h-2 rounded-full transition-all duration-300"
                 :style="{
@@ -245,11 +245,11 @@
           <!-- Phase présentielle tag -->
           <div
             v-if="cohort.offline_starts_at"
-            class="mt-2.5 flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200/60 px-3 py-1.5 text-xs font-semibold text-emerald-800"
+            class="mt-2.5 flex items-center gap-2 rounded-lg bg-mint border border-primary/25 px-3 py-1.5 text-xs font-semibold text-primary-shade"
             data-testid="cohort-offline-tag"
           >
             <svg
-              class="h-4 w-4 text-emerald-600 shrink-0"
+              class="h-4 w-4 text-primary-shade shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -326,7 +326,7 @@
           </div>
           <button
             @click="closeCreateModal"
-            class="rounded-lg p-1.5 text-quiet transition hover:bg-gray-100 hover:text-ink"
+            class="rounded-lg p-1.5 text-quiet transition hover:bg-canvas hover:text-ink"
             title="Fermer"
           >
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -485,14 +485,14 @@
             <button
               type="button"
               @click="closeCreateModal"
-              class="rounded-xl border border-line bg-white px-4 py-2 text-sm font-semibold text-ink transition hover:bg-gray-100"
+              class="rounded-xl border border-line bg-white px-4 py-2 text-sm font-semibold text-ink transition hover:bg-canvas"
             >
               Annuler
             </button>
             <button
               type="submit"
               :disabled="createMutation.isPending.value"
-              class="rounded-xl bg-primary px-5 py-2 text-sm font-bold text-white shadow-md shadow-primary/25 transition hover:bg-primary-shade disabled:opacity-50"
+              class="app-action-primary"
               data-testid="btn-submit-create-cohort"
             >
               Créer la cohorte
@@ -543,7 +543,7 @@
           <button
             type="button"
             @click="closeMembersDrawer"
-            class="rounded-lg p-2 text-quiet transition hover:bg-gray-100 hover:text-ink"
+            class="rounded-lg p-2 text-quiet transition hover:bg-canvas hover:text-ink"
             data-testid="btn-close-members-drawer"
             title="Fermer"
           >
@@ -710,7 +710,7 @@
                   class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold"
                   :class="
                     member.attendance_rate >= 0.8
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      ? 'bg-mint text-primary-shade border border-primary/25'
                       : member.attendance_rate >= 0.5
                         ? 'bg-amber-50 text-amber-700 border border-amber-200'
                         : 'bg-red-50 text-red-700 border border-red-200'
@@ -741,7 +741,7 @@
           <button
             type="button"
             @click="closeMembersDrawer"
-            class="rounded-lg border border-line bg-white px-3.5 py-1.5 font-semibold text-ink hover:bg-gray-100 transition"
+            class="rounded-lg border border-line bg-white px-3.5 py-1.5 font-semibold text-ink hover:bg-canvas transition"
           >
             Fermer
           </button>
@@ -810,7 +810,7 @@ function statusBadgeClass(status: string): string {
     case 'cancelled':
       return 'bg-red-100 text-red-700'
     default:
-      return 'bg-gray-100 text-quiet'
+      return 'bg-canvas text-quiet'
   }
 }
 
@@ -1065,7 +1065,7 @@ function memberStatusLabel(status: string): string {
 function memberStatusBadgeClass(status: string): string {
   switch (status) {
     case 'active':
-      return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      return 'bg-mint text-primary-shade border-primary/25'
     case 'enrolled':
       return 'bg-blue-50 text-blue-700 border-blue-200'
     case 'suspended':
@@ -1073,7 +1073,7 @@ function memberStatusBadgeClass(status: string): string {
     case 'completed':
       return 'bg-purple-50 text-purple-700 border-purple-200'
     default:
-      return 'bg-gray-50 text-gray-700 border-gray-200'
+      return 'bg-canvas text-body border-line'
   }
 }
 

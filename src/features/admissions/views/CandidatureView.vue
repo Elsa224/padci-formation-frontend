@@ -1,5 +1,5 @@
 <template>
-  <section class="app-page max-w-4xl" aria-label="Déposer une candidature">
+  <section class="app-page" aria-label="Déposer une candidature">
     <!-- RETOUR -->
     <div>
       <router-link

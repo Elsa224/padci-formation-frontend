@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Contrôle</p>
-        <h1 class="app-page-title mt-2">Journal d'audit</h1>
+        <h1 class="app-page-title">Journal d'audit</h1>
         <p class="app-page-copy">
           Actions sensibles et connexions, en lecture seule. Les entrées ne peuvent être ni
           modifiées ni supprimées.

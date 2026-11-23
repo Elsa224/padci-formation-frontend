@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- NAVIGATION RETOUR -->
     <div class="flex items-center justify-between border-b border-line pb-4">
       <router-link
@@ -123,7 +123,7 @@
           <router-link
             v-if="prevChapter"
             :to="`/formations/${courseKey}/chapitres/${prevChapter.key}`"
-            class="px-4 py-2 bg-gray-100 text-ink rounded-xl text-xs font-semibold hover:bg-gray-200 transition"
+            class="px-4 py-2 bg-canvas text-ink rounded-xl text-xs font-semibold hover:bg-line transition"
           >
             &larr; Chapitre précédent
           </router-link>
@@ -133,7 +133,7 @@
           <button
             @click="markCompleteAndNext"
             :disabled="progressMutation.isPending.value"
-            class="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition shadow-sm disabled:opacity-50"
+            class="app-action-primary"
           >
             {{
               progressMutation.isPending.value

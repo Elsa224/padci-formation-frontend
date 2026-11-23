@@ -1,5 +1,5 @@
 <template>
-  <section class="app-page max-w-6xl" aria-labelledby="pathway-title">
+  <section class="app-page" aria-labelledby="pathway-title">
     <router-link
       to="/catalogue"
       class="inline-flex items-center gap-2 text-sm font-semibold text-quiet transition hover:text-primary"
@@ -158,10 +158,10 @@
                 </p>
                 <div
                   v-if="cohort.offline_starts_at"
-                  class="mt-2 inline-flex items-center gap-1.5 rounded-md border border-emerald-200/70 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800"
+                  class="mt-2 inline-flex items-center gap-1.5 rounded-md border border-primary/25 bg-mint px-2.5 py-1 text-xs font-semibold text-primary-shade"
                   data-testid="cohort-offline-dates"
                 >
-                  <MapPinIcon :size="13" class="shrink-0 text-emerald-600" aria-hidden="true" />
+                  <MapPinIcon :size="13" class="shrink-0 text-primary-shade" aria-hidden="true" />
                   <span v-if="cohort.offline_ends_at">
                     Ateliers présentiels : du {{ formatDate(cohort.offline_starts_at) }} au
                     {{ formatDate(cohort.offline_ends_at) }}
