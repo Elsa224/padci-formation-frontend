@@ -55,7 +55,7 @@ test.describe('Learner Application Flow & Dynamic Learning Space', () => {
 
   test('Learner accesses LearnerDashboard and views dynamic course structure', async ({ page }) => {
     await page.goto('/formations/dashboard')
-    await expect(page.getByRole('heading', { name: 'Mon espace de formation' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Ma formation' })).toBeVisible()
 
     // Vérifier la présence d'au moins un cours ou bouton
     const courseCard = page.getByRole('link', { name: /Accéder au cours/ }).first()

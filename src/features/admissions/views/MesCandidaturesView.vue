@@ -3,7 +3,7 @@
     <!-- EN-TÊTE -->
     <header class="app-page-header">
       <div>
-        <span class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Admissions</span>
+        <span class="app-eyebrow">Admissions</span>
         <h1 id="applications-title" class="app-page-title mt-2">Mes candidatures</h1>
         <p class="app-page-copy">
           Consultez le statut de vos candidatures aux différentes sessions de formation.
@@ -267,7 +267,7 @@ const statusMap: Record<string, { label: string; class: string }> = {
   },
   waitlisted: { label: 'Sur liste d’attente', class: 'bg-violet-100 text-violet-800' },
   rejected: { label: 'Non retenue', class: 'bg-red-100 text-red-800' },
-  withdrawn: { label: 'Candidature retirée', class: 'bg-slate-100 text-slate-700' },
+  withdrawn: { label: 'Candidature retirée', class: 'bg-canvas text-body' },
 }
 
 function statusLabel(status: string): string {
@@ -275,7 +275,7 @@ function statusLabel(status: string): string {
 }
 
 function statusClass(status: string): string {
-  return statusMap[status]?.class ?? 'bg-slate-100 text-slate-700'
+  return statusMap[status]?.class ?? 'bg-canvas text-body'
 }
 
 function equipmentReviewLabel(status: string): string {

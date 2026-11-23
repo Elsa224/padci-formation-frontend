@@ -6,6 +6,11 @@ import MesCandidaturesView from '@/features/admissions/views/MesCandidaturesView
 import * as useEnrollmentsModule from '../composables/useEnrollments'
 import * as useLearnerApplicationsModule from '@/features/admissions/composables/useLearnerApplications'
 
+// The "Reprendre" block fetches the course outline; not under test here.
+vi.mock('../components/ResumeCourseHero.vue', () => ({
+  default: { template: '<div data-test="resume-hero-stub" />' },
+}))
+
 vi.mock('vue-router', () => ({
   useRoute: vi.fn(() => ({})),
   useRouter: vi.fn(() => ({ push: vi.fn() })),

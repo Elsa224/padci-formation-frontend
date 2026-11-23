@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Pédagogie</p>
+        <p class="app-eyebrow">Pédagogie</p>
         <h1 class="app-page-title mt-2">Modération des cours</h1>
         <p class="app-page-copy">Examinez les cours soumis avant leur publication.</p>
       </div>

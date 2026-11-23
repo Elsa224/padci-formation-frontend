@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Pilotage</p>
+        <p class="app-eyebrow">Pilotage</p>
         <h1 class="app-page-title mt-2">Rapports et indicateurs</h1>
         <p class="app-page-copy">
           Inscriptions, achèvement et attestations, calculés en direct par la plateforme.

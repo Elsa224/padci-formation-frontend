@@ -20,7 +20,7 @@
         class="app-panel sticky top-[env(safe-area-inset-top,0px)] z-10 flex flex-wrap items-center justify-between gap-3"
       >
         <div class="min-w-0">
-          <p class="text-xs font-bold uppercase tracking-wider text-primary">Évaluation</p>
+          <p class="app-eyebrow">Évaluation</p>
           <h1 class="truncate text-lg font-bold text-ink">{{ data.assessment?.title }}</h1>
           <p class="text-xs text-quiet">
             {{ answeredCount }} / {{ data.questions.length }} réponse(s)

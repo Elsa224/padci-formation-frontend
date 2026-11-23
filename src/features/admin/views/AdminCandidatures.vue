@@ -3,7 +3,7 @@
     <!-- ================= EN-TÊTE ================= -->
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Admissions</p>
+        <p class="app-eyebrow">Admissions</p>
         <h1 id="admin-applications-title" class="app-page-title mt-2">File de candidatures</h1>
         <p class="app-page-copy">
           File d'admission : revue et décision sur les candidatures soumises par les apprenants.
@@ -231,9 +231,7 @@
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-primary"
-                  >Dossier candidat</span
-                >
+                <span class="app-eyebrow">Dossier candidat</span>
                 <span
                   v-if="detail"
                   class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
@@ -279,9 +277,7 @@
           <template v-else-if="detail">
             <!-- 1. Profil Candidat -->
             <section class="rounded-2xl border border-line bg-canvas/60 p-5">
-              <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-quiet">
-                Profil du candidat
-              </h4>
+              <h4 class="mb-3 app-label">Profil du candidat</h4>
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 text-sm">
                 <div>
                   <p class="text-xs text-quiet">Nom complet</p>
@@ -420,9 +416,7 @@
                   "
                 >
                   <div class="flex items-center justify-between mb-1.5">
-                    <span class="text-xs font-bold uppercase tracking-wider text-quiet"
-                      >Processeur (CPU)</span
-                    >
+                    <span class="app-label">Processeur (CPU)</span>
                     <span
                       class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
                       :class="
@@ -467,9 +461,7 @@
                   "
                 >
                   <div class="flex items-center justify-between mb-1.5">
-                    <span class="text-xs font-bold uppercase tracking-wider text-quiet"
-                      >Mémoire RAM</span
-                    >
+                    <span class="app-label">Mémoire RAM</span>
                     <span
                       class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
                       :class="
@@ -514,9 +506,7 @@
                   "
                 >
                   <div class="flex items-center justify-between mb-1.5">
-                    <span class="text-xs font-bold uppercase tracking-wider text-quiet"
-                      >Stockage</span
-                    >
+                    <span class="app-label">Stockage</span>
                     <span
                       class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
                       :class="
@@ -745,9 +735,7 @@
               v-if="detail.motivation"
               class="rounded-2xl border border-line bg-canvas/50 p-5"
             >
-              <h4 class="mb-2 text-xs font-bold uppercase tracking-wider text-quiet">
-                Lettre / Texte de motivation
-              </h4>
+              <h4 class="mb-2 app-label">Lettre / Texte de motivation</h4>
               <p class="text-sm leading-relaxed text-ink whitespace-pre-wrap">
                 {{ detail.motivation }}
               </p>

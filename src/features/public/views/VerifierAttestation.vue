@@ -2,7 +2,7 @@
   <PublicLayout>
     <section class="mx-auto max-w-xl space-y-6 px-4 py-12">
       <header class="space-y-2">
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Vérification</p>
+        <p class="app-eyebrow">Vérification</p>
         <h1 class="text-2xl font-bold text-ink">Vérifier une attestation</h1>
         <p class="text-sm text-quiet">
           Saisissez le code imprimé sur l'attestation pour confirmer qu'elle a bien été délivrée.

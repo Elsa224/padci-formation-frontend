@@ -2,7 +2,7 @@
   <section class="app-page max-w-4xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Évaluations</p>
+        <p class="app-eyebrow">Évaluations</p>
         <h1 class="app-page-title mt-2">Copies à corriger</h1>
         <p class="app-page-copy">
           Réponses libres de vos apprenants. Le score final s'affiche chez l'apprenant dès que

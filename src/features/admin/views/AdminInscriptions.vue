@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Admissions</p>
+        <p class="app-eyebrow">Admissions</p>
         <h1 class="app-page-title mt-2">Inscriptions</h1>
         <p class="app-page-copy">
           Suspendre, rétablir, révoquer ou clôturer l'accès d'un apprenant à un cours. Chaque action
@@ -48,7 +48,7 @@
       </p>
       <div v-else class="overflow-x-auto rounded-xl border border-line">
         <table class="w-full min-w-[52rem] text-left text-sm">
-          <thead class="bg-canvas text-xs uppercase tracking-wide text-quiet">
+          <thead class="app-thead">
             <tr>
               <th class="px-3 py-2">Apprenant</th>
               <th class="px-3 py-2">Cours</th>

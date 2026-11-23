@@ -52,7 +52,7 @@
 
     <!-- STATISTIQUES CLÉS -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-quiet text-sm font-medium">Apprenants</p>
@@ -78,7 +78,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-quiet text-sm font-medium">Taux de complétion</p>
@@ -104,7 +104,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-quiet text-sm font-medium">Certificats délivrés</p>
@@ -130,7 +130,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-quiet text-sm font-medium">ANO en attente</p>
@@ -157,7 +157,7 @@
     </div>
 
     <!-- GRAPHIQUE : lignes budgétaires réelles -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+    <div class="app-panel">
       <h3 class="text-lg font-bold text-ink mb-4">
         Allocation et consommation par ligne budgétaire
       </h3>

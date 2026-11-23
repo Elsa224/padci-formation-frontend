@@ -16,7 +16,7 @@
     <template v-else-if="course.data.value">
       <header class="app-page-header">
         <div>
-          <p class="text-xs font-bold uppercase tracking-wider text-primary">
+          <p class="app-eyebrow">
             {{ course.data.value.pathway?.name ?? 'Filière' }}
           </p>
           <h1 class="app-page-title mt-2">{{ course.data.value.title }}</h1>

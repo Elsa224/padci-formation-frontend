@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Enseignement</p>
+        <p class="app-eyebrow">Enseignement</p>
         <h1 class="app-page-title mt-2">Mes cours et supports</h1>
         <p class="app-page-copy">
           Créez vos cours, structurez-les en modules et chapitres, puis soumettez-les à validation.

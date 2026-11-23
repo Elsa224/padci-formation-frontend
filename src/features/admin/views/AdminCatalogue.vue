@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Catalogue</p>
+        <p class="app-eyebrow">Catalogue</p>
         <h1 class="app-page-title mt-2">Programmes et filières</h1>
         <p class="app-page-copy">
           La structure de l'offre : un programme regroupe des filières, chaque filière porte ses

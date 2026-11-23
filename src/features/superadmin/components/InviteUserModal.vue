@@ -148,7 +148,7 @@ function handleClose() {
           <button
             type="button"
             @click="handleClose"
-            class="p-2 rounded-xl text-quiet hover:text-ink hover:bg-slate-100 transition-colors"
+            class="p-2 rounded-xl text-quiet hover:text-ink hover:bg-canvas transition-colors"
           >
             <XIcon class="w-5 h-5" />
           </button>
@@ -176,7 +176,7 @@ function handleClose() {
         <form @submit.prevent="handleSubmit" class="space-y-5">
           <!-- Email Input -->
           <div class="space-y-1.5">
-            <label for="invite-email" class="block text-xs font-semibold text-slate-700">
+            <label for="invite-email" class="block text-xs font-semibold text-body">
               Adresse e-mail institutionnelle <span class="text-red-500">*</span>
             </label>
             <div class="relative">
@@ -189,14 +189,14 @@ function handleClose() {
                 type="email"
                 required
                 placeholder="collaborateur@emsp.ci"
-                class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
+                class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-canvas border border-line rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
               />
             </div>
           </div>
 
           <!-- Role Selection Grid -->
           <div class="space-y-2">
-            <label class="block text-xs font-semibold text-slate-700">
+            <label class="block text-xs font-semibold text-body">
               Rôle attribué <span class="text-red-500">*</span>
             </label>
 
@@ -208,7 +208,7 @@ function handleClose() {
                 :class="
                   selectedRole === role.value
                     ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                    : 'border-line hover:border-line-strong bg-white'
                 "
               >
                 <input
@@ -241,7 +241,7 @@ function handleClose() {
             <button
               type="button"
               @click="handleClose"
-              class="px-5 py-2.5 rounded-full text-xs font-semibold text-slate-600 hover:text-ink hover:bg-slate-100 transition-colors"
+              class="px-5 py-2.5 rounded-full text-xs font-semibold text-body hover:text-ink hover:bg-canvas transition-colors"
             >
               Annuler
             </button>

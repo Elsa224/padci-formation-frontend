@@ -2,7 +2,7 @@
   <section class="app-page max-w-4xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Apprentissage</p>
+        <p class="app-eyebrow">Apprentissage</p>
         <h1 class="app-page-title mt-2">Mes attestations</h1>
         <p class="app-page-copy">
           Vos attestations de réussite et vos certifications professionnelles.

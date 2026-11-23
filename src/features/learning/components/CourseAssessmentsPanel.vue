@@ -55,7 +55,7 @@
             </RouterLink>
             <span
               v-if="isAttemptsExhausted(assessment)"
-              class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-quiet"
+              class="rounded-full bg-canvas px-3 py-1.5 text-xs font-semibold text-quiet"
               data-test="attempts-exhausted"
             >
               Tentatives épuisées

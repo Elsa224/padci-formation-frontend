@@ -2,7 +2,7 @@
   <section class="app-page max-w-6xl">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Admissions</p>
+        <p class="app-eyebrow">Admissions</p>
         <h1 class="app-page-title mt-2">Vérification du matériel</h1>
         <p class="app-page-copy">
           Examinez les équipements déclarés au regard des exigences de la filière.

@@ -175,7 +175,7 @@
           <button
             type="submit"
             :disabled="isPending"
-            class="group w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary text-white py-3.5 rounded-xl font-semibold text-base shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
+            class="group w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-shade text-white py-3.5 rounded-xl font-semibold text-base shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] transition duration-150 active:translate-y-px disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {{ isPending ? 'Connexion…' : 'Se connecter' }}
             <svg
@@ -217,7 +217,7 @@
           <button
             type="submit"
             :disabled="isPending"
-            class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary text-white py-3.5 rounded-xl font-semibold text-base shadow-lg shadow-primary/30 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+            class="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-shade text-white py-3.5 rounded-xl font-semibold text-base shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] transition duration-150 active:translate-y-px disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {{ isPending ? 'Vérification…' : 'Valider' }}
           </button>
