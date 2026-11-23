@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Admissions</p>
-        <h1 class="app-page-title mt-2">Vérification du matériel</h1>
+        <h1 class="app-page-title">Vérification du matériel</h1>
         <p class="app-page-copy">
           Examinez les équipements déclarés au regard des exigences de la filière.
         </p>

@@ -1,9 +1,8 @@
 <template>
-  <section class="app-page max-w-3xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="app-eyebrow">Administration</p>
-        <h1 class="app-page-title mt-2">Paramètres</h1>
+        <h1 class="app-page-title">Paramètres</h1>
         <p class="app-page-copy">Règles de la plateforme et sécurité de votre compte.</p>
       </div>
     </header>

@@ -45,7 +45,7 @@
 
           <!-- ÉTAT SUCCÈS HONNÊTE : compte créé, en attente de vérification -->
           <template v-else>
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <div class="w-16 h-16 bg-mint rounded-full flex items-center justify-center mb-4">
               <svg
                 class="w-8 h-8 text-primary"
                 fill="none"
@@ -73,7 +73,7 @@
             <div v-if="verificationUrl" class="mt-4 w-full">
               <a
                 :href="verificationUrl"
-                class="block w-full text-center bg-green-50 border border-primary/30 rounded-xl px-4 py-3 text-sm text-primary hover:bg-green-100 transition"
+                class="block w-full text-center bg-mint border border-primary/30 rounded-xl px-4 py-3 text-sm text-primary hover:bg-mint transition"
               >
                 [dev] Vérifier l'adresse maintenant
               </a>

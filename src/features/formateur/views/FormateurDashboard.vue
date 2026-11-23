@@ -1,5 +1,5 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
         <h1 class="app-page-title">Bienvenue, {{ auth.user?.name ?? 'formateur' }}</h1>

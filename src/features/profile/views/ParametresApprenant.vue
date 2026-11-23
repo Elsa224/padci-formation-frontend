@@ -1,5 +1,5 @@
 <template>
-  <div class="app-page max-w-4xl">
+  <div class="app-page">
     <!-- ================= EN-TÊTE ================= -->
     <div class="app-page-header">
       <div>

@@ -51,7 +51,7 @@
           <!-- ÉTAT 2 : SUCCÈS -->
           <template v-else>
             <div
-              class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 animate-bounce"
+              class="w-16 h-16 bg-mint rounded-full flex items-center justify-center mb-4 animate-bounce"
             >
               <svg
                 class="w-8 h-8 text-primary"

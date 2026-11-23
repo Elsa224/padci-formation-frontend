@@ -1,10 +1,9 @@
 <template>
-  <section class="app-page max-w-6xl" aria-labelledby="applications-title">
+  <section class="app-page" aria-labelledby="applications-title">
     <!-- EN-TÊTE -->
     <header class="app-page-header">
       <div>
-        <span class="app-eyebrow">Admissions</span>
-        <h1 id="applications-title" class="app-page-title mt-2">Mes candidatures</h1>
+        <h1 id="applications-title" class="app-page-title">Mes candidatures</h1>
         <p class="app-page-copy">
           Consultez le statut de vos candidatures aux différentes sessions de formation.
         </p>
@@ -294,7 +293,7 @@ function equipmentReviewClass(status: string): string {
     not_required: 'text-quiet',
     pending: 'text-amber-700',
     needs_info: 'text-amber-700',
-    approved: 'text-green-700',
+    approved: 'text-primary-shade',
     rejected: 'text-red-700',
   }
   return classes[status] ?? 'text-quiet'

@@ -50,7 +50,7 @@
               class="font-semibold"
               :class="
                 row.attendance_rate >= 0.8
-                  ? 'text-emerald-700'
+                  ? 'text-primary-shade'
                   : row.attendance_rate >= 0.5
                     ? 'text-amber-700'
                     : 'text-red-700'

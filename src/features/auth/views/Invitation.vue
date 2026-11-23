@@ -61,7 +61,7 @@ const roleBadge = computed(() => {
     case 'super_admin':
       return {
         label: 'Super Administrateur',
-        bg: 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
+        bg: 'bg-savane-soft text-savane-ink ring-1 ring-savane/30',
         icon: '🛡️',
       }
     case 'admin':
@@ -79,7 +79,7 @@ const roleBadge = computed(() => {
     case 'formateur':
       return {
         label: 'Formateur',
-        bg: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+        bg: 'bg-mint text-primary-shade ring-1 ring-primary/25',
         icon: '🎓',
       }
     default:
@@ -213,13 +213,13 @@ async function handleSubmit() {
         <!-- ── ÉTAT 3 : SUCCÈS APRÈS VALIDATION ──────────────────────────── -->
         <div
           v-else-if="isSubmittedSuccess"
-          class="rounded-[2rem] p-2 ring-1 ring-emerald-200 bg-emerald-50/50 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          class="rounded-[2rem] p-2 ring-1 ring-primary/25 bg-mint/50 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
         >
           <div
             class="rounded-[calc(2rem-0.5rem)] bg-white p-8 sm:p-10 text-center space-y-5 shadow-sm"
           >
             <div
-              class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto ring-8 ring-emerald-50/60 animate-bounce"
+              class="w-16 h-16 rounded-full bg-mint text-primary-shade flex items-center justify-center mx-auto ring-8 ring-primary/25 animate-bounce"
             >
               <CheckCircle2Icon class="w-8 h-8" />
             </div>
@@ -436,7 +436,7 @@ async function handleSubmit() {
         <div
           class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 backdrop-blur-md border border-white/15 text-white"
         >
-          <ShieldCheckIcon class="w-4 h-4 text-emerald-400" />
+          <ShieldCheckIcon class="w-4 h-4 text-primary" />
           Espace Collaborateur Sécurisé
         </div>
 

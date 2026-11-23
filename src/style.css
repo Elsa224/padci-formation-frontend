@@ -258,8 +258,10 @@ body {
  * couleur.
  */
 @layer components {
+  /* Racine de chaque écran : rythme vertical uniquement. La largeur et les
+     marges sont fixées par le shell (WorkspaceShell <main>), jamais ici. */
   .app-page {
-    @apply mx-auto w-full max-w-[1280px] space-y-8;
+    @apply w-full space-y-8;
   }
 
   .app-page-header {

@@ -54,7 +54,7 @@ const availableRoles = computed(() => {
       value: 'formateur',
       label: 'Formateur',
       desc: 'Création et animation des cours et évaluations',
-      badge: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+      badge: 'bg-mint text-primary-shade ring-1 ring-primary/25',
     },
   ]
 
@@ -63,7 +63,7 @@ const availableRoles = computed(() => {
       value: 'super_admin',
       label: 'Super Administrateur',
       desc: 'Accès total : gouvernance, paramètres critiques, signature ANO',
-      badge: 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
+      badge: 'bg-savane-soft text-savane-ink ring-1 ring-savane/30',
     })
   }
 
@@ -157,9 +157,9 @@ function handleClose() {
         <!-- Success Alert -->
         <div
           v-if="successMessage"
-          class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3 text-xs text-emerald-800 animate-fade-in"
+          class="p-4 rounded-xl bg-mint border border-primary/25 flex items-center gap-3 text-xs text-primary-shade animate-fade-in"
         >
-          <CheckCircle2Icon class="w-5 h-5 text-emerald-600 shrink-0" />
+          <CheckCircle2Icon class="w-5 h-5 text-primary-shade shrink-0" />
           <span>{{ successMessage }}</span>
         </div>
 
@@ -246,11 +246,7 @@ function handleClose() {
               Annuler
             </button>
 
-            <button
-              type="submit"
-              :disabled="!canSubmit"
-              class="group relative inline-flex items-center gap-3 pl-5 pr-2 py-2 rounded-full font-semibold text-xs text-white bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary shadow-md hover:shadow-lg transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-            >
+            <button type="submit" :disabled="!canSubmit" class="app-action-primary group relative">
               <span v-if="createMutation.isPending.value">Envoi en cours...</span>
               <span v-else>Envoyer l'invitation</span>
 

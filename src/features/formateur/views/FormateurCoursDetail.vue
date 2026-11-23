@@ -1,5 +1,5 @@
 <template>
-  <section class="app-page max-w-5xl">
+  <section class="app-page">
     <RouterLink to="/formateur/cours" class="text-sm font-semibold text-primary">
       &larr; Mes cours
     </RouterLink>
@@ -16,10 +16,7 @@
     <template v-else-if="course.data.value">
       <header class="app-page-header">
         <div>
-          <p class="app-eyebrow">
-            {{ course.data.value.pathway?.name ?? 'Filière' }}
-          </p>
-          <h1 class="app-page-title mt-2">{{ course.data.value.title }}</h1>
+          <h1 class="app-page-title">{{ course.data.value.title }}</h1>
           <p v-if="course.data.value.summary" class="app-page-copy">
             {{ course.data.value.summary }}
           </p>
