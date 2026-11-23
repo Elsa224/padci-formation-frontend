@@ -168,7 +168,7 @@
             <div class="flex flex-wrap gap-2">
               <button
                 :disabled="equipmentResponseMutation.isPending.value"
-                class="app-action-primary text-xs disabled:opacity-60"
+                class="app-action-primary text-xs"
               >
                 {{
                   equipmentResponseMutation.isPending.value ? 'Envoi…' : 'Renvoyer mes informations'

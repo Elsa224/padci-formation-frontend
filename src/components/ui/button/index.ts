@@ -9,11 +9,12 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] hover:bg-primary-shade',
+          'bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] hover:bg-primary-shade disabled:bg-[#e3eae5] disabled:text-quiet disabled:opacity-100 disabled:shadow-none',
         /** Savane: one per screen at most — the main next step. */
-        accent: 'bg-savane text-forest font-bold hover:brightness-105',
+        accent:
+          'bg-savane text-forest font-bold hover:brightness-105 disabled:bg-[#e3eae5] disabled:text-quiet disabled:opacity-100',
         outline:
-          'border-line-strong bg-white hover:border-primary/40 hover:bg-mint hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground',
+          'border-line-control bg-white hover:border-primary/40 hover:bg-mint hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
         ghost:
