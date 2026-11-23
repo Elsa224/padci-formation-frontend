@@ -98,12 +98,11 @@
       </form>
 
       <div v-if="programmes.isPending.value" class="app-skeleton h-16" />
-      <p
+      <EmptyState
         v-else-if="!programmes.data.value?.items.length"
-        class="rounded-xl bg-canvas p-5 text-sm text-quiet"
-      >
-        Aucun programme.
-      </p>
+        title="Aucun programme"
+        description="Créez un programme pour y regrouper des filières."
+      />
       <ul v-else class="divide-y divide-line">
         <li
           v-for="programme in programmes.data.value.items"
@@ -280,12 +279,11 @@
       </form>
 
       <div v-if="pathways.isPending.value" class="app-skeleton h-24" />
-      <p
+      <EmptyState
         v-else-if="!pathways.data.value?.items.length"
-        class="rounded-xl bg-canvas p-5 text-sm text-quiet"
-      >
-        Aucune filière.
-      </p>
+        title="Aucune filière"
+        description="Ajoutez une filière pour y rattacher des cours et des cohortes."
+      />
       <ul v-else class="divide-y divide-line">
         <li
           v-for="pathway in pathways.data.value.items"
@@ -329,6 +327,7 @@
 </template>
 
 <script setup lang="ts">
+import EmptyState from '@/components/app/EmptyState.vue'
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
 import ConfirmButton from '../components/ConfirmButton.vue'

@@ -10,14 +10,15 @@
       </div>
     </header>
 
-    <div class="flex gap-2" role="tablist" aria-label="Type de journal">
+    <div class="flex gap-1" role="tablist" aria-label="Type de journal">
       <button
         v-for="item in tabs"
         :key="item.id"
         role="tab"
         :aria-selected="tab === item.id"
-        class="rounded-xl px-4 py-2 text-sm font-semibold"
-        :class="tab === item.id ? 'bg-primary text-white' : 'bg-white text-quiet hover:text-ink'"
+        type="button"
+        class="rounded-full px-3.5 py-2 text-sm font-semibold transition"
+        :class="tab === item.id ? 'bg-forest text-white' : 'text-body hover:bg-mint hover:text-ink'"
         :data-test="`tab-${item.id}`"
         @click="tab = item.id"
       >
@@ -27,7 +28,7 @@
 
     <!-- Actions -->
     <div v-if="tab === 'audit'" class="app-panel space-y-4" role="tabpanel">
-      <form class="flex flex-wrap items-end gap-3" @submit.prevent="auditFilters.page = 1">
+      <form class="flex flex-wrap items-end gap-3" @submit.prevent>
         <label class="text-sm font-semibold text-ink">
           Action
           <input
@@ -45,23 +46,16 @@
           Au
           <input id="audit-to" v-model="auditDraft.to" class="app-input mt-1" type="date" />
         </label>
-        <button
-          class="app-action-secondary"
-          @click="Object.assign(auditFilters, auditDraft, { page: 1 })"
-        >
-          Filtrer
-        </button>
       </form>
       <div v-if="audit.isPending.value" class="app-skeleton h-40" />
-      <p v-else-if="audit.isError.value" class="text-sm text-danger-ink" role="alert">
+      <p v-else-if="audit.isError.value" class="app-alert app-alert-danger" role="alert">
         {{ apiMessage(audit.error.value, 'Journal indisponible pour votre compte.') }}
       </p>
-      <p
+      <EmptyState
         v-else-if="!audit.data.value?.items.length"
-        class="rounded-xl bg-canvas p-5 text-sm text-quiet"
-      >
-        Aucune entrée pour ces critères.
-      </p>
+        title="Aucune entrée"
+        description="Élargissez la période ou effacez un filtre."
+      />
       <div v-else class="overflow-x-auto rounded-xl border border-line">
         <table class="w-full min-w-[48rem] text-left text-sm">
           <thead class="app-thead">
@@ -116,23 +110,16 @@
             placeholder="Ex : login_failed"
           />
         </label>
-        <button
-          class="app-action-secondary"
-          @click="Object.assign(authFilters, authDraft, { page: 1 })"
-        >
-          Filtrer
-        </button>
       </form>
       <div v-if="auth.isPending.value" class="app-skeleton h-40" />
-      <p v-else-if="auth.isError.value" class="text-sm text-danger-ink" role="alert">
+      <p v-else-if="auth.isError.value" class="app-alert app-alert-danger" role="alert">
         {{ apiMessage(auth.error.value, 'Journal indisponible pour votre compte.') }}
       </p>
-      <p
+      <EmptyState
         v-else-if="!auth.data.value?.items.length"
-        class="rounded-xl bg-canvas p-5 text-sm text-quiet"
-      >
-        Aucun événement pour ces critères.
-      </p>
+        title="Aucun événement"
+        description="Élargissez la période ou effacez un filtre."
+      />
       <div v-else class="overflow-x-auto rounded-xl border border-line">
         <table class="w-full min-w-[44rem] text-left text-sm">
           <thead class="app-thead">
@@ -170,6 +157,8 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import { watchDebounced } from '@vueuse/core'
+import EmptyState from '@/components/app/EmptyState.vue'
 import PaginationNav from '../components/PaginationNav.vue'
 import {
   apiMessage,
@@ -191,4 +180,16 @@ const audit = useAuditLogs(computed(() => ({ ...auditFilters })))
 const authDraft = reactive({ email: '', event: '' })
 const authFilters = reactive({ email: '', event: '', page: 1 })
 const auth = useAuthEvents(computed(() => ({ ...authFilters })))
+
+// Filtres appliqués en direct (dates aussitôt, texte après une pause de frappe).
+watchDebounced(
+  () => ({ ...auditDraft }),
+  (draft) => Object.assign(auditFilters, draft, { page: 1 }),
+  { debounce: 350, deep: true },
+)
+watchDebounced(
+  () => ({ ...authDraft }),
+  (draft) => Object.assign(authFilters, draft, { page: 1 }),
+  { debounce: 350, deep: true },
+)
 </script>

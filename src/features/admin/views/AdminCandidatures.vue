@@ -43,16 +43,10 @@
             {{ pathway.name }}
           </option>
         </select>
-
-        <!-- Filtre Statut -->
-        <select v-model="filterStatus" class="app-input md:w-48">
-          <option value="">Tous les statuts</option>
-          <option v-for="status in statusOptions" :key="status.value" :value="status.value">
-            {{ status.label }}
-          </option>
-        </select>
       </div>
     </div>
+
+    <QueueTabs v-model="filterStatus" :tabs="statusTabs" label="Statut des candidatures" />
 
     <!-- ================= TABLEAU DES CANDIDATURES ================= -->
     <div class="app-panel overflow-hidden p-0">
@@ -88,7 +82,8 @@
             <tr
               v-for="application in applications"
               :key="application.key"
-              class="transition hover:bg-primary/[0.025]"
+              class="cursor-pointer transition hover:bg-mint/40"
+              @click="openModal(application.key)"
             >
               <td class="py-4 px-6">
                 <div class="flex items-center gap-3">
@@ -135,7 +130,8 @@
               </td>
               <td class="py-4 px-6 text-center">
                 <button
-                  @click="openModal(application.key)"
+                  :aria-label="`Ouvrir le dossier de ${application.user?.name ?? 'ce candidat'}`"
+                  @click.stop="openModal(application.key)"
                   class="rounded-lg p-2 text-primary transition hover:bg-primary/10"
                   title="Voir le dossier"
                 >
@@ -934,6 +930,9 @@
 <script setup lang="ts">
 import { TriangleAlert as TriangleAlertIcon } from '@lucide/vue'
 import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import QueueTabs from '@/components/app/QueueTabs.vue'
+import { useApplicationStatusCounts } from '../composables/useDashboard'
 import { refDebounced } from '@vueuse/core'
 import type { ApiError } from '@/api/http'
 import { useCatalogPathways } from '@/features/public/composables/useCatalogPathways'
@@ -950,7 +949,8 @@ import {
 const searchQuery = ref('')
 const searchQueryDebounced = refDebounced(searchQuery, 350)
 const filterPathwayKey = ref('')
-const filterStatus = ref('')
+// ?statut=… depuis le tableau de bord (« À traiter »).
+const filterStatus = ref(String(useRoute()?.query.statut ?? ''))
 const page = ref(1)
 
 watch([filterPathwayKey, filterStatus, searchQueryDebounced], () => {
@@ -980,6 +980,25 @@ const statusOptions = [
   { value: 'withdrawn', label: 'Retirée' },
 ]
 
+const statusCounts = useApplicationStatusCounts()
+const TAB_STATUSES: Array<{ value: string; label: string; urgent?: boolean }> = [
+  { value: '', label: 'Toutes' },
+  { value: 'submitted', label: 'Soumises', urgent: true },
+  { value: 'in_review', label: 'En revue', urgent: true },
+  { value: 'waitlisted', label: 'Liste d’attente' },
+  { value: 'accepted', label: 'Acceptées' },
+  { value: 'rejected', label: 'Rejetées' },
+  { value: 'withdrawn', label: 'Retirées' },
+]
+const statusTabs = computed(() => {
+  const counts = statusCounts.data.value as Record<string, number> | undefined
+  // « Toutes » sans compteur : le statut standby n'est pas compté côté API.
+  return TAB_STATUSES.map((tab) => ({
+    ...tab,
+    count: tab.value ? (counts?.[tab.value] ?? null) : null,
+  }))
+})
+
 function statusLabel(status: string): string {
   return statusOptions.find((option) => option.value === status)?.label ?? status
 }
@@ -989,9 +1008,10 @@ function statusBadgeClass(status: string): string {
     case 'accepted':
       return 'bg-primary/10 text-primary'
     case 'in_review':
+      return 'bg-info-soft text-info-ink'
     case 'waitlisted':
     case 'standby':
-      return 'bg-warning-soft text-warning-ink'
+      return 'bg-savane-soft text-savane-ink'
     case 'rejected':
       return 'bg-danger-soft text-danger-ink'
     default:
@@ -1004,9 +1024,10 @@ function statusDotClass(status: string): string {
     case 'accepted':
       return 'bg-primary'
     case 'in_review':
+      return 'bg-info'
     case 'waitlisted':
     case 'standby':
-      return 'bg-warning'
+      return 'bg-savane'
     case 'rejected':
       return 'bg-danger'
     default:

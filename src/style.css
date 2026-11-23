@@ -370,6 +370,25 @@ body {
     }
   }
 
+  /* Interrupteur : case à cocher native (clavier, formulaires, tests) habillée
+     en bascule. Vert quand activé, contour de contrôle à 3:1 sinon. */
+  .app-switch {
+    @apply relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-line-control transition-colors checked:bg-primary disabled:cursor-progress disabled:opacity-60;
+  }
+  .app-switch::before {
+    content: '';
+    @apply absolute top-0.5 left-0.5 size-5 rounded-full bg-white shadow-sm transition-transform;
+  }
+  .app-switch:checked::before {
+    @apply translate-x-5;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-switch,
+    .app-switch::before {
+      @apply transition-none;
+    }
+  }
+
   .app-input {
     @apply min-h-11 w-full rounded-xl border border-line-strong bg-white px-3.5 py-2 text-sm text-ink transition placeholder:text-quiet/70 hover:border-quiet/50 focus:border-primary focus:ring-4 focus:ring-primary/12 focus:outline-none;
   }

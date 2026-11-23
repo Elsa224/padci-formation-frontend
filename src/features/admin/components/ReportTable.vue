@@ -1,6 +1,6 @@
 <template>
   <div v-if="loading" class="app-skeleton h-32" />
-  <p v-else-if="!rows.length" class="rounded-xl bg-canvas p-6 text-sm text-quiet">{{ empty }}</p>
+  <EmptyState v-else-if="!rows.length" :title="empty" />
   <div v-else class="overflow-x-auto rounded-xl border border-line">
     <table class="w-full min-w-[40rem] text-left text-sm">
       <thead class="app-thead">
@@ -67,6 +67,7 @@
 </template>
 
 <script setup lang="ts">
+import EmptyState from '@/components/app/EmptyState.vue'
 import { formatPercent } from '../composables/useAdminOperations'
 
 export interface ReportRow {

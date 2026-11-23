@@ -10,6 +10,38 @@
       <RouterLink to="/admin/rapports" class="app-action-secondary">Voir les rapports</RouterLink>
     </header>
 
+    <!-- À traiter : n'apparaît que si une décision attend l'administration -->
+    <section
+      v-if="todo.length"
+      class="app-panel-forest"
+      aria-labelledby="admin-todo-title"
+      data-test="admin-todo"
+    >
+      <h2 id="admin-todo-title" class="text-sm font-semibold text-savane">À traiter</h2>
+      <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+        <li v-for="item in todo" :key="item.key">
+          <RouterLink
+            :to="item.to"
+            class="group flex items-center justify-between gap-4 rounded-xl bg-forest-raised p-4 transition hover:bg-forest-line/60"
+          >
+            <div class="min-w-0">
+              <p class="text-[1.9rem] leading-none font-bold text-white tabular-nums">
+                {{ item.count }}
+              </p>
+              <p class="mt-1.5 text-sm text-forest-muted">{{ item.label }}</p>
+            </div>
+            <span class="inline-flex items-center gap-1 text-sm font-semibold text-savane">
+              {{ item.action }}
+              <ChevronRightIcon
+                class="size-4 transition group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </span>
+          </RouterLink>
+        </li>
+      </ul>
+    </section>
+
     <!-- Indicateurs principaux : une seule bande, lue d'un coup d'œil -->
     <p
       v-if="isOverviewError"
@@ -182,7 +214,9 @@ import {
   ArcElement,
 } from 'chart.js'
 import type { ApiError } from '@/api/http'
+import { ChevronRight as ChevronRightIcon } from '@lucide/vue'
 import StatTile from '@/components/app/StatTile.vue'
+import { useCourseStatusCounts } from '@/features/moderation/composables/useModerationQueues'
 import { useApplications } from '../composables/useApplications'
 import {
   useApplicationStatusCounts,
@@ -191,6 +225,9 @@ import {
 } from '../composables/useDashboard'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
+// Graphiques dans la police et les couleurs de texte de l'application.
+ChartJS.defaults.font.family = getComputedStyle(document.body).fontFamily
+ChartJS.defaults.color = '#56645d'
 
 // ==================== KPIs ====================
 const {
@@ -238,7 +275,7 @@ const chartOptions = {
     },
   },
   scales: {
-    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f3f4f6' } },
+    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#dde5df' } },
     x: { grid: { display: false } },
   },
 }
@@ -280,14 +317,15 @@ const statusChartData = computed(() => {
         backgroundColor: entries.map(([status]) => {
           switch (status) {
             case 'accepted':
-              return '#198341'
+              return '#198341' // primary
             case 'in_review':
+              return '#1f6f9f' // info
             case 'waitlisted':
-              return '#f59e0b'
+              return '#e8761e' // savane
             case 'rejected':
-              return '#ef4444'
+              return '#d92d20' // danger
             default:
-              return '#9ca3af'
+              return '#9db8aa' // forest-muted : soumises, retirées
           }
         }),
         borderColor: '#ffffff',
@@ -305,6 +343,35 @@ const doughnutOptions = {
   },
   cutout: '75%',
 }
+
+// ==================== À TRAITER ====================
+const courseCounts = useCourseStatusCounts(['submitted', 'in_review'])
+const todo = computed(() => {
+  const items = []
+  const counts = statusCounts.value as Record<string, number> | undefined
+  const applications = (counts?.submitted ?? 0) + (counts?.in_review ?? 0)
+  if (applications > 0) {
+    items.push({
+      key: 'applications',
+      count: applications,
+      label: applications === 1 ? 'candidature à décider' : 'candidatures à décider',
+      action: 'Examiner',
+      to: '/admin/candidatures?statut=submitted',
+    })
+  }
+  const c = courseCounts.data.value
+  const courses = (c?.submitted ?? 0) + (c?.in_review ?? 0)
+  if (courses > 0) {
+    items.push({
+      key: 'courses',
+      count: courses,
+      label: courses === 1 ? 'cours à valider' : 'cours à valider',
+      action: 'Modérer',
+      to: '/admin/moderation-cours',
+    })
+  }
+  return items
+})
 
 // ==================== DERNIÈRES CANDIDATURES ACCEPTÉES ====================
 const { data: recentData, isPending: isRecentPending } = useApplications(

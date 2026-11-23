@@ -10,16 +10,21 @@
     </header>
 
     <!-- Indicateurs globaux -->
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-      <article v-for="kpi in kpis" :key="kpi.label" class="app-panel" data-test="report-kpi">
-        <div v-if="overview.isPending.value" class="app-skeleton h-14" />
-        <template v-else>
-          <p class="text-sm font-medium text-quiet">{{ kpi.label }}</p>
-          <p class="mt-1 text-3xl font-bold tabular-nums text-ink">{{ kpi.value }}</p>
-        </template>
-      </article>
-    </div>
-    <p v-if="overview.isError.value" class="text-sm text-danger-ink" role="alert">
+    <section
+      class="grid grid-cols-2 gap-x-6 gap-y-7 rounded-[18px] border border-line bg-white p-6 shadow-panel sm:grid-cols-3 lg:grid-cols-5 lg:divide-x lg:divide-line"
+      aria-label="Indicateurs globaux"
+    >
+      <StatTile
+        v-for="(kpi, index) in kpis"
+        :key="kpi.label"
+        :class="index > 0 ? 'lg:pl-6' : ''"
+        :label="kpi.label"
+        :value="kpi.value"
+        :loading="overview.isPending.value"
+        data-test="report-kpi"
+      />
+    </section>
+    <p v-if="overview.isError.value" class="app-alert app-alert-danger" role="alert">
       {{ apiMessage(overview.error.value, 'Impossible de charger les indicateurs.') }}
     </p>
 
@@ -32,7 +37,7 @@
           :disabled="!pathways.data.value?.length"
           @click="exportPathways"
         >
-          Exporter (CSV)
+          <DownloadIcon class="size-4" aria-hidden="true" /> Exporter (CSV)
         </button>
       </div>
       <ReportTable
@@ -52,7 +57,7 @@
           :disabled="!cohorts.data.value?.length"
           @click="exportCohorts"
         >
-          Exporter (CSV)
+          <DownloadIcon class="size-4" aria-hidden="true" /> Exporter (CSV)
         </button>
       </div>
       <ReportTable
@@ -73,6 +78,8 @@
 </template>
 
 <script setup lang="ts">
+import { Download as DownloadIcon } from '@lucide/vue'
+import StatTile from '@/components/app/StatTile.vue'
 import { computed } from 'vue'
 import { useDashboardByPathway, useDashboardOverview } from '../composables/useDashboard'
 import {

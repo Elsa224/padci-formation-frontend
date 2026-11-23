@@ -137,6 +137,7 @@ export function useStartApplicationReview() {
     },
     onSuccess: (application) => {
       queryClient.invalidateQueries({ queryKey: ['admin-applications'] })
+      queryClient.invalidateQueries({ queryKey: ['admin-application-status-counts'] })
       queryClient.invalidateQueries({ queryKey: ['admin-application', application.key] })
     },
   })
@@ -163,6 +164,7 @@ export function useDecideApplication() {
     },
     onSuccess: (application) => {
       queryClient.invalidateQueries({ queryKey: ['admin-applications'] })
+      queryClient.invalidateQueries({ queryKey: ['admin-application-status-counts'] })
       queryClient.invalidateQueries({ queryKey: ['admin-application', application.key] })
     },
   })
@@ -193,6 +195,7 @@ export function useDecideEquipmentReview() {
     },
     onSuccess: () => {
       queryClient?.invalidateQueries({ queryKey: ['admin-applications'] })
+      queryClient?.invalidateQueries({ queryKey: ['admin-application-status-counts'] })
       queryClient?.invalidateQueries({ queryKey: ['admin-application'] })
     },
   })
