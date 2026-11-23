@@ -8,6 +8,7 @@ vi.mock('@lucide/vue', () => ({
   Plus: { template: '<span data-test="plus-icon" />' },
   Trash2: { template: '<span data-test="trash-icon" />' },
   X: { template: '<span data-test="x-icon" />' },
+  ArrowLeft: { template: '<span data-test="arrow-left-icon" />' },
 }))
 
 vi.mock('vue-sonner', () => ({

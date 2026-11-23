@@ -193,7 +193,8 @@
                 data-test="back-to-sessions-list"
                 @click="activeSessionKey = null"
               >
-                &larr; Retour à la liste des séances
+                <ArrowLeftIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" /> Retour à
+                la liste des séances
               </button>
             </div>
 
@@ -457,7 +458,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { Plus as PlusIcon, X as XIcon } from '@lucide/vue'
+import { Plus as PlusIcon, X as XIcon, ArrowLeft as ArrowLeftIcon } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import ConfirmButton from '@/features/admin/components/ConfirmButton.vue'
 import { apiErrorMessage } from '@/features/formateur/composables/useTrainerCourses'

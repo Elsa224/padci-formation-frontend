@@ -88,7 +88,7 @@ test('inscription → email non vérifié → vérification → connexion', asyn
   //    un chemin SPA qui existe).
   await page.goto(href)
   await expect(page).toHaveURL(/\/connexion\?verified=1/)
-  await expect(page.getByText('Adresse vérifiée ✓', { exact: false })).toBeVisible()
+  await expect(page.getByText('Adresse vérifiée', { exact: false })).toBeVisible()
 
   // 4. Connexion cette fois acceptée → dashboard apprenant.
   await page.getByPlaceholder('Adresse e-mail').fill(email)
@@ -138,7 +138,7 @@ test('mot de passe oublié → email (Mailpit) → réinitialisation → connexi
   await expect(devLink).toHaveAttribute('href', /.+/)
   const verifyHref = (await devLink.getAttribute('href'))!
   await page.goto(verifyHref)
-  await expect(page.getByText('Adresse vérifiée ✓', { exact: false })).toBeVisible()
+  await expect(page.getByText('Adresse vérifiée', { exact: false })).toBeVisible()
 
   // 1. Mot de passe oublié
   await page.goto('/mot-de-passe-oublie')

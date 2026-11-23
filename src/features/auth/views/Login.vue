@@ -22,7 +22,7 @@
              renvoie le navigateur ici avec ?verified=1
              (EmailVerificationController côté backend) -->
     <p v-if="emailVerified" class="app-alert app-alert-success mb-4">
-      Adresse vérifiée ✓ - vous pouvez vous connecter.
+      Adresse vérifiée. Vous pouvez vous connecter.
     </p>
 
     <!-- Lien de vérification consommé mais invalide ou expiré
@@ -48,7 +48,7 @@
       >
         {{ resendPending ? 'Envoi en cours…' : "Renvoyer l'e-mail de vérification" }}
       </button>
-      <p v-else class="mt-1 font-medium text-primary">E-mail de vérification renvoyé ✓</p>
+      <p v-else class="mt-1 font-medium text-primary">E-mail de vérification renvoyé.</p>
     </div>
 
     <!-- ================= ÉTAPE MOT DE PASSE ================= -->

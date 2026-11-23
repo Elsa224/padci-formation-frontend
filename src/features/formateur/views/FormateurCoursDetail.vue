@@ -1,7 +1,7 @@
 <template>
   <section class="app-page">
     <RouterLink to="/formateur/cours" class="text-sm font-semibold text-primary">
-      &larr; Mes cours
+      <ArrowLeftIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" /> Mes cours
     </RouterLink>
 
     <div v-if="course.isPending.value" class="app-skeleton h-32" />
@@ -427,6 +427,7 @@ import {
   ArrowUp as ArrowUpIcon,
   FileText as FileTextIcon,
   Link as LinkIcon,
+  ArrowLeft as ArrowLeftIcon,
 } from '@lucide/vue'
 import { toast } from 'vue-sonner'
 import CourseStatusBadge from '../components/CourseStatusBadge.vue'

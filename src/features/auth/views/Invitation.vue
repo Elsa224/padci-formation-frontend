@@ -3,6 +3,10 @@ import AuthShell from '../components/AuthShell.vue'
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
+  ShieldCheckIcon,
+  SettingsIcon,
+  ScaleIcon,
+  GraduationCapIcon,
   LockIcon,
   UserIcon,
   EyeIcon,
@@ -60,31 +64,31 @@ const roleBadge = computed(() => {
       return {
         label: 'Super Administrateur',
         bg: 'bg-savane-soft text-savane-ink ring-1 ring-savane/30',
-        icon: '🛡️',
+        icon: ShieldCheckIcon,
       }
     case 'admin':
       return {
         label: 'Administrateur',
         bg: 'bg-info-soft text-info-ink ring-1 ring-info-line',
-        icon: '⚙️',
+        icon: SettingsIcon,
       }
     case 'moderateur':
       return {
         label: 'Modérateur',
         bg: 'bg-forest-soft text-forest ring-1 ring-forest/20',
-        icon: '⚖️',
+        icon: ScaleIcon,
       }
     case 'formateur':
       return {
         label: 'Formateur',
         bg: 'bg-mint text-primary-shade ring-1 ring-primary/25',
-        icon: '🎓',
+        icon: GraduationCapIcon,
       }
     default:
       return {
         label: invitation.value?.role_label || 'Collaborateur',
         bg: 'bg-canvas text-body ring-1 ring-line',
-        icon: '👤',
+        icon: UserIcon,
       }
   }
 })
@@ -217,7 +221,7 @@ async function handleSubmit() {
             class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wide"
             :class="roleBadge.bg"
           >
-            <span>{{ roleBadge.icon }}</span>
+            <component :is="roleBadge.icon" class="size-3.5" aria-hidden="true" />
             <span>Rôle attribué : {{ roleBadge.label }}</span>
           </div>
           <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink">

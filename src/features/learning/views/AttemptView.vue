@@ -1,7 +1,7 @@
 <template>
   <section class="app-page">
     <RouterLink :to="`/formations/${courseKey}`" class="text-sm font-semibold text-primary">
-      &larr; Retour au cours
+      <ArrowLeftIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" /> Retour au cours
     </RouterLink>
 
     <div v-if="attempt.isPending.value" class="space-y-3">
@@ -197,6 +197,7 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowLeft as ArrowLeftIcon } from '@lucide/vue'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ApiError } from '@/api/http'
