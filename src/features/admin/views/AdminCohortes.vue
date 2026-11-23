@@ -478,6 +478,7 @@
             <button
               type="submit"
               :disabled="createMutation.isPending.value"
+              :aria-busy="createMutation.isPending.value"
               class="app-action-primary"
               data-testid="btn-submit-create-cohort"
             >

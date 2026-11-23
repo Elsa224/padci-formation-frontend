@@ -9,7 +9,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] hover:bg-primary-shade disabled:bg-[#e3eae5] disabled:text-quiet disabled:opacity-100 disabled:shadow-none',
+          'bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] hover:bg-primary-shade disabled:bg-[#e3eae5] disabled:text-quiet disabled:opacity-100 disabled:shadow-none aria-busy:cursor-progress aria-busy:disabled:bg-primary aria-busy:disabled:text-primary-foreground aria-busy:disabled:opacity-90',
         /** Savane: one per screen at most — the main next step. */
         accent:
           'bg-savane text-forest font-bold hover:brightness-105 disabled:bg-[#e3eae5] disabled:text-quiet disabled:opacity-100',

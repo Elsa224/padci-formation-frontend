@@ -135,6 +135,7 @@
           <button
             @click="markCompleteAndNext"
             :disabled="progressMutation.isPending.value"
+            :aria-busy="progressMutation.isPending.value"
             class="app-action-primary"
           >
             {{

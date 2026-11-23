@@ -177,13 +177,18 @@
             <button type="button" class="app-action-secondary" @click="scheduleTarget = null">
               Annuler
             </button>
-            <button class="app-action-secondary" :disabled="scheduleMutation.isPending.value">
+            <button
+              class="app-action-secondary"
+              :disabled="scheduleMutation.isPending.value"
+              :aria-busy="scheduleMutation.isPending.value"
+            >
               Enregistrer
             </button>
             <button
               type="button"
               class="app-action-primary"
               :disabled="scheduleMutation.isPending.value"
+              :aria-busy="scheduleMutation.isPending.value"
               data-test="announce-schedule"
               @click="saveSchedule(assessment.key, true)"
             >
@@ -379,6 +384,7 @@
         <button
           class="app-action-primary"
           :disabled="create.isPending.value || update.isPending.value"
+          :aria-busy="create.isPending.value || update.isPending.value"
           data-test="submit-quiz-builder"
         >
           {{

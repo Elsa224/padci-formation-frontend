@@ -554,6 +554,7 @@
             <button
               @click="submit"
               :disabled="submitMutation.isPending.value"
+              :aria-busy="submitMutation.isPending.value"
               class="app-action-primary"
             >
               {{

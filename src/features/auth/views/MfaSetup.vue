@@ -117,6 +117,7 @@ async function finishAndContinue(): Promise<void> {
               type="submit"
               class="app-action-primary w-full"
               :disabled="confirm.isPending.value"
+              :aria-busy="confirm.isPending.value"
             >
               {{ confirm.isPending.value ? 'Vérification…' : 'Activer' }}
             </button>

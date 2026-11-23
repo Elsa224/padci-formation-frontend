@@ -14,7 +14,7 @@
         maxlength="180"
         :aria-label="`Nouveau titre pour ${title}`"
       />
-      <button class="app-action-primary" :disabled="busy">Enregistrer</button>
+      <button class="app-action-primary" :disabled="busy" :aria-busy="busy">Enregistrer</button>
       <button type="button" class="app-action-secondary" @click="mode = 'view'">Annuler</button>
     </form>
 
@@ -54,6 +54,7 @@
           type="button"
           class="font-semibold"
           :disabled="busy"
+          :aria-busy="busy"
           data-test="confirm-delete"
           @click="emit('delete')"
         >

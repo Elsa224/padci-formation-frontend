@@ -87,7 +87,11 @@
           <button type="button" class="app-action-secondary" @click="programmeForm = null">
             Annuler
           </button>
-          <button class="app-action-primary" :disabled="saveProgramme.isPending.value">
+          <button
+            class="app-action-primary"
+            :disabled="saveProgramme.isPending.value"
+            :aria-busy="saveProgramme.isPending.value"
+          >
             Enregistrer
           </button>
         </div>
@@ -265,7 +269,11 @@
           <button type="button" class="app-action-secondary" @click="pathwayForm = null">
             Annuler
           </button>
-          <button class="app-action-primary" :disabled="savePathway.isPending.value">
+          <button
+            class="app-action-primary"
+            :disabled="savePathway.isPending.value"
+            :aria-busy="savePathway.isPending.value"
+          >
             Enregistrer
           </button>
         </div>

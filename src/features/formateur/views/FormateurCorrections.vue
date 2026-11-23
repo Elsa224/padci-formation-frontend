@@ -85,7 +85,11 @@
               maxlength="2000"
             />
           </label>
-          <button class="app-action-primary" :disabled="gradeMutation.isPending.value">
+          <button
+            class="app-action-primary"
+            :disabled="gradeMutation.isPending.value"
+            :aria-busy="gradeMutation.isPending.value"
+          >
             Valider
           </button>
         </div>

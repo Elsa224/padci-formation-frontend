@@ -107,6 +107,7 @@
                   type="submit"
                   class="app-action-primary"
                   :disabled="mutation.isPending.value"
+                  :aria-busy="mutation.isPending.value"
                 >
                   {{ pending === 'approved' ? 'Validation…' : 'Valider le matériel' }}
                 </button>
@@ -114,6 +115,7 @@
                   type="button"
                   class="app-action-secondary"
                   :disabled="mutation.isPending.value"
+                  :aria-busy="mutation.isPending.value"
                   @click="decide(review, 'needs_info')"
                 >
                   {{ pending === 'needs_info' ? 'Envoi…' : 'Demander un complément' }}
@@ -122,6 +124,7 @@
                   type="button"
                   class="app-action-secondary text-danger-ink hover:border-danger-line hover:bg-danger-soft"
                   :disabled="mutation.isPending.value"
+                  :aria-busy="mutation.isPending.value"
                   @click="decide(review, 'rejected')"
                 >
                   {{ pending === 'rejected' ? 'Refus…' : 'Refuser' }}

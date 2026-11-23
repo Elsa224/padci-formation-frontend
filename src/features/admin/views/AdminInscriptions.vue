@@ -101,6 +101,7 @@
                     <button
                       class="app-action-primary"
                       :disabled="action.isPending.value"
+                      :aria-busy="action.isPending.value"
                       data-test="confirm-action"
                     >
                       {{ actionLabels[pending.action] }}
