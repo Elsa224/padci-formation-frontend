@@ -33,9 +33,9 @@
       <h2 class="text-2xl font-bold text-ink">Candidature enregistrée</h2>
       <p class="mx-auto max-w-md text-sm leading-6 text-quiet">
         Votre dossier pour
-        <strong v-if="selectedCohort" class="text-ink">la session {{ selectedCohort.name }}</strong>
-        <strong v-else class="text-ink">la filière {{ pathway?.name }}</strong>
-        a été transmis à l'équipe pédagogique. Vous pouvez suivre son statut en temps réel.
+        <strong class="text-ink">la filière {{ pathway?.name }}</strong>
+        a été transmis à l'équipe pédagogique. Une fois accepté, vous serez inscrit dans la
+        prochaine session disponible. Vous pouvez suivre son statut en temps réel.
       </p>
       <div class="pt-4 flex flex-col sm:flex-row justify-center gap-3">
         <router-link to="/mes-candidatures" class="app-action-primary justify-center">
@@ -575,19 +575,13 @@ import { ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon } from '@lucid
 import { computed, ref, onScopeDispose } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ApiError } from '@/api/http'
-import { usePathway, usePathwayCohorts } from '@/features/catalog/composables/useCatalog'
+import { usePathway } from '@/features/catalog/composables/useCatalog'
 import { useSubmitApplication, useUploadMedia } from '../composables/useCandidature'
 
 const route = useRoute()
 const pathwayKey = computed(() => String(route.query.pathway ?? ''))
-const initialCohortKey = String(route.query.cohort ?? '')
 
 const { data: pathway } = usePathway(pathwayKey)
-const { data: cohortsData } = usePathwayCohorts(pathwayKey)
-const cohorts = computed(() => cohortsData.value ?? [])
-
-const chosenCohortKey = ref(initialCohortKey)
-const selectedCohort = computed(() => cohorts.value.find((c) => c.key === chosenCohortKey.value))
 
 const currentStep = ref(1)
 const motivation = ref('')
