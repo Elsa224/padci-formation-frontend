@@ -41,17 +41,17 @@
       class="grid grid-cols-2 gap-x-6 gap-y-7 rounded-[18px] border border-line bg-white p-6 shadow-panel lg:grid-cols-4 lg:divide-x lg:divide-line"
       aria-label="Indicateurs clés"
     >
-      <StatTile label="Apprenants" :value="overview?.learners_total ?? '—'" />
+      <StatTile label="Apprenants" :value="overview?.learners_total ?? '-'" />
       <StatTile
         class="lg:pl-6"
         label="Taux d'achèvement"
         tone="leaf"
-        :value="overview ? `${Math.round(overview.completion_rate * 100)} %` : '—'"
+        :value="overview ? `${Math.round(overview.completion_rate * 100)} %` : '-'"
       />
       <StatTile
         class="lg:pl-6"
         label="Attestations délivrées"
-        :value="overview?.certificates_issued_total ?? '—'"
+        :value="overview?.certificates_issued_total ?? '-'"
       />
       <StatTile
         class="lg:pl-6"

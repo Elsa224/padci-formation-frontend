@@ -176,7 +176,7 @@ describe('CohortAttendanceModal', () => {
     })
 
     expect(wrapper.find('[data-test="attendance-modal"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('Feuille de présence — Promotion 2026 Network')
+    expect(wrapper.text()).toContain('Feuille de présence - Promotion 2026 Network')
 
     await wrapper.setProps({ open: false })
     expect(wrapper.find('[data-test="attendance-modal"]').exists()).toBe(false)

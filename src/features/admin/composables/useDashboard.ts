@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/vue-query'
 import { apiMeta, http } from '@/api/http'
 
-/** GET /admin/dashboard/overview — reports.view. Platform-wide for admin/super_admin. */
+/** GET /admin/dashboard/overview - reports.view. Platform-wide for admin/super_admin. */
 export interface DashboardOverview {
   learners_total: number
   active_cohorts_total: number
@@ -21,7 +21,7 @@ export function useDashboardOverview() {
   })
 }
 
-/** GET /admin/dashboard/reports/pathways — enrollment/completion counts per pathway. */
+/** GET /admin/dashboard/reports/pathways - enrollment/completion counts per pathway. */
 export interface PathwayMetrics {
   pathway_key: string
   name: string
@@ -52,7 +52,7 @@ const APPLICATION_STATUSES = [
 
 /**
  * No dedicated stats endpoint exists for application status counts
- * (Admissions is a separate module from Operations/DashboardMetrics) — this
+ * (Admissions is a separate module from Operations/DashboardMetrics) - this
  * reads `meta.pagination.total` from GET /admin/applications once per
  * status (per_page=1, no records fetched beyond the one needed to read the
  * total), which stays correct at any volume unlike counting a single capped

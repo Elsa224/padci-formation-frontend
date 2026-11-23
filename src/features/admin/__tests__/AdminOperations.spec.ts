@@ -72,7 +72,7 @@ describe('AdminRapports', () => {
         {
           cohort_key: 'cht_1',
           code: 'ITS-2026-C1',
-          name: 'IT Support — Cohorte 1',
+          name: 'IT Support - Cohorte 1',
           pathway_name: 'IT Support',
           enrolled_count: 40,
           completed_count: 17,
@@ -96,7 +96,7 @@ describe('AdminRapports', () => {
     await exportButtons[1]!.trigger('click')
     const blob = vi.mocked(URL.createObjectURL).mock.calls[0]![0] as Blob
     const text = await blob.text()
-    expect(text).toContain('IT Support — Cohorte 1;ITS-2026-C1 · IT Support;40;17;42,5;15;85;4')
+    expect(text).toContain('IT Support - Cohorte 1;ITS-2026-C1 · IT Support;40;17;42,5;15;85;4')
   })
 })
 

@@ -22,7 +22,7 @@ export interface CohortMemberFilters {
 }
 
 /**
- * GET /api/v1/admin/cohorts/{cohort}/members — cohorts.view.
+ * GET /api/v1/admin/cohorts/{cohort}/members - cohorts.view.
  * Returns paginated members (learners) attached to the cohort.
  */
 export function useCohortMembers(

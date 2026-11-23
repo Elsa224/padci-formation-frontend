@@ -1,6 +1,6 @@
 /**
  * PADCI-API response envelope (see `app/Modules/Shared/Http/ApiResponse.php`
- * and `ApiExceptionRenderer` on the backend) — every endpoint returns one of
+ * and `ApiExceptionRenderer` on the backend) - every endpoint returns one of
  * these two shapes, never a bare payload.
  */
 /** Present on `meta` only when `data` was a paginator (`ApiResponse::pagination`). */

@@ -42,7 +42,7 @@ export interface CohortListFilters {
   page?: number
 }
 
-/** GET /admin/cohorts — cohorts.view. */
+/** GET /admin/cohorts - cohorts.view. */
 export function useCohorts(filters: Ref<CohortListFilters>) {
   return useQuery({
     queryKey: computed(() => ['admin-cohorts', filters.value]),
@@ -95,7 +95,7 @@ export interface CreateCohortResult {
   drained_standby_count: number
 }
 
-/** POST /admin/cohorts — cohorts.manage. */
+/** POST /admin/cohorts - cohorts.manage. */
 export function useCreateCohort() {
   const queryClient = useQueryClient()
 

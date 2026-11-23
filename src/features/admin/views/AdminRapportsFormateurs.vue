@@ -159,6 +159,6 @@ const approve = (key: string) => run(key, 'approved')
 const reject = (key: string) => run(key, 'rejected')
 
 function formatDate(value: string | null) {
-  return value ? new Date(value).toLocaleDateString('fr-FR') : '—'
+  return value ? new Date(value).toLocaleDateString('fr-FR') : '-'
 }
 </script>

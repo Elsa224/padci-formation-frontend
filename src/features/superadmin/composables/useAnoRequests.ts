@@ -3,7 +3,7 @@ import { computed, type Ref } from 'vue'
 import { apiMeta, http } from '@/api/http'
 import type { ApiPaginationMeta } from '@/api/types'
 
-/** `AnoRequestResource` shape (ADR-011 — Avis de Non-Objection). */
+/** `AnoRequestResource` shape (ADR-011 - Avis de Non-Objection). */
 export interface AnoRequest {
   id: number
   key: string
@@ -26,7 +26,7 @@ export interface AnoListFilters {
   page?: number
 }
 
-/** GET /admin/ano-requests — finance.view. */
+/** GET /admin/ano-requests - finance.view. */
 export function useAnoRequests(filters: Ref<AnoListFilters>) {
   return useQuery({
     queryKey: computed(() => ['admin-ano-requests', filters.value]),
@@ -53,7 +53,7 @@ export interface SubmitAnoPayload {
   priority: 'normale' | 'haute'
 }
 
-/** POST /admin/ano-requests — ano.manage. */
+/** POST /admin/ano-requests - ano.manage. */
 export function useSubmitAno() {
   const queryClient = useQueryClient()
 
@@ -66,7 +66,7 @@ export function useSubmitAno() {
   })
 }
 
-/** POST /admin/ano-requests/{anoRequest}/sign — ano.sign, super_admin only (403 otherwise). */
+/** POST /admin/ano-requests/{anoRequest}/sign - ano.sign, super_admin only (403 otherwise). */
 export function useSignAno() {
   const queryClient = useQueryClient()
 
@@ -79,7 +79,7 @@ export function useSignAno() {
   })
 }
 
-/** POST /admin/ano-requests/{anoRequest}/reject — ano.sign. */
+/** POST /admin/ano-requests/{anoRequest}/reject - ano.sign. */
 export function useRejectAno() {
   const queryClient = useQueryClient()
 

@@ -1,5 +1,5 @@
 # =============================================================================
-# docker-compose.local.yml — EMSP-WEB : dev avec rechargement à chaud
+# docker-compose.local.yml - EMSP-WEB : dev avec rechargement à chaud
 #
 #   docker compose -f docker-compose.local.yml up
 #

@@ -14,7 +14,7 @@
       <header class="flex items-center justify-between border-b border-line px-6 py-4">
         <div>
           <h2 id="attendance-modal-title" class="text-lg font-bold text-ink">
-            Feuille de présence — {{ cohortName }}
+            Feuille de présence - {{ cohortName }}
           </h2>
           <p class="text-xs text-quiet">
             Gestion de l'émargement et assiduité aux cours en présentiel (offline)

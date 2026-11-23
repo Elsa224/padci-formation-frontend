@@ -48,7 +48,7 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
       id: 1,
       key: 'cohort-dw-1',
       code: 'DW-2026-C1',
-      name: 'Développeur Web — Cohorte 1',
+      name: 'Développeur Web - Cohorte 1',
       session: 'Cohorte 1',
       capacity: 30,
       enrolled_count: 2,
@@ -63,7 +63,7 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
       id: 2,
       key: 'cohort-empty',
       code: 'DW-2026-C2',
-      name: 'Développeur Web — Cohorte 2',
+      name: 'Développeur Web - Cohorte 2',
       session: 'Cohorte 2',
       capacity: 50,
       enrolled_count: 0,
@@ -155,7 +155,7 @@ describe('CohortMembersDrawer in AdminCohortes', () => {
     expect(drawer.exists()).toBe(true)
 
     // Header displays cohort name & code
-    expect(drawer.text()).toContain('Développeur Web — Cohorte 1')
+    expect(drawer.text()).toContain('Développeur Web - Cohorte 1')
     expect(drawer.text()).toContain('DW-2026-C1')
 
     // Quick stats banner

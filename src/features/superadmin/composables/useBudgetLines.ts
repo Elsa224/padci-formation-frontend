@@ -23,7 +23,7 @@ export interface BudgetLineListFilters {
   page?: number
 }
 
-/** GET /admin/budget-lines — finance.view. */
+/** GET /admin/budget-lines - finance.view. */
 export function useBudgetLines(filters: Ref<BudgetLineListFilters>) {
   return useQuery({
     queryKey: computed(() => ['admin-budget-lines', filters.value]),
@@ -53,7 +53,7 @@ export interface CreateBudgetLinePayload {
   note?: string
 }
 
-/** POST /admin/budget-lines — finance.manage. */
+/** POST /admin/budget-lines - finance.manage. */
 export function useCreateBudgetLine() {
   const queryClient = useQueryClient()
 

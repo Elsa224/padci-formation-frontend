@@ -1,20 +1,20 @@
-# 01 — Compléter le flux d'authentification
+# 01 - Compléter le flux d'authentification
 
 > Prérequis de tout le reste : tant qu'on ne peut pas créer un vrai compte,
 > vérifier son email et réinitialiser son mot de passe, on ne peut pas tester
 > le reste de l'application en conditions réelles.
 
-## Contexte — ce qui est déjà fait et vérifié
+## Contexte - ce qui est déjà fait et vérifié
 
 Vérifié en conditions réelles contre le backend dockerisé (audit 2026-11-08) :
 
-- `POST /v1/auth/login` — `src/features/auth/composables/useLogin.ts`
+- `POST /v1/auth/login` - `src/features/auth/composables/useLogin.ts`
   (gestion du 428 `AUTH_MFA_REQUIRED`, stockage token en `sessionStorage`).
-- Challenge MFA — `useMfaChallenge.ts`, `useMfaSetup.ts`, `MfaSetup.vue`
+- Challenge MFA - `useMfaChallenge.ts`, `useMfaSetup.ts`, `MfaSetup.vue`
   (ADR-006 ; redirection globale sur `AUTH_MFA_SETUP_REQUIRED` dans
   `src/api/http.ts`).
-- `POST /v1/auth/logout` — `useLogout.ts`.
-- Bootstrap de session — `useBootstrapAuth.ts` (`GET /v1/auth/me`), guard
+- `POST /v1/auth/logout` - `useLogout.ts`.
+- Bootstrap de session - `useBootstrapAuth.ts` (`GET /v1/auth/me`), guard
   `router.beforeEach` dans `src/router/index.ts`.
 
 **Les composables existants sont le gabarit** : `@tanstack/vue-query`
@@ -22,9 +22,9 @@ Vérifié en conditions réelles contre le backend dockerisé (audit 2026-11-08)
 l'enveloppe `{ success, data, message }`. Un nouveau composable dans cette
 tâche doit suivre la même convention, pas en inventer une.
 
-## Constat — ce qui est factice ou manquant (re-vérifié le 2026-11-09)
+## Constat - ce qui est factice ou manquant (re-vérifié le 2026-11-09)
 
-### 1. `Inscription.vue` — soumission factice, contrat incomplet
+### 1. `Inscription.vue` - soumission factice, contrat incomplet
 
 `src/features/auth/views/Inscription.vue` : `submitForm()` (l.703-706) fait
 uniquement `console.log(form)` puis affiche la modale de succès. **Aucun
@@ -38,9 +38,9 @@ contrat d'inscription** :
 - `POST /v1/auth/register`
   (`PADCI-API/app/Modules/Identity/Http/Controllers/AuthController.php::register`,
   request `RegisterRequest.php`) ne prend que :
-  - `name` (string, max 255) — requis
-  - `email` (email:rfc, unique) — requis
-  - `password` (+ `password_confirmation`) — requis, `Password::defaults()`
+  - `name` (string, max 255) - requis
+  - `email` (email:rfc, unique) - requis
+  - `password` (+ `password_confirmation`) - requis, `Password::defaults()`
   - `device_name` (optionnel, string, max 255)
   - En local/testing seulement : la réponse ajoute `verification_url`
     (lien signé, cf. `EmailVerificationLink.php`).
@@ -48,7 +48,7 @@ contrat d'inscription** :
   `POST /v1/applications`
   (`PADCI-API/app/Modules/Admissions/Http/Requests/StoreApplicationRequest.php`)
   : `pathway_key` (requis, `exists:pathways,key`), `motivation` (optionnel),
-  `payload` (array libre, max 50 — blob de contexte versionné : équipement,
+  `payload` (array libre, max 50 - blob de contexte versionné : équipement,
   disponibilité…). **Ce endpoint exige un compte authentifié** (`auth:sanctum`).
 - Les documents (pièces justificatives) se déposent via `POST /v1/media`
   (`PADCI-API/app/Modules/Media/Http/Controllers/MediaFileController.php`,
@@ -56,7 +56,7 @@ contrat d'inscription** :
   MIME autorisés dans `config('media.mime_extensions')`, taille max
   `config('media.max_kb')`.
 
-Conséquence d'architecture : le compte et le dossier sont **deux flux** —
+Conséquence d'architecture : le compte et le dossier sont **deux flux** -
 1) inscription + vérification email + connexion ; 2) dossier de candidature
 (connecté, sur une filière **et une session** précises depuis ADR-012).
 Le formulaire 5 étapes actuel mélange les deux. **Décision actée** (voir
@@ -64,16 +64,16 @@ Le formulaire 5 étapes actuel mélange les deux. **Décision actée** (voir
 compte (étape 1 ci-dessous) ; le dossier de candidature est traité dans
 le 05, pas ici.
 
-### 2. `ForgotPassword.vue` — setTimeout factice
+### 2. `ForgotPassword.vue` - setTimeout factice
 
 `src/features/auth/views/ForgotPassword.vue` l.182-192 : simulation 1,5 s
 puis écran "Email envoyé". L'email n'est jamais envoyé.
 
 Contrat : `POST /v1/auth/forgot-password` `{ email }` → **toujours 202**
-(`PasswordResetController::forgot`) — ne jamais afficher "cette adresse
+(`PasswordResetController::forgot`) - ne jamais afficher "cette adresse
 n'existe pas", l'endpoint le garantit lui-même.
 
-### 3. `ResetPassword.vue` — setTimeout factice + ne lit pas la query
+### 3. `ResetPassword.vue` - setTimeout factice + ne lit pas la query
 
 `src/features/auth/views/ResetPassword.vue` l.240-260 : simulation 1,5 s
 puis écran succès. Le mot de passe n'est jamais changé. De plus la page ne
@@ -86,7 +86,7 @@ Contrat : `POST /v1/auth/reset-password`
 `PasswordResetFailedException` (token invalide/expiré) ; à succès, **tous les
 tokens de l'utilisateur sont révoqués** côté backend.
 
-### 4. Bugs de chemins des emails — les deux liens cassent
+### 4. Bugs de chemins des emails - les deux liens cassent
 
 Chaînes exactes à vérifier avant de cocher (déjà relevées le 2026-11-09) :
 
@@ -102,31 +102,31 @@ Chaînes exactes à vérifier avant de cocher (déjà relevées le 2026-11-09) :
 
 La correction se fait côté backend (`config('app.frontend_url')` et les
 chemins construits) ou en créant les routes SPA correspondantes ;
-coordonner avec le mainteneur backend — **une seule correction canonique**,
+coordonner avec le mainteneur backend - **une seule correction canonique**,
 pas un contournement frontend.
 
-### 5. Vérification d'email — page manquante
+### 5. Vérification d'email - page manquante
 
 Après `POST /v1/auth/register`, jusqu'à `markEmailAsVerified`, la connexion
 échoue avec **403 `AUTH_EMAIL_NOT_VERIFIED`**
 (`PADCI-API/app/Modules/Identity/Exceptions/EmailNotVerifiedException.php`).
 Il n'existe aucune page frontend pour consommer le lien signé ni pour
 afficher un état "compte créé, en attente de vérification" avec un bouton
-de renvoi — endpoint existant : `POST /v1/email/verification-notification`
+de renvoi - endpoint existant : `POST /v1/email/verification-notification`
 (`EmailVerificationController::resend`).
 
-## Tâches — cocher seulement après vérification réelle
+## Tâches - cocher seulement après vérification réelle
 
 ### Contrat d'abord
 
 - [x] Lire le contrat des 6 endpoints concernés dans
   `PADCI-API/docs/api/openapi.json` (et regénérer le spec si nécessaire :
-  `scramble` côté backend, puis regénérer les types frontend — règle
+  `scramble` côté backend, puis regénérer les types frontend - règle
   contract-first de `AGENTS.md`).
   Pris en charge le 2026-11-09 : contrats lus dans le **code Laravel réel**
   (`AuthController`, `RegisterRequest`, `PasswordResetController`,
   `EmailVerificationController`, `ResetPasswordNotification`,
-  `RegisterNotification`, `UserResource`) — source de vérité supérieure au
+  `RegisterNotification`, `UserResource`) - source de vérité supérieure au
   spec. Le spec était en retard sur `develop` (endpoints ADR-012 absents) :
   ré-exporté et commité backend (PADCI-API `42a135e`). Aucun changement de
   contrat → pas de regénération nécessaire : le frontend n'a pas de
@@ -138,21 +138,21 @@ de renvoi — endpoint existant : `POST /v1/email/verification-notification`
 
 ### Composables (convention `useLogin.ts`)
 
-- [x] `useRegister.ts` — `POST /v1/auth/register` ; gérer
+- [x] `useRegister.ts` - `POST /v1/auth/register` ; gérer
   `VALIDATION_FAILED` (mot de passe non conforme, email déjà pris) et
   exposer `verification_url` en local. (`ApiError.fieldErrors` + erreur
   affichée champ par champ dans Inscription.vue.)
-- [x] `useForgotPassword.ts` — `POST /v1/auth/forgot-password` ; traiter
+- [x] `useForgotPassword.ts` - `POST /v1/auth/forgot-password` ; traiter
   202 comme succès, ne jamais brancher d'affichage "email inconnu".
-- [x] `useResetPassword.ts` — `POST /v1/auth/reset-password` ; exposer le
+- [x] `useResetPassword.ts` - `POST /v1/auth/reset-password` ; exposer le
   message `PasswordResetFailedException` (message API affiché tel quel).
-- [x] `useResendVerification.ts` — `POST /v1/email/verification-notification`.
+- [x] `useResendVerification.ts` - `POST /v1/email/verification-notification`.
 
 ### Vues & routes
 
 - [x] `Inscription.vue` : étape compte branchée sur `useRegister`, erreur
       de validation affichée champ par champ (`ApiError.fieldErrors`),
-      écran final honnête ("consultez vos emails", lien renvoi) — plus de
+      écran final honnête ("consultez vos emails", lien renvoi) - plus de
       modale de succès avant un appel API qui a réussi.
 - [x] Nouvelle page `VérificationEmail` : consomme le lien signé
       (GET `/v1/email/verify/{id}/{hash}`), gère signature invalide/lien
@@ -160,7 +160,7 @@ de renvoi — endpoint existant : `POST /v1/email/verification-notification`
       Réalisé **sans page dédiée** : le backend redirige déjà le navigateur
       vers `/connexion?verified=1` (ou `?error=…`), alias de la route `/` ;
       `Login.vue` consomme les deux états (bandeau vert vérifié, bandeau
-      rouge lien invalide) — une seule correction canonique, pas une page
+      rouge lien invalide) - une seule correction canonique, pas une page
       de plus. Vérifié e2e (backend `EmailVerificationController` + test de
       régression PADCI-API `893fc27`).
 - [x] `ForgotPassword.vue` : brancher `useForgotPassword` (supprimer le
@@ -181,7 +181,7 @@ de renvoi — endpoint existant : `POST /v1/email/verification-notification`
 - [x] `npm run build` passe.
 - [x] Cycle manuel complet contre le backend dockerisé
   (`docker ps` montre `padci_app` ; sinon `cd PADCI-API && make up`) :
-  remplacé par la version automatisée équivalente — `e2e/auth-flow.spec.ts`
+  remplacé par la version automatisée équivalente - `e2e/auth-flow.spec.ts`
   (Playwright, dev-server `:5173`, projections chromium, workers séquentiels),
   **4/4 passes** :
   1. register → 201 + `verification_url` en local ;

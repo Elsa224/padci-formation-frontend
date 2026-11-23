@@ -1,5 +1,5 @@
 # =============================================================================
-# docker-compose.yml — PADCI-WEB : build de prod servi par Nginx (preview)
+# docker-compose.yml - PADCI-WEB : build de prod servi par Nginx (preview)
 #
 #   docker compose up --build
 #

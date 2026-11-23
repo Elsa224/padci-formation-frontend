@@ -38,7 +38,7 @@ async function mountDashboard() {
   })
 }
 
-describe('FormateurDashboard — À faire', () => {
+describe('FormateurDashboard - À faire', () => {
   it('stays hidden when nothing is waiting', async () => {
     const wrapper = await mountDashboard()
     expect(wrapper.find('[data-test="trainer-todo"]').exists()).toBe(false)

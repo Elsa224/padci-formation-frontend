@@ -77,7 +77,7 @@
             </span>
           </div>
           <h2 class="font-semibold text-ink">
-            Inscrit à la Cohorte {{ assignedCohort.name }} — Rentrée le
+            Inscrit à la Cohorte {{ assignedCohort.name }} - Rentrée le
             {{ formatCohortDate(assignedCohort.starts_at) }}
           </h2>
           <p class="text-sm text-quiet">
@@ -367,7 +367,7 @@ const courseGroups = computed(() => {
 })
 
 /**
- * « Affectation confirmée — Rentrée le … » only helps before courses start:
+ * « Affectation confirmée - Rentrée le … » only helps before courses start:
  * no course yet, or a start date still ahead. Once courses are open it is noise.
  */
 const showCohortCard = computed(() => {
@@ -383,7 +383,7 @@ function enrollmentStatusLabel(status: string): string {
 
 function initialsOf(title: string): string {
   return title
-    .split(/[\s&—-]+/)
+    .split(/[\s&--]+/)
     .filter((word) => word.length > 2)
     .slice(0, 2)
     .map((word) => word[0]?.toUpperCase())

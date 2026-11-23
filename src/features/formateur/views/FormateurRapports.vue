@@ -194,6 +194,6 @@ async function submit() {
 }
 
 function formatDate(value: string | null) {
-  return value ? new Date(value).toLocaleDateString('fr-FR') : '—'
+  return value ? new Date(value).toLocaleDateString('fr-FR') : '-'
 }
 </script>

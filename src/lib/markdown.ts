@@ -4,7 +4,7 @@
  * Safety by construction: the whole source is HTML-escaped FIRST, then a
  * small subset of Markdown is turned into a fixed set of tags. No raw HTML
  * from the source can survive, and links are only emitted for http(s) URLs.
- * Supported: #–#### headings, paragraphs, line breaks, **bold**, *italic*,
+ * Supported: #-#### headings, paragraphs, line breaks, **bold**, *italic*,
  * `inline code`, ``` fenced code ```, - / * / 1. lists, > quotes, --- rules,
  * [text](https://…) links.
  */

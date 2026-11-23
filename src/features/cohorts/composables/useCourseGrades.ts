@@ -16,7 +16,7 @@ export interface GradeInput {
   appreciation?: string | null
 }
 
-/** GET /admin/cohorts/{cohort}/grades?course_key=… — une ligne par apprenant. */
+/** GET /admin/cohorts/{cohort}/grades?course_key=… - une ligne par apprenant. */
 export function useCohortGrades(cohortKey: MaybeRef<string>, courseKey: MaybeRef<string>) {
   return useQuery({
     queryKey: computed(() => ['course-grades', toValue(cohortKey), toValue(courseKey)]),
@@ -30,7 +30,7 @@ export function useCohortGrades(cohortKey: MaybeRef<string>, courseKey: MaybeRef
   })
 }
 
-/** PUT /admin/cohorts/{cohort}/grades — enregistre le lot de notes saisies. */
+/** PUT /admin/cohorts/{cohort}/grades - enregistre le lot de notes saisies. */
 export function useSaveGrades(cohortKey: MaybeRef<string>, courseKey: MaybeRef<string>) {
   const client = useQueryClient()
   return useMutation({
@@ -46,7 +46,7 @@ export function useSaveGrades(cohortKey: MaybeRef<string>, courseKey: MaybeRef<s
   })
 }
 
-/** GET /grades — notes de l'apprenant connecté. */
+/** GET /grades - notes de l'apprenant connecté. */
 export function useMyGrades() {
   return useQuery({
     queryKey: ['my-grades'],

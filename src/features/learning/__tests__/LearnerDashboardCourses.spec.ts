@@ -39,7 +39,7 @@ const netspec = {
   id: 2,
   key: 'cht_net',
   code: 'NS-1',
-  name: 'Network Specialist — Session 1',
+  name: 'Network Specialist - Session 1',
   session: 'Session 1',
   status: 'running',
   starts_at: null,
@@ -69,7 +69,7 @@ function mountWith(items: unknown[]) {
   return mount(LearnerDashboard)
 }
 
-describe('LearnerDashboard — Mes cours', () => {
+describe('LearnerDashboard - Mes cours', () => {
   beforeEach(() => vi.clearAllMocks())
 
   it('groups courses by cohort and names each cohort only once', () => {
@@ -82,7 +82,7 @@ describe('LearnerDashboard — Mes cours', () => {
     expect(groups).toHaveLength(2)
     expect(groups[0]!.text()).toContain('Cohorte Cyber 2026-1')
     expect(groups[0]!.findAll('li')).toHaveLength(2)
-    expect(groups[1]!.text()).toContain('Network Specialist — Session 1')
+    expect(groups[1]!.text()).toContain('Network Specialist - Session 1')
     const text = wrapper.find('#courses-title').element.parentElement!.textContent ?? ''
     expect(text.split('Cohorte Cyber 2026-1')).toHaveLength(2)
   })

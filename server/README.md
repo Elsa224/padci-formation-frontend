@@ -20,7 +20,7 @@ résout les credentials depuis le rôle. Rien à déposer sur la box.
 
 | Méthode | Route | Corps | Effet |
 |---|---|---|---|
-| GET | `/api/health` | — | sonde |
+| GET | `/api/health` | - | sonde |
 | POST | `/api/inscription` | `multipart/form-data` (champs + pièces jointes) | dossier → admin (`MAIL_ADMIN`), Reply-To candidat + accusé → candidat |
 | POST | `/api/contact` | JSON `{nom,email,telephone?,sujet?,message}` | message → admin, Reply-To expéditeur |
 

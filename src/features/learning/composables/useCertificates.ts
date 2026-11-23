@@ -3,14 +3,14 @@ import { computed, toValue, type MaybeRef } from 'vue'
 import { http } from '@/api/http'
 import type { Schema } from '@/api/contract'
 
-/** `CertificateResource` — generated from the contract (accurate here). */
+/** `CertificateResource` - generated from the contract (accurate here). */
 export type Certificate = Schema<'CertificateResource'>
-/** `PublicCertificateResource` — what anyone can see from a code. */
+/** `PublicCertificateResource` - what anyone can see from a code. */
 export type PublicCertificate = Schema<'PublicCertificateResource'>
 /** `ExternalCertificationResource` (Cisco, Oracle…), recorded by staff. */
 export type ExternalCertification = Schema<'ExternalCertificationResource'>
 
-/** GET /learning/certificates — the learner's own certificates. */
+/** GET /learning/certificates - the learner's own certificates. */
 export function useMyCertificates() {
   return useQuery({
     queryKey: ['learning-certificates'],
@@ -41,7 +41,7 @@ export function useMyExternalCertifications() {
   })
 }
 
-/** GET /public/certificates/{code} — no authentication. */
+/** GET /public/certificates/{code} - no authentication. */
 export function usePublicCertificate(code: MaybeRef<string>) {
   return useQuery({
     queryKey: computed(() => ['public-certificate', toValue(code)]),

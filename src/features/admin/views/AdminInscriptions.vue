@@ -65,8 +65,8 @@
                 <p class="font-semibold text-ink">{{ enrollment.user?.name }}</p>
                 <p class="text-xs text-quiet">{{ enrollment.user?.email }}</p>
               </td>
-              <td class="px-3 py-3">{{ enrollment.course?.title ?? '—' }}</td>
-              <td class="px-3 py-3">{{ enrollment.cohort?.name ?? '—' }}</td>
+              <td class="px-3 py-3">{{ enrollment.course?.title ?? '-' }}</td>
+              <td class="px-3 py-3">{{ enrollment.cohort?.name ?? '-' }}</td>
               <td class="px-3 py-3">
                 <span class="app-chip" :class="tone(enrollment.status)">
                   {{ enrollmentStatusLabels[enrollment.status] ?? enrollment.status }}

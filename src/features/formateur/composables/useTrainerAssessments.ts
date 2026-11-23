@@ -4,7 +4,7 @@ import { apiMeta, http } from '@/api/http'
 
 /**
  * Trainer side of the Assessment module. Authoring (create, publish,
- * delete) needs an editable course (draft/rejected — CoursePolicy::update);
+ * delete) needs an editable course (draft/rejected - CoursePolicy::update);
  * exam scheduling stays possible after publication
  * (CoursePolicy::scheduleAssessments). The server enforces both.
  */
@@ -149,7 +149,7 @@ function useAssessmentMutation<TVariables>(
   })
 }
 
-/** POST /admin/courses/{course}/assessments — created as draft. */
+/** POST /admin/courses/{course}/assessments - created as draft. */
 export function useCreateAssessment(courseKey: MaybeRef<string>) {
   return useAssessmentMutation(
     courseKey,
@@ -198,7 +198,7 @@ export function useAssessmentDetailAdmin(assessmentKey: MaybeRef<string | null>)
   })
 }
 
-/** PATCH /admin/assessments/{assessment} — drafts only. */
+/** PATCH /admin/assessments/{assessment} - drafts only. */
 export function useUpdateAssessment(courseKey: MaybeRef<string>) {
   const client = useQueryClient()
   return useAssessmentMutation(
@@ -224,7 +224,7 @@ export function usePublishAssessment(courseKey: MaybeRef<string>) {
   )
 }
 
-/** DELETE /admin/assessments/{assessment} — drafts only. */
+/** DELETE /admin/assessments/{assessment} - drafts only. */
 export function useDeleteAssessment(courseKey: MaybeRef<string>) {
   return useAssessmentMutation(courseKey, (assessmentKey: string) =>
     http.delete(`/admin/assessments/${assessmentKey}`),
@@ -280,7 +280,7 @@ export interface PendingAttempt {
   pending_answers: PendingAnswer[]
 }
 
-/** GET /admin/assessments/attempts/pending-grading — scoped server-side. */
+/** GET /admin/assessments/attempts/pending-grading - scoped server-side. */
 export function usePendingAttempts() {
   return useQuery({
     queryKey: ['trainer-pending-grading'],

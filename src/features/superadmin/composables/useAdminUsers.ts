@@ -26,7 +26,7 @@ export interface AdminUserListFilters {
   page?: number
 }
 
-/** GET /admin/users — users.view. */
+/** GET /admin/users - users.view. */
 export function useAdminUsers(filters: Ref<AdminUserListFilters>) {
   return useQuery({
     queryKey: computed(() => ['admin-users', filters.value]),
@@ -53,7 +53,7 @@ export interface UpdateAdminUserPayload {
   role?: AppRole
 }
 
-/** PATCH /admin/users/{user} — users.manage. No create/delete endpoint exists. */
+/** PATCH /admin/users/{user} - users.manage. No create/delete endpoint exists. */
 export function useUpdateAdminUser() {
   const queryClient = useQueryClient()
 

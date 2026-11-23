@@ -12,19 +12,19 @@ careful decisions. This is a daily product UI, not a marketing site.
 - Visual density: 5/10. Admissions and learning information stay scannable.
 - Existing Futura PT files are the brand typography and remain the typeface.
 
-## 2. Semantic color roles — « Forêt & Savane » (2026-11-23)
+## 2. Semantic color roles - « Forêt & Savane » (2026-11-23)
 
 The interface was perceived as washed-out: one green on near-white, grey
 borders everywhere, low-contrast body copy. The palette now has a frame, an
 action colour and a signal colour, each with one job.
 
-- Forest `#0D2A1C` (`bg-forest`): the frame — sidebar, and the single
+- Forest `#0D2A1C` (`bg-forest`): the frame - sidebar, and the single
   signature surface per screen (e.g. « Reprendre ma formation »). Raised
   `#143724`, lines `#24493A`, muted text `#9DB8AA`.
 - Brand green `#198341` (`bg-primary`): the only action colour (primary
   buttons, focus, links). Hover `#146B34`. Soft wash `#E7F2EB` (`bg-mint`).
 - Savane `#E8761E` (`bg-savane`), the orange of the Ivorian flag: a signal,
-  never a routine button — active navigation marker, « next step », progress
+  never a routine button - active navigation marker, « next step », progress
   of the current course, one accent button per screen at most. Text on
   savane is forest (≈ 6:1). Ink variant `#A24C08`, soft `#FDF0E3`.
 - Canvas `#F3F5F2`, surface `#FFFFFF`, ink `#12201A`, body `#33423A`,
@@ -41,7 +41,7 @@ All tokens live in `src/style.css` (`@theme`). Never hard-code a hex in a view.
 ## 3. Type and spacing
 
 - No tracked ALL-CAPS labels. Context labels use `.app-eyebrow`, field and
-  metadata labels `.app-label`, table headers `.app-thead` — sentence case.
+  metadata labels `.app-label`, table headers `.app-thead` - sentence case.
 - Bold Futura is wide by construction: bold/semibold text is tightened
   globally (−0.022em, headings −0.028em) in `src/style.css`.
 - Course content is Markdown rendered by `src/lib/markdown.ts` (escapes all
@@ -105,7 +105,7 @@ All tokens live in `src/style.css` (`@theme`). Never hard-code a hex in a view.
   `.app-prose`. A native `<select class="app-input">` gets the palette
   chevron automatically; `textarea.app-input` gets a taller box.
 - Page frame: width and gutters are set once by `WorkspaceShell` `<main>`
-  (max 1280px). A view root is `.app-page` only — never its own `max-w-*`.
+  (max 1280px). A view root is `.app-page` only - never its own `max-w-*`.
 - Access screens (login, sign-up, password, invitation) use
   `features/auth/components/AuthShell.vue`: white form column, forest panel
   that says what the platform offers. No stock photo, no blurred blobs.

@@ -99,11 +99,11 @@ const number = new Intl.NumberFormat('fr-FR')
 const kpis = computed(() => {
   const data = overview.data.value
   return [
-    { label: 'Apprenants', value: data ? number.format(data.learners_total) : '—' },
-    { label: 'Cohortes actives', value: data ? number.format(data.active_cohorts_total) : '—' },
-    { label: 'Cours publiés', value: data ? number.format(data.published_courses_total) : '—' },
-    { label: "Taux d'achèvement", value: data ? formatPercent(data.completion_rate) : '—' },
-    { label: 'Attestations', value: data ? number.format(data.certificates_issued_total) : '—' },
+    { label: 'Apprenants', value: data ? number.format(data.learners_total) : '-' },
+    { label: 'Cohortes actives', value: data ? number.format(data.active_cohorts_total) : '-' },
+    { label: 'Cours publiés', value: data ? number.format(data.published_courses_total) : '-' },
+    { label: "Taux d'achèvement", value: data ? formatPercent(data.completion_rate) : '-' },
+    { label: 'Attestations', value: data ? number.format(data.certificates_issued_total) : '-' },
   ]
 })
 
@@ -188,7 +188,7 @@ function exportCohorts() {
       row.certificates,
       row.attendance_rate !== null && row.attendance_rate !== undefined
         ? percentNumber(row.attendance_rate)
-        : '—',
+        : '-',
       row.attendance_sessions_count ?? 0,
     ]),
   )

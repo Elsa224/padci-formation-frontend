@@ -18,7 +18,7 @@ export const reportStatusChip: Record<TrainerReportStatus, string> = {
   rejected: 'app-chip-danger',
 }
 
-/** GET /admin/cohorts/{cohort}/reports — rapports d'une cohorte encadrée. */
+/** GET /admin/cohorts/{cohort}/reports - rapports d'une cohorte encadrée. */
 export function useCohortReports(cohortKey: MaybeRef<string>) {
   return useQuery({
     queryKey: computed(() => ['trainer-reports', toValue(cohortKey)]),
@@ -58,7 +58,7 @@ export function useSubmitReport(cohortKey: MaybeRef<string>) {
   })
 }
 
-/** GET /admin/trainer-reports — tous les rapports (administration). */
+/** GET /admin/trainer-reports - tous les rapports (administration). */
 export function useAllReports(status: MaybeRef<string>) {
   return useQuery({
     queryKey: computed(() => ['admin-trainer-reports', toValue(status)]),

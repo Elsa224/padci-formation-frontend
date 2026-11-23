@@ -27,7 +27,7 @@ interface RegisterSuccess extends SessionUser {
 }
 
 /**
- * POST /v1/auth/register. Creates the account only — no email verification,
+ * POST /v1/auth/register. Creates the account only - no email verification,
  * no session: a fresh account must verify its email BEFORE it can log in
  * (403 `AUTH_EMAIL_NOT_VERIFIED` otherwise), so there is never a token or
  * `setSession()` here, unlike `useLogin`.

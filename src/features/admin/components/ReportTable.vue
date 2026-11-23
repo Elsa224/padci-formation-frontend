@@ -58,7 +58,7 @@
             >
               {{ formatPercent(row.attendance_rate) }}
             </span>
-            <span v-else class="text-quiet text-xs">—</span>
+            <span v-else class="text-quiet text-xs">-</span>
           </td>
         </tr>
       </tbody>
