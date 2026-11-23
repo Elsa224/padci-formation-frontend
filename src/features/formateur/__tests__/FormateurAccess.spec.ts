@@ -21,7 +21,7 @@ describe('homeFor', () => {
   it('sends each role to its own workspace, highest privilege first', () => {
     expect(homeFor(['super_admin', 'formateur'])).toBe('/superadmin/dashboard')
     expect(homeFor(['admin', 'formateur'])).toBe('/admin/dashboard')
-    expect(homeFor(['moderateur'])).toBe('/moderation/materiel')
+    expect(homeFor(['moderateur'])).toBe('/moderation/tableau-de-bord')
     expect(homeFor(['formateur'])).toBe('/formateur/dashboard')
     expect(homeFor(['apprenant'])).toBe('/formations/dashboard')
     expect(homeFor([])).toBe('/formations/dashboard')

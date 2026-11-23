@@ -388,6 +388,11 @@ body {
   }
 }
 
+/* Notifications vue-sonner : même police que l'application. */
+:root [data-sonner-toaster] {
+  font-family: inherit;
+}
+
 @layer utilities {
   .workspace-page-enter-active,
   .workspace-page-leave-active {

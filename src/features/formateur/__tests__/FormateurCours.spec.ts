@@ -12,6 +12,7 @@ const submitMutateAsync = vi.fn()
 vi.mock('vue-router', async (importOriginal) => ({
   ...(await importOriginal<typeof import('vue-router')>()),
   useRouter: () => ({ push }),
+  useRoute: () => ({ query: {} }),
 }))
 vi.mock('vue-sonner', () => ({ toast: { success: vi.fn() } }))
 vi.mock('@/features/public/composables/useCatalogPathways', () => ({
