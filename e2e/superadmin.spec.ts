@@ -13,8 +13,8 @@ test.describe('SuperAdmin pages', () => {
     await page.goto('/superadmin/dashboard')
     await expect(page.getByRole('heading', { name: 'Vue Globale PADCI' })).toBeVisible()
     await expect(page.getByText('Apprenants')).toBeVisible()
-    await expect(page.getByText('Taux de complétion')).toBeVisible()
-    await expect(page.getByText('Certificats délivrés')).toBeVisible()
+    await expect(page.getByText("Taux d'achèvement")).toBeVisible()
+    await expect(page.getByText('Attestations délivrées')).toBeVisible()
     await expect(page.getByText('ANO en attente')).toBeVisible()
     await expect(
       page.getByRole('heading', { name: 'Allocation et consommation par ligne budgétaire' }),
