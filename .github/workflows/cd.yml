@@ -1,0 +1,85 @@
+# CD frontend — deploy padci-formation-frontend (EMSP) to shared-prod docroot.
+# DRAFT — not yet added to the repo. Complements ci.yml (which stays CI-only).
+#
+# Design goals (per rebuild constraints):
+#   - NO long-lived SSH key in GitHub secrets.
+#   - NO static AWS access key in GitHub secrets -> GitHub OIDC federation
+#     assumes an AWS role (the repo:Elsa224/*:* OIDC trust already exists).
+#   - The actual file copy runs ON the box via SSM, using the box's INSTANCE
+#     ROLE for S3 (no AWS creds ever on the box either).
+#   - Target instance is a repo VARIABLE -> flip blue->green at cutover with
+#     zero workflow edits.
+#
+# Flow: build dist/ in CI -> upload to S3 deploy prefix (OIDC role) ->
+#       ssm:SendCommand tells the target box to `aws s3 sync` into the docroot.
+
+name: CD frontend
+
+on:
+  push:
+    branches: [main]      # prod deploy on merge to main
+  workflow_dispatch:       # manual re-deploy / first run
+
+concurrency:
+  group: cd-frontend-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  id-token: write          # required for OIDC
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    # Inert until the deploy target is provisioned. At cutover, set the repo
+    # variable DEPLOY_INSTANCE_ID to the green instance id and this job goes
+    # live on the next push to main. Until then the job is skipped (not failed),
+    # so merging this workflow deploys nothing to the old (blue) box.
+    if: ${{ vars.DEPLOY_INSTANCE_ID != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build (prod)
+        run: npm run build-only
+        env:
+          # front + mailer API share the host; /api is ProxyPass'd to pm2 emsp_mailer:3082
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}   # e.g. /api
+
+      - name: Configure AWS creds (OIDC, no static keys)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Upload build to S3 deploy prefix
+        run: |
+          aws s3 sync dist/ "s3://${{ vars.DEPLOY_BUCKET }}/padci-formation/${{ github.sha }}/" --delete
+
+      - name: Deploy on box via SSM (box uses its instance role for S3)
+        run: |
+          CMD_ID=$(aws ssm send-command \
+            --instance-ids "${{ vars.DEPLOY_INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --comment "deploy padci-formation ${{ github.sha }}" \
+            --parameters commands='[
+              "set -e",
+              "aws s3 sync s3://${{ vars.DEPLOY_BUCKET }}/padci-formation/${{ github.sha }}/ /var/www/padci-formation-spa/ --delete",
+              "chown -R www-data:www-data /var/www/padci-formation-spa",
+              "find /var/www/padci-formation-spa -type d -exec chmod 755 {} +",
+              "find /var/www/padci-formation-spa -type f -exec chmod 644 {} +"
+            ]' \
+            --query "Command.CommandId" --output text)
+          echo "SSM command: $CMD_ID"
+          aws ssm wait command-executed --command-id "$CMD_ID" --instance-id "${{ vars.DEPLOY_INSTANCE_ID }}" || true
+          STATUS=$(aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.DEPLOY_INSTANCE_ID }}" --query "Status" --output text)
+          echo "SSM status: $STATUS"
+          aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.DEPLOY_INSTANCE_ID }}" --query "StandardErrorContent" --output text
+          test "$STATUS" = "Success"
