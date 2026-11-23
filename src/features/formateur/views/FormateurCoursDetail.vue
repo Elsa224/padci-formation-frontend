@@ -257,7 +257,7 @@
                         formatSize(resource.media.size_bytes)
                       }})
                       <template v-if="resource.media.scan_status !== 'clean'">
-                        · analyse antivirus en cours</template
+                        · fichier bloqué</template
                       >
                     </span>
                     <StructureNodeTitle
