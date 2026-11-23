@@ -90,193 +90,90 @@
         </div>
       </header>
 
-      <section class="app-panel" aria-labelledby="sessions-title">
-        <div
-          class="flex flex-col justify-between gap-4 border-b border-line pb-5 sm:flex-row sm:items-end"
-        >
-          <div>
-            <p class="app-eyebrow">Admissions</p>
-            <h2 id="sessions-title" class="mt-1 text-2xl font-bold text-ink">
-              Choisissez votre session
-            </h2>
-            <p class="mt-1 text-sm text-quiet">
-              Les candidatures ne sont possibles que pour les sessions ouvertes.
-            </p>
-            <p
-              v-if="isStaffViewer"
-              class="app-alert app-alert-info mt-3 flex items-center gap-2"
-              data-testid="staff-cannot-apply"
-            >
-              <InfoIcon :size="16" class="shrink-0" aria-hidden="true" />
-              Vous consultez cette filière avec un compte de l'équipe : seuls les apprenants peuvent
-              candidater.
+      <!-- Candidature : on candidate à une FILIÈRE, jamais à une session.
+           À l'acceptation (admin), l'API affecte l'apprenant à la première
+           cohorte ouverte qui a des places, par ordre d'arrivée (FIFO), ou
+           le place en liste d'attente (CohortAssignmentService). -->
+      <section class="app-panel space-y-5" aria-labelledby="apply-title">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div class="max-w-2xl">
+            <h2 id="apply-title" class="text-2xl font-bold text-ink">Rejoindre cette filière</h2>
+            <p class="mt-2 text-sm leading-relaxed text-body">
+              Vous candidatez à la filière, pas à une session. Une fois votre candidature acceptée,
+              vous êtes inscrit automatiquement dans la prochaine session qui a des places, dans
+              l'ordre d'arrivée des candidatures.
             </p>
           </div>
-          <span
-            class="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary"
-            ><CalendarIcon :size="14" aria-hidden="true" />{{ availableCohorts }} ouverte{{
-              availableCohorts > 1 ? 's' : ''
-            }}</span
-          >
-        </div>
 
-        <div v-if="isCohortsPending" class="mt-5 space-y-3">
-          <div v-for="index in 2" :key="index" class="app-skeleton h-28 w-full" />
-        </div>
-        <div v-else-if="cohorts.length === 0" class="py-10 text-center">
-          <CalendarIcon class="mx-auto text-quiet" :size="28" aria-hidden="true" />
-          <p class="mt-3 text-sm font-semibold text-ink">Aucune session planifiée</p>
-          <p class="mt-1 text-sm text-quiet">
-            Revenez prochainement pour consulter les nouvelles ouvertures.
-          </p>
-        </div>
-        <div v-else class="mt-5 space-y-4">
-          <article
-            v-for="cohort in cohorts"
-            :key="cohort.key"
-            class="flex flex-col gap-4 rounded-xl border p-5 transition sm:p-6"
-            :class="
-              isCohortFull(cohort)
-                ? 'border-warning-line bg-warning-soft/20'
-                : cohort.available
-                  ? 'border-primary/25 bg-primary/[0.02]'
-                  : 'border-line bg-canvas'
-            "
-          >
-            <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-              <div>
-                <div class="flex flex-wrap items-center gap-2">
-                  <span
-                    class="rounded-full border px-2.5 py-0.5 text-xs font-bold"
-                    :class="getCohortStatusBadge(cohort).class"
-                  >
-                    {{ getCohortStatusBadge(cohort).label }}
-                  </span>
-                  <span
-                    v-if="cohort.session"
-                    class="rounded-full border border-line bg-canvas px-2.5 py-0.5 text-xs font-semibold text-quiet"
-                  >
-                    {{
-                      /^session/i.test(cohort.session)
-                        ? cohort.session
-                        : `Session ${cohort.session}`
-                    }}
-                  </span>
-                  <span class="text-xs font-medium text-quiet">{{ cohort.code }}</span>
-                </div>
-                <h3 class="mt-3 text-lg font-bold text-ink">{{ cohort.name }}</h3>
-                <p class="mt-1 flex items-center gap-1.5 text-sm text-quiet">
-                  <CalendarIcon :size="14" class="shrink-0 text-quiet" aria-hidden="true" />
-                  Du {{ formatDate(cohort.starts_at) }} au {{ formatDate(cohort.ends_at) }}
-                </p>
-                <div
-                  v-if="cohort.offline_starts_at"
-                  class="app-alert app-alert-success mt-2 items-center gap-1.5"
-                  data-testid="cohort-offline-dates"
-                >
-                  <MapPinIcon :size="13" class="shrink-0 text-primary-shade" aria-hidden="true" />
-                  <span v-if="cohort.offline_ends_at">
-                    Ateliers présentiels : du {{ formatDate(cohort.offline_starts_at) }} au
-                    {{ formatDate(cohort.offline_ends_at) }}
-                  </span>
-                  <span v-else>
-                    Ateliers présentiels : dès le {{ formatDate(cohort.offline_starts_at) }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="shrink-0 pt-1 sm:pt-0">
-                <span
-                  v-if="isStaffViewer"
-                  class="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet sm:w-auto"
-                  data-testid="apply-learners-only"
-                >
-                  <LockIcon :size="14" aria-hidden="true" /> Réservé aux apprenants
-                </span>
-                <template v-else-if="activeFormationName">
-                  <div class="flex flex-col items-stretch gap-1 sm:items-end">
-                    <button
-                      type="button"
-                      disabled
-                      class="inline-flex w-full cursor-not-allowed items-center justify-center rounded-xl border border-line bg-canvas px-4 py-2.5 text-xs font-semibold text-quiet sm:w-auto"
-                      data-testid="btn-already-enrolled"
-                    >
-                      Vous suivez déjà {{ activeFormationName }}
-                    </button>
-                    <router-link
-                      to="/mes-candidatures"
-                      class="text-center text-xs font-semibold text-primary hover:underline sm:text-right"
-                      data-testid="link-to-candidatures"
-                    >
-                      Mes candidatures
-                      <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
-                    </router-link>
-                  </div>
-                </template>
-                <template v-else>
-                  <button
-                    v-if="isCohortFull(cohort)"
-                    type="button"
-                    class="app-action-secondary flex w-full items-center justify-center gap-2 border-warning-line text-warning-ink hover:bg-warning-soft/50 sm:w-auto"
-                    @click="goToCandidature(cohort)"
-                  >
-                    Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
-                  </button>
-                  <button
-                    v-else-if="cohort.available || cohort.status === 'open'"
-                    type="button"
-                    class="app-action-primary flex w-full items-center justify-center gap-2 sm:w-auto"
-                    @click="goToCandidature(cohort)"
-                  >
-                    Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
-                  </button>
-                  <span
-                    v-else
-                    class="inline-flex w-full items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet sm:w-auto"
-                  >
-                    Inscriptions fermées
-                  </span>
-                </template>
-              </div>
-            </div>
-
-            <!-- Seat availability gauge -->
-            <div class="mt-1 border-t border-line/60 pt-4">
-              <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span class="font-medium text-quiet">
-                  <span class="font-semibold text-ink">{{ getEnrolledCount(cohort) }}</span> /
-                  {{ cohort.capacity }} réservées
-                  <span
-                    class="font-semibold"
-                    :class="isCohortFull(cohort) ? 'text-warning-ink' : 'text-primary'"
-                  >
-                    ({{ formatSeatsText(cohort.available_seats) }})
-                  </span>
-                </span>
-                <span
-                  class="font-semibold"
-                  :class="isCohortFull(cohort) ? 'text-warning-ink' : 'text-primary'"
-                >
-                  {{ getOccupancyPercent(cohort) }}% remplie
-                </span>
-              </div>
-
-              <div
-                class="mt-2 h-2.5 w-full overflow-hidden rounded-full border border-line bg-canvas"
-                role="progressbar"
-                :aria-valuenow="getEnrolledCount(cohort)"
-                :aria-valuemin="0"
-                :aria-valuemax="cohort.capacity"
+          <div class="shrink-0">
+            <span
+              v-if="isStaffViewer"
+              class="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet sm:w-auto"
+              data-testid="apply-learners-only"
+            >
+              <LockIcon :size="14" aria-hidden="true" /> Réservé aux apprenants
+            </span>
+            <div
+              v-else-if="activeFormationName"
+              class="flex flex-col items-stretch gap-1 sm:items-end"
+            >
+              <button
+                type="button"
+                disabled
+                class="app-action-secondary w-full sm:w-auto"
+                data-testid="btn-already-enrolled"
               >
-                <div
-                  class="h-full rounded-full transition-all duration-500 ease-out"
-                  :class="isCohortFull(cohort) ? 'bg-warning' : 'bg-primary'"
-                  :style="{ width: `${getOccupancyPercent(cohort)}%` }"
-                />
-              </div>
+                Vous suivez déjà {{ activeFormationName }}
+              </button>
+              <router-link
+                to="/mes-candidatures"
+                class="text-center text-xs font-semibold text-primary hover:underline sm:text-right"
+                data-testid="link-to-candidatures"
+              >
+                Mes candidatures
+                <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
+              </router-link>
             </div>
-          </article>
+            <button
+              v-else
+              type="button"
+              class="app-action-primary w-full sm:w-auto"
+              data-testid="btn-apply-pathway"
+              @click="goToCandidature()"
+            >
+              Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
+            </button>
+          </div>
         </div>
+
+        <p
+          v-if="isStaffViewer"
+          class="app-alert app-alert-info flex items-center gap-2"
+          data-testid="staff-cannot-apply"
+        >
+          <InfoIcon :size="16" class="shrink-0" aria-hidden="true" />
+          Vous consultez cette filière avec un compte de l'équipe : seuls les apprenants peuvent
+          candidater.
+        </p>
+        <template v-else-if="!isCohortsPending">
+          <p
+            v-if="hasOpenSeat"
+            class="app-alert app-alert-success flex items-center gap-2"
+            data-testid="seats-available"
+          >
+            <CalendarIcon :size="16" class="shrink-0" aria-hidden="true" />
+            Des places sont disponibles dans la prochaine session.
+          </p>
+          <p
+            v-else
+            class="app-alert app-alert-info flex items-start gap-2"
+            data-testid="waitlist-note"
+          >
+            <InfoIcon :size="16" class="mt-0.5 shrink-0" aria-hidden="true" />
+            Aucune place libre pour le moment. Vous pouvez candidater : si votre candidature est
+            acceptée, vous serez placé en liste d'attente et inscrit dès qu'une session s'ouvre.
+          </p>
+        </template>
       </section>
 
       <section class="app-panel" aria-labelledby="courses-title">
@@ -320,7 +217,6 @@ import {
   Calendar as CalendarIcon,
   Info as InfoIcon,
   Lock as LockIcon,
-  MapPin as MapPinIcon,
   Monitor as MonitorIcon,
 } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
@@ -360,69 +256,19 @@ const {
 } = usePathway(pathwayKey)
 const { data: cohortsData, isPending: isCohortsPending } = usePathwayCohorts(pathwayKey)
 const cohorts = computed(() => cohortsData.value ?? [])
-const availableCohorts = computed(() => cohorts.value.filter((cohort) => cohort.available).length)
+// Seul indicateur montré à l'apprenant : reste-t-il une place quelque part ?
+const hasOpenSeat = computed(() =>
+  cohorts.value.some(
+    (cohort) => (cohort.available || cohort.status === 'open') && !isCohortFull(cohort),
+  ),
+)
 const { data: coursesData, isPending: isCoursesPending } = usePathwayCourses(pathwayKey)
 const courses = computed(() => coursesData.value?.items ?? [])
-
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return 'date à confirmer'
-  return new Date(dateStr).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
 
 function isCohortFull(cohort: PublicCohort): boolean {
   return Boolean(
     cohort.is_full || (cohort.available_seats !== undefined && cohort.available_seats <= 0),
   )
-}
-
-function getCohortStatusBadge(cohort: PublicCohort): {
-  label: 'Ouverte' | 'Complète' | 'Planifiée'
-  class: string
-} {
-  if (isCohortFull(cohort)) {
-    return {
-      label: 'Complète',
-      class: 'border-warning-line bg-warning-soft text-warning-ink',
-    }
-  }
-  if (cohort.available || cohort.status === 'open') {
-    return {
-      label: 'Ouverte',
-      class: 'border-primary/20 bg-primary/10 text-primary',
-    }
-  }
-  return {
-    label: 'Planifiée',
-    class: 'border-line bg-canvas text-body',
-  }
-}
-
-function getEnrolledCount(cohort: PublicCohort): number {
-  if (typeof cohort.enrolled_count === 'number') {
-    return cohort.enrolled_count
-  }
-  if (typeof cohort.capacity === 'number' && typeof cohort.available_seats === 'number') {
-    return Math.max(0, cohort.capacity - cohort.available_seats)
-  }
-  return 0
-}
-
-function getOccupancyPercent(cohort: PublicCohort): number {
-  const capacity = cohort.capacity || 100
-  const enrolled = getEnrolledCount(cohort)
-  return Math.min(100, Math.max(0, Math.round((enrolled / capacity) * 100)))
-}
-
-function formatSeatsText(seats: number | undefined): string {
-  const count = seats ?? 0
-  if (count <= 1) {
-    return `${count} place disponible`
-  }
-  return `${count} places disponibles`
 }
 
 function goToCandidature(cohort?: PublicCohort) {

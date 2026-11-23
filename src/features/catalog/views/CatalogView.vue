@@ -4,8 +4,8 @@
       <div class="max-w-2xl">
         <h1 id="catalogue-title" class="app-page-title">Trouvez votre parcours</h1>
         <p class="app-page-copy">
-          Consultez les filières, leurs prérequis et les sessions ouvertes avant de déposer votre
-          candidature.
+          Choisissez une filière et candidatez. Une fois accepté, vous êtes inscrit dans la
+          prochaine session disponible.
         </p>
       </div>
       <p v-if="pathways.length" class="text-sm text-quiet">
@@ -114,11 +114,7 @@
                 aria-hidden="true"
               />
               <dd :class="pathway.open_cohorts_count > 0 ? 'font-semibold text-ink' : 'text-quiet'">
-                {{
-                  pathway.open_cohorts_count > 0
-                    ? `${pathway.open_cohorts_count} session(s) ouverte(s)`
-                    : 'Aucune session ouverte'
-                }}
+                {{ pathway.open_cohorts_count > 0 ? 'Places disponibles' : 'Liste d’attente' }}
               </dd>
             </div>
             <div v-if="pathway.courses_count" class="flex items-center gap-2 text-quiet">

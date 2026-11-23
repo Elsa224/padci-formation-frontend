@@ -15,7 +15,7 @@ test.describe('Public Catalog & Cohort Availability (ADR-012)', () => {
     // 2. Ouvrir la fiche Cyber Sécurité
     await page.getByRole('link', { name: 'Voir le parcours' }).first().click()
     await expect(page.getByRole('heading', { name: /Équipement à prévoir/ })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Choisissez votre session' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Rejoindre cette filière' })).toBeVisible()
   })
 })
 
