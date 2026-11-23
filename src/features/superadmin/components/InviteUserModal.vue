@@ -42,13 +42,13 @@ const availableRoles = computed(() => {
       value: 'admin',
       label: 'Administrateur',
       desc: 'Gestion opérationnelle, utilisateurs, formations et cohortes',
-      badge: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+      badge: 'bg-info-soft text-info-ink ring-1 ring-info-line',
     },
     {
       value: 'moderateur',
       label: 'Modérateur',
       desc: 'Revue, validation et publication des contenus de formation',
-      badge: 'bg-purple-50 text-purple-700 ring-1 ring-purple-200',
+      badge: 'bg-forest-soft text-forest ring-1 ring-forest/20',
     },
     {
       value: 'formateur',
@@ -119,7 +119,7 @@ function handleClose() {
   <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
     <!-- Backdrop flouté -->
     <div
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"
+      class="fixed inset-0 bg-forest/60 backdrop-blur-sm transition-opacity duration-300"
       @click="handleClose"
     ></div>
 
@@ -155,20 +155,14 @@ function handleClose() {
         </div>
 
         <!-- Success Alert -->
-        <div
-          v-if="successMessage"
-          class="p-4 rounded-xl bg-mint border border-primary/25 flex items-center gap-3 text-xs text-primary-shade animate-fade-in"
-        >
+        <div v-if="successMessage" class="app-alert app-alert-success flex items-center gap-3">
           <CheckCircle2Icon class="w-5 h-5 text-primary-shade shrink-0" />
           <span>{{ successMessage }}</span>
         </div>
 
         <!-- Error Alert -->
-        <div
-          v-if="errorMessage"
-          class="p-4 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3 text-xs text-red-700 animate-fade-in"
-        >
-          <AlertTriangleIcon class="w-5 h-5 text-red-500 shrink-0" />
+        <div v-if="errorMessage" class="app-alert app-alert-danger flex items-center gap-3">
+          <AlertTriangleIcon class="w-5 h-5 text-danger shrink-0" />
           <span>{{ errorMessage }}</span>
         </div>
 
@@ -177,7 +171,7 @@ function handleClose() {
           <!-- Email Input -->
           <div class="space-y-1.5">
             <label for="invite-email" class="block text-xs font-semibold text-body">
-              Adresse e-mail institutionnelle <span class="text-red-500">*</span>
+              Adresse e-mail institutionnelle <span class="text-danger">*</span>
             </label>
             <div class="relative">
               <MailIcon
@@ -189,7 +183,7 @@ function handleClose() {
                 type="email"
                 required
                 placeholder="collaborateur@emsp.ci"
-                class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-canvas border border-line rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
+                class="app-input w-full pl-10 pr-3.5"
               />
             </div>
           </div>
@@ -197,7 +191,7 @@ function handleClose() {
           <!-- Role Selection Grid -->
           <div class="space-y-2">
             <label class="block text-xs font-semibold text-body">
-              Rôle attribué <span class="text-red-500">*</span>
+              Rôle attribué <span class="text-danger">*</span>
             </label>
 
             <div class="space-y-2">

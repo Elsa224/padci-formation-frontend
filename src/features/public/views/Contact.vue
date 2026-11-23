@@ -21,52 +21,26 @@
     <form v-else @submit.prevent="send" class="space-y-4">
       <div>
         <label class="block text-sm font-medium text-body">Nom complet *</label>
-        <input
-          v-model="form.nom"
-          type="text"
-          required
-          class="mt-1 w-full border border-line-strong rounded-md px-3 py-2 focus:border-primary focus:outline-none"
-        />
+        <input v-model="form.nom" type="text" required class="app-input mt-1 w-full" />
       </div>
       <div>
         <label class="block text-sm font-medium text-body">Email *</label>
-        <input
-          v-model="form.email"
-          type="email"
-          required
-          class="mt-1 w-full border border-line-strong rounded-md px-3 py-2 focus:border-primary focus:outline-none"
-        />
+        <input v-model="form.email" type="email" required class="app-input mt-1 w-full" />
       </div>
       <div>
         <label class="block text-sm font-medium text-body">Téléphone</label>
-        <input
-          v-model="form.telephone"
-          type="tel"
-          class="mt-1 w-full border border-line-strong rounded-md px-3 py-2 focus:border-primary focus:outline-none"
-        />
+        <input v-model="form.telephone" type="tel" class="app-input mt-1 w-full" />
       </div>
       <div>
         <label class="block text-sm font-medium text-body">Sujet</label>
-        <input
-          v-model="form.sujet"
-          type="text"
-          class="mt-1 w-full border border-line-strong rounded-md px-3 py-2 focus:border-primary focus:outline-none"
-        />
+        <input v-model="form.sujet" type="text" class="app-input mt-1 w-full" />
       </div>
       <div>
         <label class="block text-sm font-medium text-body">Message *</label>
-        <textarea
-          v-model="form.message"
-          required
-          rows="5"
-          class="mt-1 w-full border border-line-strong rounded-md px-3 py-2 focus:border-primary focus:outline-none"
-        ></textarea>
+        <textarea v-model="form.message" required rows="5" class="app-input mt-1 w-full"></textarea>
       </div>
 
-      <div
-        v-if="errorMsg"
-        class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-4 py-3"
-      >
+      <div v-if="errorMsg" class="app-alert app-alert-danger">
         {{ errorMsg }}
       </div>
 

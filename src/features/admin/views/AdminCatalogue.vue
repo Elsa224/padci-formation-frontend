@@ -10,7 +10,7 @@
       </div>
     </header>
 
-    <p v-if="error" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+    <p v-if="error" class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink" role="alert">
       {{ error }}
     </p>
 

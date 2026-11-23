@@ -174,10 +174,10 @@ describe('PathwayDetailView', () => {
     expect(wrapper.text()).toContain('100% remplie')
 
     const article = wrapper.find('article')
-    expect(article.classes()).toContain('border-amber-200')
+    expect(article.classes()).toContain('border-warning-line')
 
     const progressFill = wrapper.find('[role="progressbar"] div')
-    expect(progressFill.classes()).toContain('bg-amber-500')
+    expect(progressFill.classes()).toContain('bg-warning')
 
     const button = wrapper.find('button')
     expect(button.classes()).toContain('app-action-secondary')
@@ -239,10 +239,10 @@ describe('PathwayDetailView', () => {
     expect(wrapper.text()).toContain('50 / 50 réservées')
 
     const article = wrapper.find('article')
-    expect(article.classes()).toContain('border-amber-200')
+    expect(article.classes()).toContain('border-warning-line')
 
     const progressFill = wrapper.find('[role="progressbar"] div')
-    expect(progressFill.classes()).toContain('bg-amber-500')
+    expect(progressFill.classes()).toContain('bg-warning')
 
     // Must use app-action-secondary for full cohort even if status === 'open'
     const button = wrapper.find('button')

@@ -62,7 +62,11 @@
           />
         </label>
       </div>
-      <p v-if="createError" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+      <p
+        v-if="createError"
+        class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
+        role="alert"
+      >
         {{ createError }}
       </p>
       <div class="flex justify-end gap-3">
@@ -94,7 +98,7 @@
       </div>
       <div
         v-else-if="courses.isError.value"
-        class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+        class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
         role="alert"
       >
         {{ apiErrorMessage(courses.error.value, 'Impossible de charger vos cours.') }}
@@ -143,7 +147,7 @@
           </div>
           <p
             v-if="submitError?.key === course.key"
-            class="rounded-xl bg-red-50 p-3 text-sm text-red-800"
+            class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
             role="alert"
           >
             {{ submitError.message }}

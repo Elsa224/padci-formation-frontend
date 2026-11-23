@@ -21,17 +21,17 @@
           <div>
             <label class="block text-sm font-medium text-ink mb-1">Nom</label>
             <input v-model="profileForm.name" type="text" class="app-input" />
-            <p v-if="profileErrors.name" class="text-xs text-red-600 mt-1">
+            <p v-if="profileErrors.name" class="text-xs text-danger-ink mt-1">
               {{ profileErrors.name[0] }}
             </p>
           </div>
           <div>
             <label class="block text-sm font-medium text-ink mb-1">Email</label>
             <input v-model="profileForm.email" type="email" class="app-input" />
-            <p v-if="profileErrors.email" class="text-xs text-red-600 mt-1">
+            <p v-if="profileErrors.email" class="text-xs text-danger-ink mt-1">
               {{ profileErrors.email[0] }}
             </p>
-            <p v-else-if="emailChanged" class="text-xs text-amber-600 mt-1">
+            <p v-else-if="emailChanged" class="text-xs text-warning-ink mt-1">
               Changer l'email nécessite de le vérifier à nouveau avant la prochaine connexion.
             </p>
           </div>
@@ -64,7 +64,7 @@
           <div>
             <label class="block text-sm font-medium text-ink mb-1">Mot de passe actuel</label>
             <input v-model="passwordForm.current_password" type="password" class="app-input" />
-            <p v-if="passwordErrors.current_password" class="text-xs text-red-600 mt-1">
+            <p v-if="passwordErrors.current_password" class="text-xs text-danger-ink mt-1">
               {{ passwordErrors.current_password[0] }}
             </p>
           </div>
@@ -72,7 +72,7 @@
             <div>
               <label class="block text-sm font-medium text-ink mb-1">Nouveau mot de passe</label>
               <input v-model="passwordForm.password" type="password" class="app-input" />
-              <p v-if="passwordErrors.password" class="text-xs text-red-600 mt-1">
+              <p v-if="passwordErrors.password" class="text-xs text-danger-ink mt-1">
                 {{ passwordErrors.password[0] }}
               </p>
             </div>
@@ -122,7 +122,7 @@
             v-else
             @click="disableMfa"
             :disabled="mfaDisableMutation.isPending.value"
-            class="app-action-secondary shrink-0 text-red-700"
+            class="app-action-secondary shrink-0 text-danger-ink"
           >
             Désactiver
           </button>

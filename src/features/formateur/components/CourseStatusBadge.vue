@@ -20,10 +20,10 @@ const tone = computed(() => {
       return 'bg-primary/10 text-primary'
     case 'submitted':
     case 'in_review':
-      return 'bg-amber-50 text-amber-800'
+      return 'bg-warning-soft text-warning-ink'
     case 'rejected':
     case 'suspended':
-      return 'bg-red-50 text-red-700'
+      return 'bg-danger-soft text-danger-ink'
     default:
       return 'bg-canvas text-quiet'
   }

@@ -115,7 +115,7 @@
 
           <form
             v-if="app.equipment_review?.status === 'needs_info' && editingEquipmentKey === app.key"
-            class="space-y-3 rounded-xl border border-amber-200 bg-amber-50 p-4"
+            class="space-y-3 rounded-xl border border-warning-line bg-warning-soft p-4"
             @submit.prevent="respondToEquipment(app)"
           >
             <div>
@@ -161,7 +161,7 @@
                 <input v-model.trim="equipmentForm.os_name" required class="app-input mt-1" />
               </label>
             </div>
-            <p v-if="equipmentResponseError" class="text-xs text-red-700" role="alert">
+            <p v-if="equipmentResponseError" class="text-xs text-danger-ink" role="alert">
               {{ equipmentResponseError }}
             </p>
             <div class="flex flex-wrap gap-2">
@@ -194,7 +194,7 @@
         <div class="flex flex-col sm:flex-row items-center gap-3">
           <button
             v-if="app.equipment_review?.status === 'needs_info' && editingEquipmentKey !== app.key"
-            class="w-full rounded-xl border border-amber-300 px-4 py-2 text-xs font-semibold text-amber-800 transition hover:bg-amber-50 sm:w-auto"
+            class="w-full rounded-xl border border-warning-line px-4 py-2 text-xs font-semibold text-warning-ink transition hover:bg-warning-soft sm:w-auto"
             @click="startEquipmentResponse(app)"
           >
             Compléter les informations
@@ -205,15 +205,15 @@
             "
             label="Retirer ma candidature"
             confirm="Confirmer le retrait de votre candidature ?"
-            button-class="w-full rounded-xl border border-red-200 px-4 py-2 text-xs font-semibold text-danger-ink transition hover:bg-red-50 disabled:opacity-50 sm:w-auto"
+            button-class="w-full rounded-xl border border-danger-line px-4 py-2 text-xs font-semibold text-danger-ink transition hover:bg-danger-soft disabled:opacity-50 sm:w-auto"
             @confirm="withdraw(app)"
           />
           <div
             v-if="app.status === 'standby'"
-            class="rounded-xl border border-blue-200 bg-blue-50/70 p-3 text-xs text-blue-900 sm:max-w-xs"
+            class="rounded-xl border border-info-line bg-info-soft/70 p-3 text-xs text-info-ink sm:max-w-xs"
           >
-            <p class="font-semibold text-blue-900">Liste prioritaire (Standby)</p>
-            <p class="mt-1 text-blue-800 leading-relaxed">
+            <p class="font-semibold text-info-ink">Liste prioritaire (Standby)</p>
+            <p class="mt-1 text-info-ink leading-relaxed">
               Dossier validé avec succès ! Vous êtes sur la liste prioritaire (Standby) et serez
               automatiquement affecté dès l'ouverture de la prochaine session.
             </p>
@@ -257,15 +257,15 @@ const equipmentForm = ref<EquipmentDeclaration>({
 const equipmentResponseMutation = useRespondToEquipmentReview()
 
 const statusMap: Record<string, { label: string; class: string }> = {
-  submitted: { label: 'Soumise, en attente d’examen', class: 'bg-sky-100 text-sky-800' },
-  in_review: { label: 'En cours d’examen', class: 'bg-amber-100 text-amber-800' },
+  submitted: { label: 'Soumise, en attente d’examen', class: 'bg-info-soft text-info-ink' },
+  in_review: { label: 'En cours d’examen', class: 'bg-warning-soft text-warning-ink' },
   accepted: { label: 'Candidature acceptée', class: 'bg-primary/10 text-primary' },
   standby: {
     label: 'En attente de cohorte (Standby)',
-    class: 'bg-blue-100 text-blue-800 border border-blue-200',
+    class: 'bg-info-soft text-info-ink border border-info-line',
   },
-  waitlisted: { label: 'Sur liste d’attente', class: 'bg-violet-100 text-violet-800' },
-  rejected: { label: 'Non retenue', class: 'bg-red-100 text-red-800' },
+  waitlisted: { label: 'Sur liste d’attente', class: 'bg-forest-soft text-forest' },
+  rejected: { label: 'Non retenue', class: 'bg-danger-soft text-danger-ink' },
   withdrawn: { label: 'Candidature retirée', class: 'bg-canvas text-body' },
 }
 
@@ -291,10 +291,10 @@ function equipmentReviewLabel(status: string): string {
 function equipmentReviewClass(status: string): string {
   const classes: Record<string, string> = {
     not_required: 'text-quiet',
-    pending: 'text-amber-700',
-    needs_info: 'text-amber-700',
+    pending: 'text-warning-ink',
+    needs_info: 'text-warning-ink',
     approved: 'text-primary-shade',
-    rejected: 'text-red-700',
+    rejected: 'text-danger-ink',
   }
   return classes[status] ?? 'text-quiet'
 }

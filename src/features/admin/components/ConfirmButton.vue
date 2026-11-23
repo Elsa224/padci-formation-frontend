@@ -11,7 +11,7 @@
     </button>
     <span
       v-else
-      class="inline-flex flex-wrap items-center gap-2 rounded-lg bg-red-50 px-2 py-1 text-xs text-red-800"
+      class="inline-flex flex-wrap items-center gap-2 rounded-lg bg-danger-soft px-2 py-1 text-xs text-danger-ink"
       role="alert"
     >
       {{ confirm }}
@@ -37,7 +37,7 @@
 import { ref } from 'vue'
 
 withDefaults(defineProps<{ label: string; confirm: string; buttonClass?: string }>(), {
-  buttonClass: 'text-red-700',
+  buttonClass: 'text-danger-ink',
 })
 const emit = defineEmits<{ confirm: [] }>()
 const asking = ref(false)

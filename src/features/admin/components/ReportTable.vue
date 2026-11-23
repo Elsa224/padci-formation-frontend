@@ -52,8 +52,8 @@
                 row.attendance_rate >= 0.8
                   ? 'text-primary-shade'
                   : row.attendance_rate >= 0.5
-                    ? 'text-amber-700'
-                    : 'text-red-700'
+                    ? 'text-warning-ink'
+                    : 'text-danger-ink'
               "
             >
               {{ formatPercent(row.attendance_rate) }}

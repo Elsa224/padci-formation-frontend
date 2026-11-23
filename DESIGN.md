@@ -29,7 +29,12 @@ action colour and a signal colour, each with one job.
   savane is forest (≈ 6:1). Ink variant `#A24C08`, soft `#FDF0E3`.
 - Canvas `#F3F5F2`, surface `#FFFFFF`, ink `#12201A`, body `#33423A`,
   quiet `#56645D`, line `#DDE5DF`, strong line `#C7D3CA`.
-- Destructive red `#B42318` and amber `#9A6700` stay semantic states only.
+- States, one family per meaning, each with `-soft` (background), `-line`
+  (border), plain and `-ink` (text): `danger` (red `#D92D20` / ink `#B42318`),
+  `warning` (amber `#F79009` / ink `#9A6700`), `info` (blue `#1F6F9F` / ink
+  `#175A85`). Success reuses mint + primary. `forest-soft` `#E4EBE6` is an
+  opaque forest tint (roles, quiet badges). Raw Tailwind palettes (`red-*`,
+  `amber-*`, `blue-*`, `gray-*`, `purple-*`…) are not used in views.
 
 All tokens live in `src/style.css` (`@theme`). Never hard-code a hex in a view.
 
@@ -95,10 +100,21 @@ All tokens live in `src/style.css` (`@theme`). Never hard-code a hex in a view.
 - Classes: `.app-page`, `.app-page-header`, `.app-page-title`,
   `.app-page-copy`, `.app-panel` (18px radius), `.app-panel-forest`
   (signature surface), `.app-action-primary|secondary|accent`, `.app-input`,
-  `.app-chip` + `-leaf|-savane|-neutral|-danger`, `.app-prose`.
+  `.app-chip` + `-leaf|-savane|-neutral|-danger|-warning|-info`,
+  `.app-alert` + `-danger|-warning|-info|-success` (inline banners),
+  `.app-prose`. A native `<select class="app-input">` gets the palette
+  chevron automatically; `textarea.app-input` gets a taller box.
+- Page frame: width and gutters are set once by `WorkspaceShell` `<main>`
+  (max 1280px). A view root is `.app-page` only — never its own `max-w-*`.
+- Access screens (login, sign-up, password, invitation) use
+  `features/auth/components/AuthShell.vue`: white form column, forest panel
+  that says what the platform offers. No stock photo, no blurred blobs.
 - Components (`src/components/app/`): `ProgressBar`, `ProgressRing`,
   `StatTile`, `EmptyState`, and `courseProgress()` for a course outline.
 - shadcn-vue: `Button` gains `variant="accent"` (savane), sizes aligned on
-  44px touch targets; `Badge` gains `leaf | savane | neutral` tones.
+  44px touch targets; `Badge` gains `leaf | savane | neutral | danger |
+  warning | info` tones. `Input` (44px, white, primary focus ring), dropdown
+  menus (mint hover, 12px radius), dialogs (18px, forest overlay), tooltips
+  (forest), cards and tables follow the same tokens.
 - Indicators are grouped in one stat band (summary before detail), not one
   card per number. Lists are rows with dividers, not grids of identical cards.

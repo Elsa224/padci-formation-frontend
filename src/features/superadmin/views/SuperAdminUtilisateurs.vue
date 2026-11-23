@@ -73,13 +73,10 @@
               v-model="searchQuery"
               type="text"
               placeholder="Rechercher un nom, un email..."
-              class="w-full pl-10 pr-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+              class="app-input w-full pl-10 pr-4"
             />
           </div>
-          <select
-            v-model="filterRole"
-            class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[200px]"
-          >
+          <select v-model="filterRole" class="app-input md:w-56">
             <option value="">Tous les rôles</option>
             <option v-for="role in roleOptions" :key="role.value" :value="role.value">
               {{ role.label }}
@@ -108,7 +105,7 @@
                 </td>
               </tr>
               <tr v-else-if="isError">
-                <td colspan="5" class="py-10 text-center text-red-600">
+                <td colspan="5" class="py-10 text-center text-danger-ink">
                   {{ (error as ApiError)?.message ?? 'Impossible de charger les utilisateurs.' }}
                 </td>
               </tr>
@@ -176,7 +173,7 @@
                     class="text-xs font-semibold px-3 py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
                     :class="
                       user.is_active
-                        ? 'text-red-600 hover:bg-red-50'
+                        ? 'text-danger-ink hover:bg-danger-soft'
                         : 'text-primary hover:bg-primary/10'
                     "
                   >
@@ -220,7 +217,7 @@
             </button>
           </nav>
         </div>
-        <p v-if="actionError" class="px-6 py-3 text-sm text-red-600 border-t border-line">
+        <p v-if="actionError" class="px-6 py-3 text-sm text-danger-ink border-t border-line">
           {{ actionError }}
         </p>
       </div>
@@ -268,7 +265,7 @@
               <tr v-else-if="pendingInvitations.length === 0">
                 <td colspan="5" class="py-12 text-center text-quiet">
                   <div class="flex flex-col items-center justify-center space-y-2">
-                    <MailIcon class="w-8 h-8 text-slate-300" />
+                    <MailIcon class="w-8 h-8 text-line-strong" />
                     <p class="font-medium text-ink">Aucune invitation en attente</p>
                     <p class="text-xs text-quiet max-w-sm">
                       Tous les collaborateurs invités ont activé leur compte ou aucune invitation
@@ -319,10 +316,8 @@
                 </td>
 
                 <td class="py-4 px-6">
-                  <span
-                    class="inline-flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full font-medium"
-                  >
-                    <ClockIcon class="w-3 h-3 text-amber-500" />
+                  <span class="app-chip app-chip-warning">
+                    <ClockIcon class="w-3 h-3 text-warning" />
                     <span>{{ formatRelativeExpiration(inv.expires_at) }}</span>
                   </span>
                 </td>
@@ -331,7 +326,7 @@
                   <ConfirmButton
                     label="Révoquer"
                     confirm="Révoquer l'invitation ?"
-                    button-class="text-xs font-semibold px-3 py-1.5 rounded-lg text-red-600 hover:bg-red-50 transition disabled:opacity-50 cursor-pointer"
+                    button-class="text-xs font-semibold px-3 py-1.5 rounded-lg text-danger-ink hover:bg-danger-soft transition disabled:opacity-50 cursor-pointer"
                     @confirm="handleRevoke(inv)"
                   />
                 </td>
@@ -432,9 +427,9 @@ function roleColors(role: AppRole): { bg: string; text: string } {
     case 'super_admin':
       return { bg: 'bg-savane-soft', text: 'text-savane-ink' }
     case 'admin':
-      return { bg: 'bg-blue-100', text: 'text-blue-700' }
+      return { bg: 'bg-info-soft', text: 'text-info-ink' }
     case 'moderateur':
-      return { bg: 'bg-purple-100', text: 'text-purple-700' }
+      return { bg: 'bg-forest-soft', text: 'text-forest' }
     case 'formateur':
       return { bg: 'bg-mint', text: 'text-primary-shade' }
     default:

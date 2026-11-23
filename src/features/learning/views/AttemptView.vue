@@ -9,7 +9,7 @@
     </div>
     <div
       v-else-if="attempt.isError.value"
-      class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+      class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
       role="alert"
     >
       {{ message(attempt.error.value, "Impossible de charger l'évaluation.") }}
@@ -31,7 +31,7 @@
           <span
             v-if="remaining !== null"
             class="rounded-lg px-3 py-1.5 font-mono text-sm font-bold tabular-nums"
-            :class="remaining <= 60 ? 'bg-red-50 text-red-700' : 'bg-canvas text-ink'"
+            :class="remaining <= 60 ? 'bg-danger-soft text-danger-ink' : 'bg-canvas text-ink'"
             role="timer"
             :aria-label="`Temps restant ${formatCountdown(remaining)}`"
             data-test="countdown"
@@ -59,7 +59,7 @@
       <!-- Confirmation intégrée (pas de confirm() navigateur) -->
       <div
         v-if="confirming && inProgress"
-        class="app-panel space-y-3 border-amber-300"
+        class="app-panel space-y-3 border-warning-line"
         role="alertdialog"
         aria-labelledby="confirm-title"
       >
@@ -84,7 +84,11 @@
         </div>
       </div>
 
-      <p v-if="actionError" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+      <p
+        v-if="actionError"
+        class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
+        role="alert"
+      >
         {{ actionError }}
       </p>
 
@@ -93,7 +97,7 @@
         <template v-if="data.status === 'submitted'">
           <p
             v-if="data.auto_submitted"
-            class="rounded-xl bg-amber-50 p-3 text-sm font-medium text-amber-800"
+            class="rounded-xl bg-warning-soft p-3 text-sm font-medium text-warning-ink"
             data-test="auto-submitted-notice"
           >
             Temps écoulé : vos réponses enregistrées ont été notées automatiquement
@@ -106,7 +110,7 @@
         <div v-else-if="data.status === 'pending_grading'" class="space-y-2">
           <p
             v-if="data.auto_submitted"
-            class="rounded-xl bg-amber-50 p-3 text-sm font-medium text-amber-800"
+            class="rounded-xl bg-warning-soft p-3 text-sm font-medium text-warning-ink"
             data-test="auto-submitted-notice"
           >
             Temps écoulé : vos réponses enregistrées ont été notées automatiquement
@@ -348,7 +352,7 @@ function optionClass(question: AttemptQuestion, optionKey: string) {
   const result = question.result
   if (!result) return isSelected(question.key, optionKey) ? 'border-primary bg-primary/5' : ''
   if (result.correct_option_keys.includes(optionKey)) return 'border-primary bg-primary/10'
-  if (isSelected(question.key, optionKey)) return 'border-red-300 bg-red-50'
+  if (isSelected(question.key, optionKey)) return 'border-danger-line bg-danger-soft'
   return 'opacity-70'
 }
 </script>

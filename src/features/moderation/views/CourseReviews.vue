@@ -29,7 +29,7 @@
       </div>
       <div
         v-else-if="courses.isError.value"
-        class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+        class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
         role="alert"
       >
         {{ errorMessage(courses.error.value) }}
@@ -68,7 +68,7 @@
             <div class="rounded-xl bg-canvas p-4">
               <h4 class="font-bold text-ink">Contenu du cours</h4>
               <p v-if="modules.isPending.value" class="mt-2 text-sm text-quiet">Chargement...</p>
-              <p v-else-if="modules.isError.value" class="mt-2 text-sm text-red-700">
+              <p v-else-if="modules.isError.value" class="mt-2 text-sm text-danger-ink">
                 {{ errorMessage(modules.error.value) }}
               </p>
               <p v-else-if="!modules.data.value?.length" class="mt-2 text-sm text-quiet">
@@ -131,7 +131,9 @@
                   :required="action === 'reject'"
                 />
               </label>
-              <p v-if="actionError" role="alert" class="text-sm text-red-700">{{ actionError }}</p>
+              <p v-if="actionError" role="alert" class="text-sm text-danger-ink">
+                {{ actionError }}
+              </p>
               <button
                 class="app-action-primary"
                 :disabled="

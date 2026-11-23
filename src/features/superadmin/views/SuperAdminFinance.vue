@@ -76,7 +76,7 @@
           </thead>
           <tbody class="divide-y divide-line text-sm">
             <tr v-if="isDisbursementsError">
-              <td colspan="7" class="py-8 text-center text-red-600">
+              <td colspan="7" class="py-8 text-center text-danger-ink">
                 {{
                   (disbursementsError as ApiError)?.message ??
                   'Impossible de charger les décaissements.'
@@ -103,7 +103,9 @@
                 <span
                   v-if="disbursement.ano_request"
                   :class="
-                    disbursement.ano_request.status === 'signed' ? 'text-primary' : 'text-amber-600'
+                    disbursement.ano_request.status === 'signed'
+                      ? 'text-primary'
+                      : 'text-warning-ink'
                   "
                 >
                   {{ disbursement.ano_request.status === 'signed' ? 'Signée' : 'Non signée' }}
@@ -164,10 +166,7 @@
             }}
             - {{ selectedDisbursement?.beneficiary }}
           </p>
-          <p
-            v-if="actionError"
-            class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4 text-left"
-          >
+          <p v-if="actionError" class="app-alert app-alert-danger mb-4">
             {{ actionError }}
           </p>
 
@@ -261,11 +260,11 @@ function statusLabel(status: string): string {
 function statusClass(status: string): string {
   switch (status) {
     case 'pending_ano':
-      return 'bg-amber-100 text-amber-700'
+      return 'bg-warning-soft text-warning-ink'
     case 'paid':
       return 'bg-mint text-primary-shade'
     case 'rejected':
-      return 'bg-red-100 text-red-700'
+      return 'bg-danger-soft text-danger-ink'
     default:
       return 'bg-canvas text-ink'
   }

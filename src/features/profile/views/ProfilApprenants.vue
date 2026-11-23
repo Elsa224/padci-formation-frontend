@@ -13,7 +13,7 @@
 
       <div class="px-6 sm:px-10 pb-8 relative">
         <div v-if="isPending" class="pt-6 text-sm text-quiet">Chargement du profil…</div>
-        <div v-else-if="isError" class="pt-6 text-sm text-red-600">
+        <div v-else-if="isError" class="pt-6 text-sm text-danger-ink">
           {{ (error as ApiError)?.message ?? 'Impossible de charger le profil.' }}
         </div>
 
@@ -58,7 +58,7 @@
                 :class="
                   profile.email_verified
                     ? 'bg-primary/10 text-primary'
-                    : 'bg-amber-100 text-amber-700'
+                    : 'bg-warning-soft text-warning-ink'
                 "
               >
                 {{ profile.email_verified ? 'Email vérifié' : 'Email non vérifié' }}
@@ -91,7 +91,7 @@
             </router-link>
           </div>
         </div>
-        <p v-if="photoError" role="alert" class="mt-4 text-sm text-red-700">{{ photoError }}</p>
+        <p v-if="photoError" role="alert" class="mt-4 text-sm text-danger-ink">{{ photoError }}</p>
       </div>
     </div>
 
@@ -146,7 +146,7 @@
             </div>
 
             <div class="mt-6 pt-4 border-t border-line">
-              <button class="app-action-secondary w-full gap-2 text-red-700" @click="logout">
+              <button class="app-action-secondary w-full gap-2 text-danger-ink" @click="logout">
                 <LogOutIcon :size="18" /> Se déconnecter
               </button>
             </div>
@@ -158,7 +158,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="bg-white rounded-xl shadow-sm border border-line p-4 text-center">
               <div
-                class="w-10 h-10 mx-auto rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-2"
+                class="w-10 h-10 mx-auto rounded-full bg-info-soft text-info-ink flex items-center justify-center mb-2"
               >
                 <BookOpenTextIcon :size="20" />
               </div>
@@ -167,7 +167,7 @@
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-line p-4 text-center">
               <div
-                class="w-10 h-10 mx-auto rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-2"
+                class="w-10 h-10 mx-auto rounded-full bg-forest-soft text-forest flex items-center justify-center mb-2"
               >
                 <TrophyIcon :size="20" />
               </div>

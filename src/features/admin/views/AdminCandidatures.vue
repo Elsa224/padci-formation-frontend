@@ -37,7 +37,7 @@
         </div>
 
         <!-- Filtre Filière (filières réelles du catalogue) -->
-        <select v-model="filterPathwayKey" class="app-input min-w-[200px]">
+        <select v-model="filterPathwayKey" class="app-input md:w-56">
           <option value="">Toutes les filières</option>
           <option v-for="pathway in pathways" :key="pathway.key" :value="pathway.key">
             {{ pathway.name }}
@@ -45,7 +45,7 @@
         </select>
 
         <!-- Filtre Statut -->
-        <select v-model="filterStatus" class="app-input min-w-[170px]">
+        <select v-model="filterStatus" class="app-input md:w-48">
           <option value="">Tous les statuts</option>
           <option v-for="status in statusOptions" :key="status.value" :value="status.value">
             {{ status.label }}
@@ -59,9 +59,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr
-              class="border-b border-line bg-canvas text-xs font-semibold uppercase tracking-[0.1em] text-quiet"
-            >
+            <tr class="app-thead border-b border-line bg-canvas">
               <th class="py-4 px-6">Candidat</th>
               <th class="py-4 px-6">Filière</th>
               <th class="py-4 px-6">Session</th>
@@ -250,7 +248,7 @@
           </div>
           <button
             @click="closeModal"
-            class="rounded-lg p-2 text-quiet transition hover:bg-red-50 hover:text-red-500"
+            class="rounded-lg p-2 text-quiet transition hover:bg-danger-soft hover:text-danger"
             title="Fermer"
           >
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -269,7 +267,7 @@
           <div v-if="isDetailPending" class="py-12 text-center text-sm text-quiet">
             Chargement du dossier complet du candidat…
           </div>
-          <div v-else-if="isDetailError" class="py-12 text-center text-sm text-red-600">
+          <div v-else-if="isDetailError" class="py-12 text-center text-sm text-danger-ink">
             {{ (detailError as ApiError)?.message ?? 'Impossible de charger ce dossier.' }}
           </div>
 
@@ -313,14 +311,14 @@
               :class="
                 detail.cohort
                   ? 'border-primary/20 bg-primary/[0.04]'
-                  : 'border-amber-200 bg-amber-50/60'
+                  : 'border-warning-line bg-warning-soft/60'
               "
               data-testid="admission-destination-preview"
             >
               <div class="flex items-start gap-3">
                 <div
                   class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
-                  :class="detail.cohort ? 'bg-primary text-white' : 'bg-amber-500 text-white'"
+                  :class="detail.cohort ? 'bg-primary text-white' : 'bg-warning text-white'"
                 >
                   <svg
                     v-if="detail.cohort"
@@ -347,8 +345,8 @@
                 </div>
                 <div>
                   <p
-                    class="text-xs font-bold uppercase tracking-wider"
-                    :class="detail.cohort ? 'text-primary' : 'text-amber-800'"
+                    class="text-xs font-bold"
+                    :class="detail.cohort ? 'text-primary' : 'text-warning-ink'"
                   >
                     Destination prévue en cas d'admission
                   </p>
@@ -390,9 +388,7 @@
                       d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  <h4 class="text-sm font-bold uppercase tracking-wider text-ink">
-                    Vérification du matériel informatique
-                  </h4>
+                  <h4 class="text-sm font-bold text-ink">Vérification du matériel informatique</h4>
                 </div>
                 <span
                   v-if="detail.equipment_review"
@@ -411,7 +407,7 @@
                   :class="
                     isCpuConform
                       ? 'border-primary/30 bg-primary/[0.02]'
-                      : 'border-red-200 bg-red-50/30'
+                      : 'border-danger-line bg-danger-soft/30'
                   "
                 >
                   <div class="flex items-center justify-between mb-1.5">
@@ -419,7 +415,9 @@
                     <span
                       class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
                       :class="
-                        isCpuConform ? 'bg-primary/20 text-primary' : 'bg-red-100 text-red-600'
+                        isCpuConform
+                          ? 'bg-primary/20 text-primary'
+                          : 'bg-danger-soft text-danger-ink'
                       "
                     >
                       <svg
@@ -456,7 +454,7 @@
                   :class="
                     isRamConform
                       ? 'border-primary/30 bg-primary/[0.02]'
-                      : 'border-red-200 bg-red-50/30'
+                      : 'border-danger-line bg-danger-soft/30'
                   "
                 >
                   <div class="flex items-center justify-between mb-1.5">
@@ -464,7 +462,9 @@
                     <span
                       class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
                       :class="
-                        isRamConform ? 'bg-primary/20 text-primary' : 'bg-red-100 text-red-600'
+                        isRamConform
+                          ? 'bg-primary/20 text-primary'
+                          : 'bg-danger-soft text-danger-ink'
                       "
                     >
                       <svg
@@ -501,7 +501,7 @@
                   :class="
                     isStorageConform
                       ? 'border-primary/30 bg-primary/[0.02]'
-                      : 'border-red-200 bg-red-50/30'
+                      : 'border-danger-line bg-danger-soft/30'
                   "
                 >
                   <div class="flex items-center justify-between mb-1.5">
@@ -509,7 +509,9 @@
                     <span
                       class="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold"
                       :class="
-                        isStorageConform ? 'bg-primary/20 text-primary' : 'bg-red-100 text-red-600'
+                        isStorageConform
+                          ? 'bg-primary/20 text-primary'
+                          : 'bg-danger-soft text-danger-ink'
                       "
                     >
                       <svg
@@ -568,17 +570,15 @@
               <!-- Actions rapides de revue du matériel pour l'administrateur -->
               <div
                 v-if="detail.equipment_review && detail.equipment_review.status !== 'approved'"
-                class="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50/70 p-3.5"
+                class="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-xl border border-warning-line bg-warning-soft/70 p-3.5"
                 data-testid="equipment-review-actions"
               >
                 <div>
-                  <p class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
-                    <span
-                      class="inline-block h-2 w-2 rounded-full bg-amber-500 animate-pulse"
-                    ></span>
+                  <p class="text-xs font-bold text-warning-ink flex items-center gap-1.5">
+                    <span class="inline-block h-2 w-2 rounded-full bg-warning animate-pulse"></span>
                     Revue matériel en attente
                   </p>
-                  <p class="text-[11px] text-amber-800 mt-0.5">
+                  <p class="text-[11px] text-warning-ink mt-0.5">
                     Validez le matériel pour débloquer l'approbation de cette candidature.
                   </p>
                 </div>
@@ -592,7 +592,7 @@
                         'Matériel non conforme aux prérequis de la filière',
                       )
                     "
-                    class="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition disabled:opacity-50"
+                    class="rounded-lg border border-danger-line bg-white px-3 py-1.5 text-xs font-semibold text-danger-ink hover:bg-danger-soft transition disabled:opacity-50"
                   >
                     Refuser
                   </button>
@@ -641,9 +641,7 @@
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <h4 class="text-sm font-bold uppercase tracking-wider text-ink">
-                    Justificatif matériel
-                  </h4>
+                  <h4 class="text-sm font-bold text-ink">Justificatif matériel</h4>
                 </div>
                 <button
                   v-if="proofUrl && isProofImage"
@@ -687,7 +685,7 @@
               >
                 <div class="flex flex-col items-center justify-center gap-2">
                   <div
-                    class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-red-600"
+                    class="flex h-12 w-12 items-center justify-center rounded-xl bg-danger-soft text-danger-ink"
                   >
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -757,13 +755,13 @@
             <!-- 7. Alerte d'erreur de décision -->
             <div
               v-if="decideError"
-              class="rounded-2xl border border-red-300 bg-red-50 p-4 text-sm text-red-700 flex items-start justify-between gap-3 shadow-sm"
+              class="app-alert app-alert-danger flex items-start justify-between gap-3"
               data-testid="decide-error-banner"
               role="alert"
             >
               <div class="flex items-start gap-3">
                 <svg
-                  class="h-5 w-5 text-red-600 shrink-0 mt-0.5"
+                  class="h-5 w-5 text-danger-ink shrink-0 mt-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -776,13 +774,13 @@
                   />
                 </svg>
                 <div>
-                  <p class="font-bold text-red-800">Erreur lors de la décision</p>
-                  <p class="mt-0.5 text-xs text-red-700 font-medium">{{ decideError }}</p>
+                  <p class="font-bold text-danger-ink">Erreur lors de la décision</p>
+                  <p class="mt-0.5 text-xs text-danger-ink font-medium">{{ decideError }}</p>
                 </div>
               </div>
               <button
                 @click="decideError = null"
-                class="rounded-lg p-1 text-red-500 hover:bg-red-100 hover:text-red-800 transition"
+                class="rounded-lg p-1 text-danger hover:bg-danger-soft hover:text-danger-ink transition"
                 title="Fermer"
               >
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -799,7 +797,7 @@
             <!-- 8. Saisie du motif de rejet -->
             <section
               v-if="pendingDecision === 'rejected'"
-              class="rounded-2xl border border-red-200 bg-red-50/40 p-4 space-y-2"
+              class="rounded-2xl border border-danger-line bg-danger-soft/40 p-4 space-y-2"
             >
               <label class="block text-sm font-semibold text-ink">
                 Motif du rejet (obligatoire)
@@ -837,13 +835,13 @@
                   detail.equipment_review &&
                   detail.equipment_review.status !== 'approved'
                 "
-                class="w-full text-xs font-semibold text-amber-700 sm:w-auto sm:mr-auto"
+                class="w-full text-xs font-semibold text-warning-ink sm:w-auto sm:mr-auto"
               >
                 ⚠ Validez le matériel ci-dessus pour débloquer l'approbation.
               </p>
               <button
                 @click="pendingDecision = 'rejected'"
-                class="rounded-xl border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                class="rounded-xl border border-danger-line bg-white px-5 py-2.5 text-sm font-semibold text-danger-ink transition hover:bg-danger-soft"
                 data-testid="btn-reject-trigger"
               >
                 Rejeter
@@ -851,7 +849,7 @@
               <button
                 @click="decide('waitlisted')"
                 :disabled="decideMutation.isPending.value"
-                class="rounded-xl border border-amber-200 bg-white px-5 py-2.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-50 disabled:opacity-50"
+                class="rounded-xl border border-warning-line bg-white px-5 py-2.5 text-sm font-semibold text-warning-ink transition hover:bg-warning-soft disabled:opacity-50"
               >
                 Liste d'attente
               </button>
@@ -879,7 +877,7 @@
               <button
                 @click="confirmReject"
                 :disabled="decideMutation.isPending.value"
-                class="rounded-xl bg-red-600 px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700 disabled:opacity-50"
+                class="rounded-xl bg-danger px-6 py-2.5 text-sm font-bold text-white shadow-md shadow-danger/20 transition hover:bg-danger disabled:opacity-50"
                 data-testid="btn-confirm-reject"
               >
                 Confirmer le rejet
@@ -985,9 +983,9 @@ function statusBadgeClass(status: string): string {
     case 'in_review':
     case 'waitlisted':
     case 'standby':
-      return 'bg-amber-100 text-amber-700'
+      return 'bg-warning-soft text-warning-ink'
     case 'rejected':
-      return 'bg-red-100 text-red-700'
+      return 'bg-danger-soft text-danger-ink'
     default:
       return 'bg-canvas text-ink'
   }
@@ -1000,9 +998,9 @@ function statusDotClass(status: string): string {
     case 'in_review':
     case 'waitlisted':
     case 'standby':
-      return 'bg-amber-500'
+      return 'bg-warning'
     case 'rejected':
-      return 'bg-red-500'
+      return 'bg-danger'
     default:
       return 'bg-quiet'
   }
@@ -1156,9 +1154,9 @@ function equipmentBadgeClass(status: string | undefined): string {
       return 'bg-primary/10 text-primary'
     case 'pending':
     case 'needs_info':
-      return 'bg-amber-100 text-amber-800'
+      return 'bg-warning-soft text-warning-ink'
     case 'rejected':
-      return 'bg-red-100 text-red-700'
+      return 'bg-danger-soft text-danger-ink'
     default:
       return 'bg-canvas text-quiet'
   }

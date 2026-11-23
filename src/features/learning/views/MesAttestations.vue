@@ -12,7 +12,7 @@
     <div class="app-panel space-y-4">
       <h2 class="text-lg font-bold text-ink">Attestations de réussite</h2>
       <div v-if="certificates.isPending.value" class="app-skeleton h-20" />
-      <p v-else-if="certificates.isError.value" class="text-sm text-red-700" role="alert">
+      <p v-else-if="certificates.isError.value" class="text-sm text-danger-ink" role="alert">
         Impossible de charger vos attestations.
       </p>
       <p
@@ -45,7 +45,7 @@
                 certificate.status === 'issued'
                   ? 'bg-primary/10 text-primary'
                   : certificate.status === 'revoked'
-                    ? 'bg-red-50 text-red-700'
+                    ? 'bg-danger-soft text-danger-ink'
                     : 'bg-canvas text-quiet'
               "
             >
@@ -54,7 +54,7 @@
           </div>
           <p
             v-if="certificate.status === 'revoked' && certificate.revocation_reason"
-            class="text-sm text-red-700"
+            class="text-sm text-danger-ink"
           >
             Motif : {{ certificate.revocation_reason }}
           </p>
@@ -80,7 +80,11 @@
           </p>
         </li>
       </ul>
-      <p v-if="downloadError" class="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">
+      <p
+        v-if="downloadError"
+        class="rounded-xl bg-danger-soft p-3 text-sm text-danger-ink"
+        role="alert"
+      >
         {{ downloadError }}
       </p>
     </div>
@@ -107,7 +111,7 @@
             {{ item.name }}
             <span class="font-normal text-quiet">· {{ item.provider_label ?? item.provider }}</span>
           </span>
-          <span :class="item.is_expired ? 'text-red-700' : 'text-quiet'">
+          <span :class="item.is_expired ? 'text-danger-ink' : 'text-quiet'">
             <template v-if="item.issued_at">Obtenue le {{ formatDate(item.issued_at) }}</template>
             <template v-if="item.expires_at">
               · {{ item.is_expired ? 'expirée le' : 'valable jusqu’au' }}

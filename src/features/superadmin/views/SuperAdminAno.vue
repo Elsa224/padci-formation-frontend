@@ -12,15 +12,12 @@
       </div>
     </header>
 
-    <p
-      v-if="!canSign"
-      class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3"
-    >
+    <p v-if="!canSign" class="app-alert app-alert-warning">
       Seul un super administrateur peut signer ou rejeter une ANO. Vous pouvez consulter la liste.
     </p>
 
     <div v-if="isPending" class="text-center text-quiet py-10">Chargement des ANO…</div>
-    <div v-else-if="isError" class="text-center text-red-600 py-10">
+    <div v-else-if="isError" class="text-center text-danger-ink py-10">
       {{ (error as ApiError)?.message ?? 'Impossible de charger les ANO.' }}
     </div>
     <div v-else-if="anos.length === 0" class="text-center text-quiet py-10">
@@ -36,7 +33,7 @@
         :class="cardBorderClass(ano)"
       >
         <div>
-          <span class="text-xs font-bold uppercase tracking-wide" :class="badgeClass(ano)">
+          <span class="text-xs font-bold" :class="badgeClass(ano)">
             {{ badgeText(ano) }}
           </span>
 
@@ -47,7 +44,7 @@
           </p>
           <p
             v-if="ano.status === 'rejected' && ano.rejection_reason"
-            class="text-sm text-red-600 mt-1"
+            class="text-sm text-danger-ink mt-1"
           >
             Rejetée : {{ ano.rejection_reason }}
           </p>
@@ -59,7 +56,7 @@
               v-if="rejectingKey !== ano.key"
               @click="startReject(ano)"
               :disabled="!canSign || isMutating(ano.key)"
-              class="px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 transition disabled:opacity-50"
+              class="px-4 py-2 bg-white border border-danger-line text-danger-ink rounded-lg text-sm font-medium hover:bg-danger-soft transition disabled:opacity-50"
             >
               Rejeter
             </button>
@@ -82,7 +79,7 @@
             v-model="rejectReason"
             rows="2"
             placeholder="Motif du rejet"
-            class="w-full border border-line rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-savane/20 focus:border-savane"
+            class="app-input w-full"
           ></textarea>
           <div class="flex gap-2 mt-2">
             <button
@@ -94,7 +91,7 @@
             <button
               @click="confirmReject(ano)"
               :disabled="rejectMutation.isPending.value"
-              class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition disabled:opacity-50"
+              class="px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-danger transition disabled:opacity-50"
             >
               Confirmer le rejet
             </button>
@@ -103,10 +100,7 @@
       </div>
     </div>
 
-    <p
-      v-if="actionError"
-      class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3"
-    >
+    <p v-if="actionError" class="app-alert app-alert-danger">
       {{ actionError }}
     </p>
 
@@ -134,10 +128,7 @@
             Vous êtes sur le point de signer l'ANO pour :<br />
             <strong class="text-ink">{{ selectedAno?.title }}</strong>
           </p>
-          <p
-            v-if="actionError"
-            class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4 text-left"
-          >
+          <p v-if="actionError" class="app-alert app-alert-danger mb-4">
             {{ actionError }}
           </p>
 
@@ -194,14 +185,14 @@ function badgeText(ano: AnoRequest): string {
 
 function badgeClass(ano: AnoRequest): string {
   if (ano.status === 'signed') return 'text-primary-shade'
-  if (ano.status === 'rejected') return 'text-red-600'
+  if (ano.status === 'rejected') return 'text-danger-ink'
   return ano.priority === 'haute' ? 'text-savane-ink' : 'text-quiet'
 }
 
 function cardBorderClass(ano: AnoRequest): string {
   if (ano.status === 'pending' && ano.priority === 'haute') return 'border-l-4 border-savane'
   if (ano.status === 'signed') return 'border border-line opacity-75'
-  if (ano.status === 'rejected') return 'border-l-4 border-red-300'
+  if (ano.status === 'rejected') return 'border-l-4 border-danger-line'
   return 'border-l-4 border-line'
 }
 

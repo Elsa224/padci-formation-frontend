@@ -57,16 +57,16 @@
 
         <div
           v-if="pathway.equipment_requirements"
-          class="m-6 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm sm:m-8 sm:items-start"
+          class="m-6 flex gap-3 rounded-xl border border-warning-line bg-warning-soft p-4 text-sm sm:m-8 sm:items-start"
         >
-          <MonitorIcon class="mt-0.5 shrink-0 text-amber-700" :size="20" aria-hidden="true" />
+          <MonitorIcon class="mt-0.5 shrink-0 text-warning-ink" :size="20" aria-hidden="true" />
           <div>
-            <h2 class="font-bold text-amber-950">Équipement à prévoir</h2>
-            <p class="mt-1 text-sm leading-6 text-amber-900">
+            <h2 class="font-bold text-warning-ink">Équipement à prévoir</h2>
+            <p class="mt-1 text-sm leading-6 text-warning-ink">
               Cette formation comprend des travaux pratiques. Vérifiez que votre matériel répond aux
               critères ci-dessous avant de candidater.
             </p>
-            <ul class="mt-3 grid gap-1 text-sm text-amber-950 sm:grid-cols-3">
+            <ul class="mt-3 grid gap-1 text-sm text-warning-ink sm:grid-cols-3">
               <li v-if="pathway.equipment_requirements.min_cpu">
                 <span class="font-semibold">Processeur :</span>
                 {{ pathway.equipment_requirements.min_cpu }}
@@ -82,7 +82,7 @@
             </ul>
             <p
               v-if="pathway.equipment_requirements.notes"
-              class="mt-3 text-xs leading-5 text-amber-900"
+              class="mt-3 text-xs leading-5 text-warning-ink"
             >
               {{ pathway.equipment_requirements.notes }}
             </p>
@@ -128,7 +128,7 @@
             class="flex flex-col gap-4 rounded-xl border p-5 transition sm:p-6"
             :class="
               isCohortFull(cohort)
-                ? 'border-amber-200 bg-amber-50/20'
+                ? 'border-warning-line bg-warning-soft/20'
                 : cohort.available
                   ? 'border-primary/25 bg-primary/[0.02]'
                   : 'border-line bg-canvas'
@@ -158,7 +158,7 @@
                 </p>
                 <div
                   v-if="cohort.offline_starts_at"
-                  class="mt-2 inline-flex items-center gap-1.5 rounded-md border border-primary/25 bg-mint px-2.5 py-1 text-xs font-semibold text-primary-shade"
+                  class="app-alert app-alert-success mt-2 items-center gap-1.5"
                   data-testid="cohort-offline-dates"
                 >
                   <MapPinIcon :size="13" class="shrink-0 text-primary-shade" aria-hidden="true" />
@@ -196,7 +196,7 @@
                   <button
                     v-if="isCohortFull(cohort)"
                     type="button"
-                    class="app-action-secondary flex w-full items-center justify-center gap-2 border-amber-300 text-amber-900 hover:bg-amber-100/50 sm:w-auto"
+                    class="app-action-secondary flex w-full items-center justify-center gap-2 border-warning-line text-warning-ink hover:bg-warning-soft/50 sm:w-auto"
                     @click="goToCandidature(cohort)"
                   >
                     Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
@@ -227,14 +227,14 @@
                   {{ cohort.capacity }} réservées
                   <span
                     class="font-semibold"
-                    :class="isCohortFull(cohort) ? 'text-amber-800' : 'text-primary'"
+                    :class="isCohortFull(cohort) ? 'text-warning-ink' : 'text-primary'"
                   >
                     ({{ formatSeatsText(cohort.available_seats) }})
                   </span>
                 </span>
                 <span
                   class="font-semibold"
-                  :class="isCohortFull(cohort) ? 'text-amber-700' : 'text-primary'"
+                  :class="isCohortFull(cohort) ? 'text-warning-ink' : 'text-primary'"
                 >
                   {{ getOccupancyPercent(cohort) }}% remplie
                 </span>
@@ -249,7 +249,7 @@
               >
                 <div
                   class="h-full rounded-full transition-all duration-500 ease-out"
-                  :class="isCohortFull(cohort) ? 'bg-amber-500' : 'bg-primary'"
+                  :class="isCohortFull(cohort) ? 'bg-warning' : 'bg-primary'"
                   :style="{ width: `${getOccupancyPercent(cohort)}%` }"
                 />
               </div>
@@ -360,7 +360,7 @@ function getCohortStatusBadge(cohort: PublicCohort): {
   if (isCohortFull(cohort)) {
     return {
       label: 'Complète',
-      class: 'border-amber-200 bg-amber-100 text-amber-800',
+      class: 'border-warning-line bg-warning-soft text-warning-ink',
     }
   }
   if (cohort.available || cohort.status === 'open') {

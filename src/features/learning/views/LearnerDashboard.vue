@@ -252,7 +252,7 @@
             </div>
             <div>
               <dt class="flex items-center gap-1.5 text-sm text-quiet">
-                <span class="h-2 w-2 rounded-full bg-sky-600" aria-hidden="true" />Excusées
+                <span class="h-2 w-2 rounded-full bg-info" aria-hidden="true" />Excusées
               </dt>
               <dd
                 class="mt-0.5 text-xl font-bold text-ink tabular-nums"
@@ -465,11 +465,11 @@ function getAttendanceStatusBadgeClass(status: string): string {
     case 'present':
       return 'app-chip-leaf'
     case 'late':
-      return 'bg-savane-soft text-amber-700'
+      return 'bg-savane-soft text-warning-ink'
     case 'absent':
       return 'app-chip-danger'
     case 'excused':
-      return 'bg-sky-50 text-sky-700'
+      return 'bg-info-soft text-info-ink'
     default:
       return 'app-chip-neutral'
   }

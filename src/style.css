@@ -104,14 +104,27 @@
   --color-savane-soft: #fdf0e3;
 
   --color-mint: #e7f2eb;
+  --color-forest-soft: #e4ebe6;
   --color-canvas: #f3f5f2;
   --color-ink: #12201a;
   --color-body: #33423a;
   --color-quiet: #56645d;
   --color-line: #dde5df;
   --color-line-strong: #c7d3ca;
+  /* États : une famille par sens (fond doux, bordure, plein, texte). Jamais
+     de rouge, ambre ou bleu Tailwind bruts dans les vues. */
+  --color-danger: #d92d20;
   --color-danger-ink: #b42318;
+  --color-danger-soft: #fef3f2;
+  --color-danger-line: #fecdca;
+  --color-warning: #f79009;
   --color-warning-ink: #9a6700;
+  --color-warning-soft: #fffaeb;
+  --color-warning-line: #fedf89;
+  --color-info: #1f6f9f;
+  --color-info-ink: #175a85;
+  --color-info-soft: #ebf5fb;
+  --color-info-line: #bddcee;
 
   --shadow-panel: 0 1px 2px rgb(13 42 28 / 0.05), 0 1px 0 rgb(13 42 28 / 0.03);
   --shadow-raised: 0 18px 40px -24px rgb(13 42 28 / 0.45);
@@ -319,6 +332,17 @@ body {
     @apply min-h-11 w-full rounded-xl border border-line-strong bg-white px-3.5 py-2 text-sm text-ink transition placeholder:text-quiet/70 hover:border-quiet/50 focus:border-primary focus:ring-4 focus:ring-primary/12 focus:outline-none;
   }
 
+  /* Listes déroulantes natives : même champ, chevron aux couleurs de la charte. */
+  select.app-input {
+    @apply cursor-pointer appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2356645d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 0.85rem center;
+    background-size: 1rem;
+  }
+  textarea.app-input {
+    @apply min-h-24 py-2.5 leading-relaxed;
+  }
+
   .app-skeleton {
     @apply animate-pulse rounded-xl bg-[#e3eae5];
   }
@@ -337,7 +361,30 @@ body {
     @apply bg-canvas text-quiet ring-1 ring-line ring-inset;
   }
   .app-chip-danger {
-    @apply bg-red-50 text-danger-ink;
+    @apply bg-danger-soft text-danger-ink;
+  }
+  .app-chip-warning {
+    @apply bg-warning-soft text-warning-ink;
+  }
+  .app-chip-info {
+    @apply bg-info-soft text-info-ink;
+  }
+
+  /* Bandeaux d'alerte en ligne (erreur de formulaire, avertissement, info). */
+  .app-alert {
+    @apply rounded-xl border px-4 py-3 text-sm;
+  }
+  .app-alert-danger {
+    @apply border-danger-line bg-danger-soft text-danger-ink;
+  }
+  .app-alert-warning {
+    @apply border-warning-line bg-warning-soft text-warning-ink;
+  }
+  .app-alert-info {
+    @apply border-info-line bg-info-soft text-info-ink;
+  }
+  .app-alert-success {
+    @apply border-primary/25 bg-mint text-primary-shade;
   }
 }
 

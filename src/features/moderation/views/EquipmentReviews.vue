@@ -31,7 +31,7 @@
       </div>
       <div
         v-else-if="query.isError.value"
-        class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+        class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
         role="alert"
       >
         {{ message(query.error.value) }}
@@ -124,7 +124,9 @@
                   :required="decision !== 'approved'"
                 />
               </label>
-              <p v-if="actionError" role="alert" class="text-sm text-red-700">{{ actionError }}</p>
+              <p v-if="actionError" role="alert" class="text-sm text-danger-ink">
+                {{ actionError }}
+              </p>
               <button class="app-action-primary" :disabled="mutation.isPending.value">
                 {{ mutation.isPending.value ? 'Enregistrement...' : 'Enregistrer la décision' }}
               </button>

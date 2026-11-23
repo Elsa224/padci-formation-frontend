@@ -12,7 +12,7 @@
     </div>
     <div
       v-else-if="cohorts.isError.value"
-      class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
+      class="rounded-xl bg-danger-soft p-4 text-sm text-danger-ink"
       role="alert"
     >
       {{ apiErrorMessage(cohorts.error.value, 'Impossible de charger vos cohortes.') }}
@@ -122,8 +122,8 @@
                       enrollment.attendance_rate >= 0.8
                         ? 'bg-mint text-primary-shade border border-primary/25'
                         : enrollment.attendance_rate >= 0.5
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-red-50 text-red-700 border border-red-200'
+                          ? 'bg-warning-soft text-warning-ink border border-warning-line'
+                          : 'bg-danger-soft text-danger-ink border border-danger-line'
                     "
                   >
                     {{ Math.round(enrollment.attendance_rate * 100) }}%

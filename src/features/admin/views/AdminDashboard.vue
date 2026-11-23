@@ -13,7 +13,7 @@
     <!-- Indicateurs principaux : une seule bande, lue d'un coup d'œil -->
     <p
       v-if="isOverviewError"
-      class="rounded-[18px] bg-red-50 p-4 text-sm text-danger-ink"
+      class="rounded-[18px] bg-danger-soft p-4 text-sm text-danger-ink"
       role="alert"
     >
       {{ (overviewError as ApiError)?.message ?? 'Indicateurs indisponibles. Rechargez la page.' }}
@@ -65,7 +65,7 @@
         </div>
         <div
           v-else-if="isPathwaysError"
-          class="h-64 flex items-center justify-center text-sm text-red-600"
+          class="h-64 flex items-center justify-center text-sm text-danger-ink"
         >
           Impossible de charger.
         </div>
@@ -88,7 +88,7 @@
         </div>
         <div
           v-else-if="isStatusCountsError"
-          class="h-64 flex items-center justify-center text-sm text-red-600"
+          class="h-64 flex items-center justify-center text-sm text-danger-ink"
         >
           Impossible de charger.
         </div>

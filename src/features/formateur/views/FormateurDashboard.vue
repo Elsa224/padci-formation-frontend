@@ -42,7 +42,7 @@
         <div v-if="courses.isPending.value" class="space-y-3">
           <div v-for="n in 3" :key="n" class="app-skeleton h-14" />
         </div>
-        <p v-else-if="courses.isError.value" class="text-sm text-red-700" role="alert">
+        <p v-else-if="courses.isError.value" class="text-sm text-danger-ink" role="alert">
           {{ apiErrorMessage(courses.error.value, 'Impossible de charger vos cours.') }}
         </p>
         <p v-else-if="!latestCourses.length" class="rounded-xl bg-canvas p-6 text-sm text-quiet">
@@ -73,7 +73,7 @@
         <div v-if="cohorts.isPending.value" class="space-y-3">
           <div v-for="n in 3" :key="n" class="app-skeleton h-14" />
         </div>
-        <p v-else-if="cohorts.isError.value" class="text-sm text-red-700" role="alert">
+        <p v-else-if="cohorts.isError.value" class="text-sm text-danger-ink" role="alert">
           {{ apiErrorMessage(cohorts.error.value, 'Impossible de charger les sessions.') }}
         </p>
         <p
