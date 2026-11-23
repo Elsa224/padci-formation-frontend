@@ -100,7 +100,8 @@
                     rel="noopener"
                     class="font-semibold text-primary hover:underline"
                   >
-                    Ouvrir &rarr;
+                    Ouvrir
+                    <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
                   </a>
                 </div>
               </div>
@@ -125,7 +126,8 @@
             :to="`/formations/${courseKey}/chapitres/${prevChapter.key}`"
             class="px-4 py-2 bg-canvas text-ink rounded-xl text-xs font-semibold hover:bg-line transition"
           >
-            &larr; Chapitre précédent
+            <ArrowLeftIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" /> Chapitre
+            précédent
           </router-link>
         </div>
 
@@ -136,9 +138,7 @@
             class="app-action-primary"
           >
             {{
-              progressMutation.isPending.value
-                ? 'Enregistrement…'
-                : 'Marquer comme terminé & suivant ✓'
+              progressMutation.isPending.value ? 'Enregistrement…' : 'Terminer et passer au suivant'
             }}
           </button>
         </div>
@@ -150,7 +150,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { FileText as FileTextIcon, Link as LinkIcon } from '@lucide/vue'
+import {
+  FileText as FileTextIcon,
+  Link as LinkIcon,
+  ArrowLeft as ArrowLeftIcon,
+  ArrowRight as ArrowRightIcon,
+} from '@lucide/vue'
 import type { ApiError } from '@/api/http'
 import { safeHttpUrl } from '@/lib/safeUrl'
 import { renderMarkdown } from '@/lib/markdown'

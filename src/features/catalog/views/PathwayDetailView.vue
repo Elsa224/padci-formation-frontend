@@ -37,9 +37,9 @@
               class="rounded-lg bg-primary px-2.5 py-1 text-xs font-bold tracking-wide text-white"
               >{{ pathway.code }}</span
             >
-            <span v-if="pathway.programme" class="text-xs font-semibold text-quiet"
-              >Programme {{ pathway.programme.name }}</span
-            >
+            <span v-if="pathway.programme" class="text-xs font-semibold text-quiet">{{
+              pathway.programme.name
+            }}</span>
           </div>
           <h1
             id="pathway-title"
@@ -102,6 +102,15 @@
             <p class="mt-1 text-sm text-quiet">
               Les candidatures ne sont possibles que pour les sessions ouvertes.
             </p>
+            <p
+              v-if="isStaffViewer"
+              class="app-alert app-alert-info mt-3 flex items-center gap-2"
+              data-testid="staff-cannot-apply"
+            >
+              <InfoIcon :size="16" class="shrink-0" aria-hidden="true" />
+              Vous consultez cette filière avec un compte de l'équipe : seuls les apprenants peuvent
+              candidater.
+            </p>
           </div>
           <span
             class="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary"
@@ -147,7 +156,11 @@
                     v-if="cohort.session"
                     class="rounded-full border border-line bg-canvas px-2.5 py-0.5 text-xs font-semibold text-quiet"
                   >
-                    Session {{ cohort.session }}
+                    {{
+                      /^session/i.test(cohort.session)
+                        ? cohort.session
+                        : `Session ${cohort.session}`
+                    }}
                   </span>
                   <span class="text-xs font-medium text-quiet">{{ cohort.code }}</span>
                 </div>
@@ -173,7 +186,14 @@
               </div>
 
               <div class="shrink-0 pt-1 sm:pt-0">
-                <template v-if="activeFormationName">
+                <span
+                  v-if="isStaffViewer"
+                  class="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet sm:w-auto"
+                  data-testid="apply-learners-only"
+                >
+                  <LockIcon :size="14" aria-hidden="true" /> Réservé aux apprenants
+                </span>
+                <template v-else-if="activeFormationName">
                   <div class="flex flex-col items-stretch gap-1 sm:items-end">
                     <button
                       type="button"
@@ -188,7 +208,8 @@
                       class="text-center text-xs font-semibold text-primary hover:underline sm:text-right"
                       data-testid="link-to-candidatures"
                     >
-                      Mes candidatures →
+                      Mes candidatures
+                      <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
                     </router-link>
                   </div>
                 </template>
@@ -297,6 +318,8 @@ import {
   ArrowRight as ArrowRightIcon,
   BookOpen as BookOpenIcon,
   Calendar as CalendarIcon,
+  Info as InfoIcon,
+  Lock as LockIcon,
   MapPin as MapPinIcon,
   Monitor as MonitorIcon,
 } from '@lucide/vue'
@@ -326,6 +349,9 @@ const activeFormation = computed(() => {
   )
 })
 const activeFormationName = computed(() => activeFormation.value?.pathway?.name ?? null)
+// Seuls les apprenants candidatent (ApplicationPolicy::create côté API). Un
+// visiteur non connecté garde le bouton : il sera invité à se connecter.
+const isStaffViewer = computed(() => !!auth.token && !!auth.user && !auth.hasRole('apprenant'))
 const {
   data: pathway,
   isPending: isPathwayPending,

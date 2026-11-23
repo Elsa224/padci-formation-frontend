@@ -151,7 +151,8 @@
               :disabled="!pathwayKey"
               class="app-action-primary disabled:opacity-50"
             >
-              Continuer vers l'équipement &rarr;
+              Continuer vers l'équipement
+              <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -470,9 +471,12 @@
           </div>
 
           <div class="flex justify-between pt-4">
-            <button @click="currentStep = 1" class="app-action-secondary">&larr; Retour</button>
+            <button @click="currentStep = 1" class="app-action-secondary">
+              <ArrowLeftIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" /> Retour
+            </button>
             <button @click="nextToStep3" class="app-action-primary">
-              Vérifier et soumettre &rarr;
+              Vérifier et soumettre
+              <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -548,7 +552,9 @@
           </p>
 
           <div class="flex justify-between pt-4">
-            <button @click="currentStep = 2" class="app-action-secondary">&larr; Retour</button>
+            <button @click="currentStep = 2" class="app-action-secondary">
+              <ArrowLeftIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" /> Retour
+            </button>
             <button
               @click="submit"
               :disabled="submitMutation.isPending.value"
@@ -568,6 +574,7 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon } from '@lucide/vue'
 import { computed, ref, onScopeDispose } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ApiError } from '@/api/http'

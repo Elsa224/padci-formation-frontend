@@ -26,6 +26,8 @@ vi.mock('vue-router', async (importOriginal) => {
 vi.mock('@/stores/auth', () => ({
   useAuthStore: vi.fn(() => ({
     token: null,
+    user: null,
+    hasRole: () => false,
   })),
 }))
 
@@ -361,6 +363,49 @@ describe('PathwayDetailView', () => {
     expect(mockPush).toHaveBeenCalledWith(
       '/connexion?redirect=' + encodeURIComponent('/candidature?pathway=dev-web'),
     )
+  })
+})
+
+describe('PathwayDetailView — staff', () => {
+  it('replaces the apply button for a non-learner account', async () => {
+    const { useAuthStore } = await import('@/stores/auth')
+    vi.mocked(useAuthStore).mockReturnValue({
+      token: 'tok',
+      user: { roles: ['formateur'] },
+      hasRole: (role: string) => role === 'formateur',
+    } as never)
+    vi.mocked(useCatalogModule.usePathway).mockReturnValue({
+      data: ref({ id: 1, key: 'dev-web', code: 'DW', name: 'Développeur Web', slug: 'dw' }),
+      isPending: ref(false),
+      isError: ref(false),
+      error: ref(null),
+    } as never)
+    vi.mocked(useCatalogModule.usePathwayCohorts).mockReturnValue({
+      data: ref([
+        {
+          id: 10,
+          key: 'c1',
+          code: 'C1',
+          name: 'Promo',
+          capacity: 100,
+          enrolled_count: 0,
+          available_seats: 100,
+          is_full: false,
+          available: true,
+        },
+      ]),
+      isPending: ref(false),
+    } as never)
+    vi.mocked(useCatalogModule.usePathwayCourses).mockReturnValue({
+      data: ref({ items: [] }),
+      isPending: ref(false),
+    } as never)
+
+    const wrapper = mount(PathwayDetailView, { global: { stubs: { RouterLink: true } } })
+
+    expect(wrapper.find('[data-testid="apply-learners-only"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="staff-cannot-apply"]').exists()).toBe(true)
+    expect(wrapper.text()).not.toContain('Participer à cette formation')
   })
 })
 

@@ -837,7 +837,8 @@
                 "
                 class="w-full text-xs font-semibold text-warning-ink sm:w-auto sm:mr-auto"
               >
-                ⚠ Validez le matériel ci-dessus pour débloquer l'approbation.
+                <TriangleAlertIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
+                Validez le matériel ci-dessus pour débloquer l'approbation.
               </p>
               <button
                 @click="pendingDecision = 'rejected'"
@@ -925,6 +926,7 @@
 </template>
 
 <script setup lang="ts">
+import { TriangleAlert as TriangleAlertIcon } from '@lucide/vue'
 import { computed, ref, watch } from 'vue'
 import { refDebounced } from '@vueuse/core'
 import type { ApiError } from '@/api/http'

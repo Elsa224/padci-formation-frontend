@@ -76,7 +76,7 @@
         >
           {{
             resendDone
-              ? 'E-mail renvoyé ✓'
+              ? 'E-mail renvoyé.'
               : resendPending
                 ? 'Envoi en cours…'
                 : "Pas reçu ? Renvoyer l'e-mail"

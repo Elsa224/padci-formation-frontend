@@ -10,7 +10,8 @@
       </div>
       <div>
         <router-link to="/catalogue" class="app-action-primary">
-          Découvrir d'autres filières &rarr;
+          Découvrir d'autres filières
+          <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
         </router-link>
       </div>
     </header>
@@ -232,6 +233,7 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowRight as ArrowRightIcon } from '@lucide/vue'
 import { computed, ref } from 'vue'
 import ConfirmButton from '@/features/admin/components/ConfirmButton.vue'
 import type { ApiError } from '@/api/http'
