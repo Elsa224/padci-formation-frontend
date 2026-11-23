@@ -7,6 +7,12 @@ const state = {
   courses: { submitted: 1, in_review: 1 } as Record<string, number>,
   equipment: { pending: 1, needs_info: 0 } as Record<string, number>,
 }
+vi.mock('@/features/admin/composables/useDashboard', () => ({
+  useApplicationStatusCounts: () => ({
+    data: ref({ submitted: 2, in_review: 0 }),
+    isPending: ref(false),
+  }),
+}))
 vi.mock('../composables/useModerationQueues', () => ({
   useCourseStatusCounts: () => ({ data: ref(state.courses), isPending: ref(false) }),
   useEquipmentStatusCounts: () => ({ data: ref(state.equipment), isPending: ref(false) }),
@@ -29,7 +35,8 @@ async function mountDashboard() {
 describe('ModeratorDashboard', () => {
   it('sums what is waiting and lists the course queue', async () => {
     const wrapper = await mountDashboard()
-    expect(wrapper.text()).toContain('3 éléments attendent votre examen.')
+    expect(wrapper.text()).toContain('5 éléments attendent votre examen.')
+    expect(wrapper.find('[data-test="tile-applications"]').text()).toContain('2')
     expect(wrapper.find('[data-test="tile-courses"]').text()).toContain('2')
     expect(wrapper.text()).toContain('Cours A')
     expect(wrapper.text()).toContain("En cours d'examen")

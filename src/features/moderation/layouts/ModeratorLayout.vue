@@ -9,7 +9,7 @@
   </WorkspaceShell>
 </template>
 <script setup lang="ts">
-import { MonitorCheck, BookOpenCheck, Compass, LayoutDashboard } from '@lucide/vue'
+import { MonitorCheck, BookOpenCheck, Compass, LayoutDashboard, UserCheck } from '@lucide/vue'
 import WorkspaceShell, {
   type WorkspaceNavGroup,
 } from '@/features/shared/components/WorkspaceShell.vue'
@@ -18,6 +18,7 @@ const navigation: WorkspaceNavGroup[] = [
     label: 'Modération',
     items: [
       { label: 'Tableau de bord', to: '/moderation/tableau-de-bord', icon: LayoutDashboard },
+      { label: 'Candidatures', to: '/moderation/candidatures', icon: UserCheck },
       { label: 'Matériel des candidats', to: '/moderation/materiel', icon: MonitorCheck },
       { label: 'Cours', to: '/moderation/cours', icon: BookOpenCheck },
       { label: 'Catalogue', to: '/catalogue', icon: Compass },

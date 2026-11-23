@@ -758,7 +758,6 @@ function submit() {
   submitMutation.mutate(
     {
       pathway_key: pathwayKey.value,
-      cohort_key: undefined,
       motivation: motivation.value.trim() || undefined,
       proof_media_key: proofMediaKey.value || undefined,
       equipment: hasComputer.value

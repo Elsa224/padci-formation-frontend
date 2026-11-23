@@ -253,6 +253,13 @@ const router = createRouter({
           component: () => import('@/features/moderation/views/ModeratorDashboard.vue'),
         },
         {
+          // Décision produit 2026-11-23 : le modérateur décide aussi les
+          // candidatures (admissions.manage) ; même écran que l'admin.
+          path: 'candidatures',
+          name: 'moderation-candidatures',
+          component: () => import('@/features/admin/views/AdminCandidatures.vue'),
+        },
+        {
           path: 'materiel',
           name: 'moderation-equipment',
           component: () => import('@/features/moderation/views/EquipmentReviews.vue'),
