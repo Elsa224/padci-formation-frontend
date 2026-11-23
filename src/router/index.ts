@@ -52,6 +52,11 @@ function operationsRoutes(prefix: 'admin' | 'superadmin') {
       component: () => import('@/features/admin/views/AdminAttestations.vue'),
     },
     {
+      path: 'rapports-formateurs',
+      name: `${prefix}-rapports-formateurs`,
+      component: () => import('@/features/admin/views/AdminRapportsFormateurs.vue'),
+    },
+    {
       path: 'audit',
       name: `${prefix}-audit`,
       component: () => import('@/features/admin/views/AdminAudit.vue'),
@@ -208,7 +213,12 @@ const router = createRouter({
           component: () => import('@/features/learning/views/LearnerDashboard.vue'),
         },
         {
-          // Static segment: matched before ':courseKey'.
+          // Static segments: matched before ':courseKey'.
+          path: 'notes',
+          name: 'mes-notes',
+          component: () => import('@/features/learning/views/MesNotes.vue'),
+        },
+        {
           path: 'attestations',
           name: 'mes-attestations',
           component: () => import('@/features/learning/views/MesAttestations.vue'),
@@ -390,6 +400,16 @@ const router = createRouter({
           path: 'corrections',
           name: 'formateur-corrections',
           component: () => import('@/features/formateur/views/FormateurCorrections.vue'),
+        },
+        {
+          path: 'notes',
+          name: 'formateur-notes',
+          component: () => import('@/features/formateur/views/FormateurNotes.vue'),
+        },
+        {
+          path: 'rapports',
+          name: 'formateur-rapports',
+          component: () => import('@/features/formateur/views/FormateurRapports.vue'),
         },
         {
           path: 'cohortes',
