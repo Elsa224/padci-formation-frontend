@@ -58,7 +58,7 @@
 
     <!-- Affectation à une cohorte -->
     <div
-      v-if="assignedCohort"
+      v-if="showCohortCard && assignedCohort"
       data-testid="cohort-status-card"
       class="flex flex-col gap-4 rounded-[18px] border border-line bg-white p-5 shadow-panel sm:flex-row sm:items-center sm:justify-between"
     >
@@ -127,52 +127,53 @@
       </EmptyState>
     </div>
 
-    <!-- Mes cours -->
+    <!-- Mes cours, regroupés par cohorte : la cohorte n'est dite qu'une fois -->
     <section v-else class="space-y-3" aria-labelledby="courses-title">
-      <div class="flex items-baseline justify-between gap-3">
-        <h2 id="courses-title" class="text-lg font-bold text-ink">Mes cours</h2>
-        <span class="text-sm text-quiet">{{ enrollments.length }} cours</span>
-      </div>
-      <ul
-        class="divide-y divide-line overflow-hidden rounded-[18px] border border-line bg-white shadow-panel"
+      <h2 id="courses-title" class="text-lg font-bold text-ink">Mes cours</h2>
+      <div
+        v-for="group in courseGroups"
+        :key="group.key"
+        class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel"
+        data-test="course-group"
       >
-        <li v-for="enrollment in enrollments" :key="enrollment.key">
-          <router-link
-            v-if="enrollment.course"
-            :to="`/formations/${enrollment.course.key}`"
-            :aria-label="`Accéder au cours ${enrollment.course.title}`"
-            class="group flex items-center gap-4 px-5 py-4 transition hover:bg-mint/50"
-          >
-            <span
-              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forest text-sm font-bold text-white"
-              aria-hidden="true"
-              >{{ initialsOf(enrollment.course.title) }}</span
+        <p
+          v-if="group.name"
+          class="border-b border-line bg-canvas/60 px-5 py-2.5 text-sm font-medium text-quiet"
+        >
+          {{ group.name }}
+        </p>
+        <ul class="divide-y divide-line">
+          <li v-for="enrollment in group.items" :key="enrollment.key">
+            <router-link
+              v-if="enrollment.course"
+              :to="`/formations/${enrollment.course.key}`"
+              :aria-label="`Accéder au cours ${enrollment.course.title}`"
+              class="group flex items-center gap-4 px-5 py-3.5 transition hover:bg-mint/50"
             >
-            <span class="min-w-0 flex-1">
-              <span class="block truncate font-semibold text-ink group-hover:text-primary-shade">
+              <span
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-forest text-sm font-bold text-white"
+                aria-hidden="true"
+                >{{ initialsOf(enrollment.course.title) }}</span
+              >
+              <span
+                class="min-w-0 flex-1 truncate font-semibold text-ink group-hover:text-primary-shade"
+              >
                 {{ enrollment.course.title }}
               </span>
-              <span v-if="enrollment.cohort" class="block truncate text-sm text-quiet">
-                {{ enrollment.cohort.name }}
+              <!-- Seul un état anormal mérite une mention : « en cours » est la norme -->
+              <span v-if="enrollment.status !== 'active'" class="app-chip app-chip-savane">
+                {{ enrollmentStatusLabel(enrollment.status) }}
               </span>
-            </span>
-            <span
-              class="app-chip"
-              :class="enrollment.status === 'active' ? 'app-chip-leaf' : 'app-chip-neutral'"
-            >
-              {{ enrollment.status === 'active' ? 'En cours' : enrollment.status }}
-            </span>
-            <ChevronRightIcon
-              :size="18"
-              class="shrink-0 text-quiet transition group-hover:translate-x-0.5 group-hover:text-primary"
-              aria-hidden="true"
-            />
-          </router-link>
-          <div v-else class="flex items-center gap-4 px-5 py-4 text-sm text-quiet">
-            Contenu en cours de publication
-          </div>
-        </li>
-      </ul>
+              <ChevronRightIcon
+                :size="18"
+                class="shrink-0 text-quiet transition group-hover:translate-x-0.5 group-hover:text-primary"
+                aria-hidden="true"
+              />
+            </router-link>
+            <p v-else class="px-5 py-3.5 text-sm text-quiet">Contenu en cours de publication</p>
+          </li>
+        </ul>
+      </div>
     </section>
 
     <!-- Mon assiduité -->
@@ -346,6 +347,39 @@ const enrollments = computed(() => data.value?.items ?? [])
 const primaryEnrollment = computed(
   () => enrollments.value.find((e) => e.status === 'active' && e.course) ?? null,
 )
+
+/**
+ * Courses grouped by cohort, in enrollment order, so the cohort name is
+ * shown once per group instead of on every course.
+ */
+const courseGroups = computed(() => {
+  const groups = new Map<
+    string,
+    { key: string; name: string | null; items: typeof enrollments.value }
+  >()
+  for (const enrollment of enrollments.value) {
+    const key = enrollment.cohort?.key ?? 'sans-cohorte'
+    const group = groups.get(key) ?? { key, name: enrollment.cohort?.name ?? null, items: [] }
+    group.items.push(enrollment)
+    groups.set(key, group)
+  }
+  return [...groups.values()]
+})
+
+/**
+ * « Affectation confirmée — Rentrée le … » only helps before courses start:
+ * no course yet, or a start date still ahead. Once courses are open it is noise.
+ */
+const showCohortCard = computed(() => {
+  const cohort = assignedCohort.value
+  if (!cohort) return false
+  if (enrollments.value.length === 0) return true
+  return cohort.starts_at ? new Date(cohort.starts_at).getTime() > Date.now() : false
+})
+
+function enrollmentStatusLabel(status: string): string {
+  return { suspended: 'Suspendu', completed: 'Terminé', revoked: 'Accès retiré' }[status] ?? status
+}
 
 function initialsOf(title: string): string {
   return title
