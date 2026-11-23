@@ -146,11 +146,7 @@
           </div>
 
           <div class="flex justify-end pt-4">
-            <button
-              @click="nextToStep2"
-              :disabled="!pathwayKey"
-              class="app-action-primary disabled:opacity-50"
-            >
+            <button @click="nextToStep2" :disabled="!pathwayKey" class="app-action-primary">
               Continuer vers l'équipement
               <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
             </button>
@@ -558,7 +554,7 @@
             <button
               @click="submit"
               :disabled="submitMutation.isPending.value"
-              class="app-action-primary disabled:opacity-50"
+              class="app-action-primary"
             >
               {{
                 submitMutation.isPending.value

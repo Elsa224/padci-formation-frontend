@@ -111,6 +111,8 @@
   --color-quiet: #56645d;
   --color-line: #dde5df;
   --color-line-strong: #c7d3ca;
+  /* Contour d'un contrôle (bouton secondaire) : 3:1 sur le canevas. */
+  --color-line-control: #7f9286;
   /* États : une famille par sens (fond doux, bordure, plein, texte). Jamais
      de rouge, ambre ou bleu Tailwind bruts dans les vues. */
   --color-danger: #d92d20;
@@ -261,6 +263,11 @@ body {
   textarea {
     @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
+  /* Sur fond forêt (sidebar, panneaux signature), le vert ne fait que 3,2:1 :
+     contour savane (5,2:1). */
+  :where(.bg-forest, .app-panel-forest) :is(button, a, input, select, textarea) {
+    @apply focus-visible:outline-savane;
+  }
 }
 
 /*
@@ -316,16 +323,16 @@ body {
   }
 
   .app-action-primary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] transition duration-150 hover:bg-primary-shade active:translate-y-px disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] transition duration-150 hover:bg-primary-shade active:translate-y-px disabled:pointer-events-none disabled:border-transparent disabled:bg-[#e3eae5] disabled:text-quiet disabled:shadow-none;
   }
 
   .app-action-secondary {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-5 py-2.5 text-sm font-semibold text-ink transition duration-150 hover:border-primary/40 hover:bg-mint active:translate-y-px disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-control bg-white px-5 py-2.5 text-sm font-semibold text-ink transition duration-150 hover:border-primary/40 hover:bg-mint active:translate-y-px disabled:pointer-events-none disabled:border-transparent disabled:bg-[#e3eae5] disabled:text-quiet disabled:shadow-none;
   }
 
   /* Accent savane : texte forêt sur orange (contraste ≈ 6:1). */
   .app-action-accent {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-savane px-5 py-2.5 text-sm font-bold text-forest transition duration-150 hover:brightness-105 active:translate-y-px disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-savane px-5 py-2.5 text-sm font-bold text-forest transition duration-150 hover:brightness-105 active:translate-y-px disabled:pointer-events-none disabled:border-transparent disabled:bg-[#e3eae5] disabled:text-quiet disabled:shadow-none;
   }
 
   .app-input {

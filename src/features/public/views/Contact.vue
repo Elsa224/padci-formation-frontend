@@ -44,11 +44,7 @@
         {{ errorMsg }}
       </div>
 
-      <button
-        type="submit"
-        :disabled="sending"
-        class="w-full px-6 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition disabled:opacity-60 disabled:cursor-not-allowed"
-      >
+      <button type="submit" :disabled="sending" class="app-action-primary w-full">
         {{ sending ? 'Envoi en cours…' : 'Envoyer le message' }}
       </button>
     </form>

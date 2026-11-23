@@ -66,7 +66,7 @@
 
       <div class="m-3 flex items-center gap-3 rounded-2xl bg-forest-raised p-3">
         <div
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-savane text-xs font-bold text-forest"
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-mint text-xs font-bold text-forest"
         >
           {{ initials }}
         </div>

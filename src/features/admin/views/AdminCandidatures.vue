@@ -600,7 +600,7 @@
                     type="button"
                     :disabled="decideEquipmentMutation.isPending.value"
                     @click="decideEquipment('approved')"
-                    class="rounded-lg bg-primary px-3.5 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-primary-shade transition disabled:opacity-50 flex items-center gap-1.5"
+                    class="app-action-primary min-h-9 px-3.5 py-1.5 text-xs"
                     data-testid="btn-approve-equipment"
                   >
                     <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
