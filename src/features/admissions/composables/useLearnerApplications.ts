@@ -73,7 +73,6 @@ export interface LearnerApplication {
 
 export interface SubmitApplicationDto {
   pathway_key: string
-  cohort_key?: string
   motivation?: string
   equipment?: EquipmentDeclaration
   proof_media_key?: string

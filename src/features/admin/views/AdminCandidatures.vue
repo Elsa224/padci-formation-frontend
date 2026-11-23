@@ -102,7 +102,7 @@
                 {{ application.pathway?.name ?? '-' }}
               </td>
               <td class="px-6 py-4 text-quiet">
-                {{ application.cohort?.code ?? application.cohort?.session ?? 'Standby / Ouverte' }}
+                {{ application.cohort?.code ?? application.cohort?.session ?? 'À l’acceptation' }}
               </td>
               <td class="px-6 py-4 text-quiet">
                 {{ formatDate(application.submitted_at) }}

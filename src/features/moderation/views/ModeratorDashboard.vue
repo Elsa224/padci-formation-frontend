@@ -8,7 +8,7 @@
     </header>
 
     <section
-      class="grid grid-cols-1 gap-y-6 rounded-[18px] border border-line bg-white p-6 shadow-panel sm:grid-cols-3 sm:divide-x sm:divide-line"
+      class="grid grid-cols-1 gap-y-6 rounded-[18px] border border-line bg-white p-6 shadow-panel sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-line"
       aria-label="Files d'attente"
     >
       <RouterLink
@@ -16,7 +16,7 @@
         :key="tile.label"
         :to="tile.to"
         class="group transition focus-visible:ring-4 focus-visible:ring-primary/15 focus-visible:outline-none"
-        :class="index > 0 ? 'sm:pl-6' : ''"
+        :class="index > 0 ? 'lg:pl-6' : ''"
         :data-test="`tile-${tile.key}`"
       >
         <StatTile
@@ -128,6 +128,7 @@ import { Check as CheckIcon, ChevronRight as ChevronRightIcon } from '@lucide/vu
 import EmptyState from '@/components/app/EmptyState.vue'
 import StatTile from '@/components/app/StatTile.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useApplicationStatusCounts } from '@/features/admin/composables/useDashboard'
 import {
   useCourseQueueHead,
   useCourseStatusCounts,
@@ -148,7 +149,20 @@ const coursesWaiting = computed(() => {
   return c ? (c.submitted ?? 0) + (c.in_review ?? 0) : null
 })
 
+const applicationCounts = useApplicationStatusCounts()
+const applicationsWaiting = computed(() => {
+  const c = applicationCounts.data.value as Record<string, number> | undefined
+  return c ? (c.submitted ?? 0) + (c.in_review ?? 0) : null
+})
+
 const tiles = computed(() => [
+  {
+    key: 'applications',
+    label: 'Candidatures à décider',
+    value: applicationsWaiting.value ?? '—',
+    loading: applicationCounts.isPending.value,
+    to: { path: '/moderation/candidatures', query: { statut: 'submitted' } },
+  },
   {
     key: 'courses',
     label: 'Cours à examiner',
@@ -175,8 +189,10 @@ const tiles = computed(() => [
 const summary = computed(() => {
   const courses = coursesWaiting.value
   const equipment = equipmentCounts.data.value?.pending
-  if (courses === null || equipment === undefined) return 'Ce qui attend votre examen.'
-  const total = courses + equipment
+  const applications = applicationsWaiting.value
+  if (courses === null || equipment === undefined || applications === null)
+    return 'Ce qui attend votre examen.'
+  const total = courses + equipment + applications
   if (total === 0) return 'Rien ne vous attend pour le moment.'
   return total === 1
     ? 'Un élément attend votre examen.'

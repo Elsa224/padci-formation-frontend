@@ -3360,9 +3360,6 @@ export interface components {
     /** StoreApplicationRequest */
     StoreApplicationRequest: {
       pathway_key: string
-      /** @description The candidate may pick a session or apply to the pathway directly;
-       *     cohort assignment happens upon admission approval or standby queue. */
-      cohort_key?: string | null
       proof_media_key?: string | null
       motivation?: string | null
       /** @description A declaration is checked by the workflow only if the selected
