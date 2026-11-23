@@ -2246,7 +2246,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** GET /grades — notes de l'apprenant connecté */
+    /** GET /grades - notes de l'apprenant connecté */
     get: operations['grades.mine']
     put?: never
     post?: never
@@ -2263,10 +2263,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** GET /admin/cohorts/{cohort}/grades?course_key=… — une ligne par apprenant
+    /** GET /admin/cohorts/{cohort}/grades?course_key=… - une ligne par apprenant
      *     inscrit au cours dans cette cohorte, avec sa note s'il en a une */
     get: operations['admin.cohorts.grades.index']
-    /** PUT /admin/cohorts/{cohort}/grades — enregistre un lot de notes */
+    /** PUT /admin/cohorts/{cohort}/grades - enregistre un lot de notes */
     put: operations['admin.cohorts.grades.upsert']
     post?: never
     delete?: never
@@ -2282,10 +2282,10 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** GET /admin/cohorts/{cohort}/reports — rapports d'une cohorte */
+    /** GET /admin/cohorts/{cohort}/reports - rapports d'une cohorte */
     get: operations['admin.cohorts.reports.index']
     put?: never
-    /** POST /admin/cohorts/{cohort}/reports — dépôt par un formateur de la cohorte */
+    /** POST /admin/cohorts/{cohort}/reports - dépôt par un formateur de la cohorte */
     post: operations['admin.cohorts.reports.store']
     delete?: never
     options?: never
@@ -2300,7 +2300,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    /** GET /admin/trainer-reports — tous les rapports (administration) */
+    /** GET /admin/trainer-reports - tous les rapports (administration) */
     get: operations['admin.trainer-reports.index']
     put?: never
     post?: never
@@ -2319,7 +2319,7 @@ export interface paths {
     }
     get?: never
     put?: never
-    /** POST /admin/trainer-reports/{report}/decide — validation ou rejet */
+    /** POST /admin/trainer-reports/{report}/decide - validation ou rejet */
     post: operations['admin.trainer-reports.decide']
     delete?: never
     options?: never
@@ -3246,7 +3246,7 @@ export interface components {
       slug: string
       description: string | null
       /** @description Minimum computer specs for this pathway (processor/RAM/storage),
-       *     seeded and admin-editable — replaces the hardcoded frontend
+       *     seeded and admin-editable - replaces the hardcoded frontend
        *     dropdown. Shape: {min_cpu, min_ram_gb, min_storage_gb, notes}. */
       equipment_requirements: unknown[] | null
       requires_equipment_validation: boolean
@@ -3433,7 +3433,7 @@ export interface components {
      *
      *     `scheduled_at` is only required to be in the future the *first* time an
      *     assessment is scheduled (i.e. while `scheduled_at` is still null on the
-     *     model). Once a date exists, rescheduling — even to a past date — is
+     *     model). Once a date exists, rescheduling - even to a past date - is
      *     allowed without this check, so a trainer/admin can fix a typo or keep an
      *     accurate record of an already-held offline exam without validation
      *     getting in the way.
