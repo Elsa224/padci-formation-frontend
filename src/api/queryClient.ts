@@ -2,7 +2,7 @@ import { QueryClient } from '@tanstack/vue-query'
 import { ApiError } from './http'
 
 /**
- * A 401/403/404/422 will never succeed on retry — only retry on transient
+ * A 401/403/404/422 will never succeed on retry - only retry on transient
  * failures (network errors, 5xx). Mirrors what a human would actually do:
  * re-click "retry" on a timeout, not on "forbidden".
  */

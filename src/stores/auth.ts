@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 /**
  * Session token storage. PADCI-API issues a Sanctum Bearer token (not a
- * cookie) — see `AuthController::login`, `token_type: "Bearer"`. There is no
+ * cookie) - see `AuthController::login`, `token_type: "Bearer"`. There is no
  * httpOnly option for a bearer scheme (the client must read it to set the
  * `Authorization` header itself), so the safer default here is
  * `sessionStorage`: it survives a reload within the tab but is cleared when

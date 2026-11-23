@@ -48,7 +48,7 @@
           <div class="min-w-0">
             <p class="font-semibold text-ink">{{ assessment.title }}</p>
             <p class="text-xs text-quiet">
-              {{ assessment.questions_count ?? '—' }} question(s) ·
+              {{ assessment.questions_count ?? '-' }} question(s) ·
               {{ assessment.settings?.duration_minutes ?? 30 }} min ·
               {{ assessment.settings?.max_attempts ?? 1 }} tentative(s)
             </p>
@@ -224,7 +224,7 @@
             class="app-input mt-1"
             required
             maxlength="180"
-            placeholder="Ex : Quiz — Journée 1"
+            placeholder="Ex : Quiz - Journée 1"
           />
         </label>
         <label class="text-sm font-semibold text-ink">

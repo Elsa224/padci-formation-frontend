@@ -11,7 +11,7 @@ interface ResetPasswordPayload {
 
 /**
  * POST /v1/auth/reset-password (`PasswordResetController::reset`).
- * On success the backend revokes ALL of the user's Sanctum tokens — any
+ * On success the backend revokes ALL of the user's Sanctum tokens - any
  * open session elsewhere is logged out. An invalid or expired token comes
  * back as `PasswordResetFailedException`; surface its message verbatim,
  * do not soften it ("session expirée, redemandez un lien" is a lie the

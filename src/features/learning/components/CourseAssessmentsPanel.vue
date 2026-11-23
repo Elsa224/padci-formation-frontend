@@ -25,7 +25,7 @@
           <div class="min-w-0">
             <p class="font-semibold text-ink">{{ assessment.title }}</p>
             <p class="text-xs text-quiet">
-              {{ assessment.questions_count ?? '—' }} question(s) ·
+              {{ assessment.questions_count ?? '-' }} question(s) ·
               {{ assessment.settings.duration_minutes }} min ·
               {{ attemptsLabel(assessment.settings.max_attempts) }}
             </p>

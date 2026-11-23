@@ -15,7 +15,7 @@ export interface CatalogPathway {
   courses_count?: number
 }
 
-/** GET /catalog/pathways — public, no auth. Active pathways only (server-side). */
+/** GET /catalog/pathways - public, no auth. Active pathways only (server-side). */
 export function useCatalogPathways() {
   return useQuery({
     queryKey: ['catalog-pathways'],

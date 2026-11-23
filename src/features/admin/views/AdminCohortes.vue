@@ -871,7 +871,7 @@ watch(
 
     const sequence = existingCount + 1
     createForm.code = `${pathway.code}-${currentYear}-C${sequence}`
-    createForm.name = `${pathway.name} — Cohorte ${sequence}`
+    createForm.name = `${pathway.name} - Cohorte ${sequence}`
   },
 )
 

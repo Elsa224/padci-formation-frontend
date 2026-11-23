@@ -14,7 +14,7 @@ const rows = ref([
 vi.mock('vue-sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 vi.mock('@tanstack/vue-query', () => ({
   useQuery: () => ({
-    data: ref([{ key: 'coh_1', name: 'Cyber — Session 1', pathway: { key: 'pth_1' } }]),
+    data: ref([{ key: 'coh_1', name: 'Cyber - Session 1', pathway: { key: 'pth_1' } }]),
     isPending: ref(false),
   }),
 }))
@@ -32,7 +32,7 @@ vi.mock('@/features/cohorts/composables/useCourseGrades', async (importOriginal)
         score: 14.5,
         appreciation: 'Très bien',
         course: { key: 'crs_1', title: 'Cours 1' },
-        cohort: { key: 'coh_1', name: 'Cyber — Session 1' },
+        cohort: { key: 'coh_1', name: 'Cyber - Session 1' },
         grader: { key: 'usr_t', name: 'Demo Formateur' },
       },
     ]),
@@ -55,7 +55,7 @@ vi.mock('@/features/cohorts/composables/useTrainerReports', async (importOrigina
           review_note: null,
           created_at: '2026-11-23T10:00:00Z',
           author: { key: 'usr_t', name: 'Demo Formateur' },
-          cohort: { key: 'coh_1', code: 'C1', name: 'Cyber — Session 1' },
+          cohort: { key: 'coh_1', code: 'C1', name: 'Cyber - Session 1' },
         },
       ],
     }),

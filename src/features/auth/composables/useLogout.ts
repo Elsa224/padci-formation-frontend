@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import { queryClient } from '@/api/queryClient'
 
 /**
- * Logs out and always lands back on the session being cleared locally —
+ * Logs out and always lands back on the session being cleared locally -
  * even if the server call fails (token already expired, network down),
  * there is no scenario where staying "logged in" client-side is correct.
  */
@@ -16,7 +16,7 @@ export function useLogout() {
     try {
       await http.post('/auth/logout')
     } catch {
-      // Already-invalid token, network error — doesn't matter, we're
+      // Already-invalid token, network error - doesn't matter, we're
       // clearing the local session regardless.
     } finally {
       auth.clearSession()

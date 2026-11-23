@@ -83,7 +83,7 @@
                 {{ entry.target_type ?? '' }}
                 <span class="font-mono">{{ entry.target_key ?? '' }}</span>
               </td>
-              <td class="px-3 py-2 font-mono text-xs text-quiet">{{ entry.ip ?? '—' }}</td>
+              <td class="px-3 py-2 font-mono text-xs text-quiet">{{ entry.ip ?? '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -141,8 +141,8 @@
                 {{ formatDateTime(entry.created_at) }}
               </td>
               <td class="px-3 py-2 font-mono text-xs">{{ entry.event }}</td>
-              <td class="px-3 py-2">{{ entry.email ?? '—' }}</td>
-              <td class="px-3 py-2 font-mono text-xs text-quiet">{{ entry.ip ?? '—' }}</td>
+              <td class="px-3 py-2">{{ entry.email ?? '-' }}</td>
+              <td class="px-3 py-2 font-mono text-xs text-quiet">{{ entry.ip ?? '-' }}</td>
             </tr>
           </tbody>
         </table>

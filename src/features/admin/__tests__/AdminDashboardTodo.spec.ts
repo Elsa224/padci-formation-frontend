@@ -33,7 +33,7 @@ vi.mock('@/features/moderation/composables/useModerationQueues', () => ({
 
 const stubs = { RouterLink: { template: '<a><slot /></a>' } }
 
-describe('AdminDashboard — À traiter', () => {
+describe('AdminDashboard - À traiter', () => {
   it('is hidden when nothing waits for a decision', async () => {
     const { default: AdminDashboard } = await import('../views/AdminDashboard.vue')
     expect(

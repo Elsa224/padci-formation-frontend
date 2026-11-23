@@ -54,7 +54,7 @@
       >
         <StatTile
           :label="kpi.label"
-          :value="kpi.value ?? '—'"
+          :value="kpi.value ?? '-'"
           :loading="kpi.loading"
           :tone="kpi.tone"
         />

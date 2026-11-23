@@ -1,4 +1,4 @@
-// EMSP mailer — mini-API SES (inscriptions + contact)
+// EMSP mailer - mini-API SES (inscriptions + contact)
 //
 // Auth SES: via le rôle IAM de l'instance (Express54-EC2-Role), qui porte
 // ses:SendEmail/SendRawEmail sur l'identité scbsystems.org. AUCUN identifiant
@@ -102,7 +102,7 @@ app.post('/api/inscription', limiter, (req, res) => {
 
       const nomComplet = `${b.prenom || ''} ${b.nom || ''}`.trim()
       const adminHtml = emailLayout({
-        title: 'Nouvelle inscription — EMSP',
+        title: 'Nouvelle inscription - EMSP',
         preheader: `Dossier de ${nomComplet || b.email}`,
         footerNote:
           'Répondez directement à ce message pour contacter le candidat (Reply-To configuré).',
@@ -133,14 +133,14 @@ app.post('/api/inscription', limiter, (req, res) => {
         from: fromHeader,
         to: MAIL_ADMIN,
         replyTo: b.email,
-        subject: `Nouvelle inscription EMSP — ${nomComplet || b.email}`,
+        subject: `Nouvelle inscription EMSP - ${nomComplet || b.email}`,
         html: adminHtml,
         attachments,
       })
 
       // Accusé de réception au candidat (sans pièces jointes)
       const ackHtml = emailLayout({
-        title: 'Confirmation de votre demande — EMSP',
+        title: 'Confirmation de votre demande - EMSP',
         preheader: 'Votre dossier d’inscription a bien été reçu.',
         body: `
           <h1 style="margin:0 0 16px;font-size:20px;color:${BRAND_BLUE};">Demande d'inscription bien reçue</h1>
@@ -155,7 +155,7 @@ app.post('/api/inscription', limiter, (req, res) => {
         await transporter.sendMail({
           from: fromHeader,
           to: b.email,
-          subject: 'Confirmation de votre demande d’inscription — EMSP',
+          subject: 'Confirmation de votre demande d’inscription - EMSP',
           html: ackHtml,
         })
       } catch (ackErr) {
@@ -182,8 +182,8 @@ app.post('/api/contact', limiter, async (req, res) => {
     if (!isEmail(b.email)) return res.status(400).json({ ok: false, error: 'Adresse email invalide.' })
 
     const html = emailLayout({
-      title: 'Nouveau message de contact — EMSP',
-      preheader: `${b.nom} — ${b.sujet || 'Contact'}`,
+      title: 'Nouveau message de contact - EMSP',
+      preheader: `${b.nom} - ${b.sujet || 'Contact'}`,
       footerNote:
         "Répondez directement à ce message pour contacter l'expéditeur (Reply-To configuré).",
       body: `
@@ -203,7 +203,7 @@ app.post('/api/contact', limiter, async (req, res) => {
       from: fromHeader,
       to: MAIL_ADMIN,
       replyTo: b.email,
-      subject: `Contact EMSP — ${b.sujet ? b.sujet : b.nom}`,
+      subject: `Contact EMSP - ${b.sujet ? b.sujet : b.nom}`,
       html,
     })
     return res.json({ ok: true })

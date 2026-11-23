@@ -91,7 +91,7 @@
                   <p class="font-semibold text-ink">{{ enrollment.user?.name }}</p>
                   <p class="text-xs text-quiet">{{ enrollment.user?.email }}</p>
                 </td>
-                <td class="px-3 py-2 text-ink">{{ enrollment.course?.title ?? '—' }}</td>
+                <td class="px-3 py-2 text-ink">{{ enrollment.course?.title ?? '-' }}</td>
                 <td class="px-3 py-2">
                   <div
                     v-if="
@@ -109,7 +109,7 @@
                       {{ Math.round(enrollment.progress_rate * 100) }}%
                     </span>
                   </div>
-                  <span v-else class="text-xs text-quiet">—</span>
+                  <span v-else class="text-xs text-quiet">-</span>
                 </td>
                 <td class="px-3 py-2">
                   <span
@@ -128,7 +128,7 @@
                   >
                     {{ Math.round(enrollment.attendance_rate * 100) }}%
                   </span>
-                  <span v-else class="text-xs text-quiet">—</span>
+                  <span v-else class="text-xs text-quiet">-</span>
                 </td>
                 <td class="px-3 py-2">
                   <span class="rounded-full bg-canvas px-2 py-0.5 text-xs font-semibold text-quiet">

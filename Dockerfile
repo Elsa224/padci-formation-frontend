@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # =============================================================================
-# Dockerfile — PADCI-WEB (build Vite + service Nginx)
+# Dockerfile - PADCI-WEB (build Vite + service Nginx)
 #
 # Build une fois, sert une SPA statique. Aucun Node ni aucun secret ne
 # survit dans l'image finale : seuls les fichiers statiques générés par
@@ -46,7 +46,7 @@ RUN chown -R nginx:nginx /usr/share/nginx/html /var/cache/nginx /var/run \
     && chown nginx:nginx /var/run/nginx.pid
 
 # Non-root: nginx can't bind port 80 (privileged) without root, so it
-# listens on 8080 (see docker/nginx/default.conf) — map the host port in
+# listens on 8080 (see docker/nginx/default.conf) - map the host port in
 # docker-compose instead of changing this.
 USER nginx
 

@@ -1,5 +1,5 @@
 /**
- * Each role's own workspace home — the single source of truth for every
+ * Each role's own workspace home - the single source of truth for every
  * "where does this user land" decision (router guard, login, MFA setup,
  * invitation onboarding, public header). Highest-privilege role wins.
  */

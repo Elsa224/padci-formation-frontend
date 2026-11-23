@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from '../App.vue'
 
-// `App.vue` is just a <router-view/> (see the file) — the previous version
+// `App.vue` is just a <router-view/> (see the file) - the previous version
 // of this test asserted the default Vite scaffold's "You did it!" welcome
 // text, which was never updated when the real app replaced that template.
 describe('App', () => {

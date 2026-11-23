@@ -5,7 +5,7 @@ import { http } from '@/api/http'
 /**
  * Learner side of the Assessment module (/learning/assessments, /attempts).
  * Scores and correct answers are computed and revealed server-side only once
- * an attempt is submitted (AttemptResource) — this file never grades.
+ * an attempt is submitted (AttemptResource) - this file never grades.
  *
  * Shapes are written by hand on purpose: Scramble cannot infer the nested
  * question payloads built in closures (it emits `questions: string[]`), so
@@ -85,7 +85,7 @@ export interface AnswerPayload {
   free_text_response?: string | null
 }
 
-/** GET /learning/courses/{course}/assessments — published assessments only. */
+/** GET /learning/courses/{course}/assessments - published assessments only. */
 export function useCourseAssessments(
   courseKey: MaybeRef<string>,
   enabled: MaybeRef<boolean> = true,
@@ -122,7 +122,7 @@ export function useAttempt(attemptKey: MaybeRef<string>) {
   })
 }
 
-/** PUT /learning/attempts/{attempt}/answers/{question} — saves one answer. */
+/** PUT /learning/attempts/{attempt}/answers/{question} - saves one answer. */
 export function useSaveAnswer(attemptKey: MaybeRef<string>) {
   return useMutation({
     mutationFn: async ({ questionKey, ...payload }: AnswerPayload & { questionKey: string }) =>
@@ -135,7 +135,7 @@ export function useSaveAnswer(attemptKey: MaybeRef<string>) {
   })
 }
 
-/** POST /learning/attempts/{attempt}/submit — server computes the score. */
+/** POST /learning/attempts/{attempt}/submit - server computes the score. */
 export function useSubmitAttempt(attemptKey: MaybeRef<string>) {
   const client = useQueryClient()
   return useMutation({

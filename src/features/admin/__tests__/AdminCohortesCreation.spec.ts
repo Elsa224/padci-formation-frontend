@@ -49,7 +49,7 @@ describe('AdminCohortes Creation & Offline Dates', () => {
       id: 1,
       key: 'cohort-dw-1',
       code: `DW-${currentYear}-C1`,
-      name: 'Développeur Web — Cohorte 1',
+      name: 'Développeur Web - Cohorte 1',
       session: 'Cohorte 1',
       capacity: 50,
       enrolled_count: 20,
@@ -102,14 +102,14 @@ describe('AdminCohortes Creation & Offline Dates', () => {
     const nameInput = wrapper.find<HTMLInputElement>('[data-testid="cohort-name-input"]')
 
     expect(codeInput.element.value).toBe(`DW-${currentYear}-C2`)
-    expect(nameInput.element.value).toBe('Développeur Web — Cohorte 2')
+    expect(nameInput.element.value).toBe('Développeur Web - Cohorte 2')
 
     // Selecting data-ai (0 existing cohorts) -> sequence should be C1
     await wrapper.find('[data-testid="cohort-pathway-select"]').setValue('data-ai')
     await flushPromises()
 
     expect(codeInput.element.value).toBe(`DAI-${currentYear}-C1`)
-    expect(nameInput.element.value).toBe('Data & Intelligence Artificielle — Cohorte 1')
+    expect(nameInput.element.value).toBe('Data & Intelligence Artificielle - Cohorte 1')
   })
 
   it('does not display session input field in the creation modal', async () => {
@@ -193,7 +193,7 @@ describe('AdminCohortes Creation & Offline Dates', () => {
         id: 2,
         key: 'cohort-dw-2',
         code: `DW-${currentYear}-C2`,
-        name: 'Développeur Web — Cohorte 2',
+        name: 'Développeur Web - Cohorte 2',
       },
       drained_standby_count: 0,
     })
@@ -217,7 +217,7 @@ describe('AdminCohortes Creation & Offline Dates', () => {
       expect.objectContaining({
         pathway_key: 'dev-web',
         code: `DW-${currentYear}-C2`,
-        name: 'Développeur Web — Cohorte 2',
+        name: 'Développeur Web - Cohorte 2',
         capacity: 100,
         starts_at: '2026-03-01',
         ends_at: '2026-09-01',

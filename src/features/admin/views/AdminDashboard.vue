@@ -57,27 +57,27 @@
     >
       <StatTile
         label="Apprenants"
-        :value="overview?.learners_total ?? '—'"
+        :value="overview?.learners_total ?? '-'"
         :loading="isOverviewPending"
       />
       <StatTile
         class="lg:pl-6"
         label="Cohortes actives"
-        :value="overview?.active_cohorts_total ?? '—'"
+        :value="overview?.active_cohorts_total ?? '-'"
         :loading="isOverviewPending"
       />
       <StatTile
         class="lg:pl-6"
         label="Taux d'achèvement"
         tone="leaf"
-        :value="overview ? `${Math.round(overview.completion_rate * 100)} %` : '—'"
+        :value="overview ? `${Math.round(overview.completion_rate * 100)} %` : '-'"
         :loading="isOverviewPending"
       />
       <StatTile
         class="lg:pl-6"
         label="Attestations délivrées"
         tone="savane"
-        :value="overview?.certificates_issued_total ?? '—'"
+        :value="overview?.certificates_issued_total ?? '-'"
         :loading="isOverviewPending"
       />
     </section>

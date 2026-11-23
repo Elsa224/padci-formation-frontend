@@ -15,7 +15,7 @@ interface ConfirmResponse {
   recovery_codes: string[]
 }
 
-/** POST /auth/mfa/setup — generates a secret, not persisted until confirmed. */
+/** POST /auth/mfa/setup - generates a secret, not persisted until confirmed. */
 export function useMfaSetup() {
   return useMutation({
     mutationFn: async () => {
@@ -25,7 +25,7 @@ export function useMfaSetup() {
   })
 }
 
-/** POST /auth/mfa/confirm — the only response that ever carries plaintext
+/** POST /auth/mfa/confirm - the only response that ever carries plaintext
  * recovery codes, and only once. */
 export function useMfaConfirm() {
   return useMutation({
@@ -36,7 +36,7 @@ export function useMfaConfirm() {
   })
 }
 
-/** POST /auth/mfa/disable — always acts on the caller themself, no body. */
+/** POST /auth/mfa/disable - always acts on the caller themself, no body. */
 export function useMfaDisable() {
   return useMutation({
     mutationFn: async () => {

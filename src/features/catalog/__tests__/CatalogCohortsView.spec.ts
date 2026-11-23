@@ -154,7 +154,7 @@ describe('PathwayDetailView', () => {
   })
 })
 
-describe('PathwayDetailView — staff', () => {
+describe('PathwayDetailView - staff', () => {
   it('replaces the apply button for a non-learner account', async () => {
     const { useAuthStore } = await import('@/stores/auth')
     vi.mocked(useAuthStore).mockReturnValue({

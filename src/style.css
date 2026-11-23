@@ -4,13 +4,13 @@
 
 /* Le mode sombre reste une variante `.dark` (les composants shadcn
    continuent de compiler), mais aucun bloc `.dark` de variables n'existe
-   plus : la décision est « light only » — tous les `dark:` des composants
+   plus : la décision est « light only » - tous les `dark:` des composants
    restent inertes tant que personne n'ajoute la classe, c'est déterministe
    et une décision produit pourra le réactiver proprement. */
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Futura PT — auto-hébergée, UNE famille sémantique : chaque graisse est
+ * Futura PT - auto-hébergée, UNE famille sémantique : chaque graisse est
  * déclarée avec son `font-weight` réel (pas de faux gras du navigateur, pas
  * de 7 familles distinctes). L'import Google Fonts (Geist) est supprimé :
  * requête externe au runtime inutile (confidentialité, offline).
@@ -73,7 +73,7 @@
 }
 
 /*
- * Palette de marque — décision 2026-11-09 : le vert institutionnel
+ * Palette de marque - décision 2026-11-09 : le vert institutionnel
  * `#198341` (présent dans TOUTES les vues maison) devient le seul
  * `primary`. Échelle dérivée des 4 valeurs déjà utilisées par les vues :
  * primary = #198341 (base), primary-bright = #22a854 (bout du dégradé),
@@ -81,7 +81,7 @@
  * photo). Rien de spéculatif.
  */
 /*
- * Direction « Forêt & Savane » (2026-11-23) — le vert de marque reste
+ * Direction « Forêt & Savane » (2026-11-23) - le vert de marque reste
  * l'unique couleur d'action ; une forêt profonde encadre l'application
  * (sidebar, bloc « Reprendre ») ; l'orange du drapeau ivoirien ne sert
  * qu'à signaler (élément actif, progression, nouveauté), jamais de fond
@@ -178,7 +178,7 @@
 /*
  * Les variables shadcn injectent la marque : `--primary` était le
  * near-black du starter (oklch 0.205) et `@theme inline` le réexposait
- * en `bg-primary` APRÈS le @theme bleu — le bug de double déclaration du
+ * en `bg-primary` APRÈS le @theme bleu - le bug de double déclaration du
  * constat. Une seule source : la marque ici, plus aucun `--color-primary`
  * au-dessus. Contraste vérifié : blanc sur #198341 ≈ 5.4:1 (AA texte
  * normal).
@@ -271,7 +271,7 @@ body {
 }
 
 /*
- * Composants maison — tous les écrans s'appuient dessus, donc la
+ * Composants maison - tous les écrans s'appuient dessus, donc la
  * direction visuelle se règle ici. Hiérarchie des arrondis : panneau 18px,
  * contrôle 12px, pastille ronde. Pas de capitales espacées : les libellés
  * restent en casse normale, la hiérarchie vient de la graisse et de la
@@ -408,7 +408,7 @@ body {
     @apply animate-pulse rounded-xl bg-[#e3eae5];
   }
 
-  /* Pastilles d'état — la couleur porte le sens, pas la décoration. */
+  /* Pastilles d'état - la couleur porte le sens, pas la décoration. */
   .app-chip {
     @apply inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap;
   }

@@ -58,7 +58,7 @@ export interface ApplicationEquipmentReview {
   reviewed_by?: { key: string; name: string } | null
 }
 
-/** `ApplicationResource` shape. `payload` is free-form — see StoreApplicationRequest. */
+/** `ApplicationResource` shape. `payload` is free-form - see StoreApplicationRequest. */
 export interface Application {
   id: number
   key: string
@@ -92,7 +92,7 @@ export interface ApplicationListFilters {
   page?: number
 }
 
-/** GET /admin/applications — admissions.view. Server-side filtering/paging. */
+/** GET /admin/applications - admissions.view. Server-side filtering/paging. */
 export function useApplications(filters: Ref<ApplicationListFilters>) {
   return useQuery({
     queryKey: computed(() => ['admin-applications', filters.value]),
@@ -114,7 +114,7 @@ export function useApplications(filters: Ref<ApplicationListFilters>) {
   })
 }
 
-/** GET /admin/applications/{application} — full detail (cohort, decided_by). */
+/** GET /admin/applications/{application} - full detail (cohort, decided_by). */
 export function useApplication(key: Ref<string | null>) {
   return useQuery({
     queryKey: computed(() => ['admin-application', key.value]),
@@ -126,7 +126,7 @@ export function useApplication(key: Ref<string | null>) {
   })
 }
 
-/** POST /admin/applications/{application}/start-review — admissions.manage. */
+/** POST /admin/applications/{application}/start-review - admissions.manage. */
 export function useStartApplicationReview() {
   const queryClient = useQueryClient()
 
@@ -150,7 +150,7 @@ export interface DecideApplicationPayload {
   reason?: string
 }
 
-/** POST /admin/applications/{application}/decide — admissions.manage. */
+/** POST /admin/applications/{application}/decide - admissions.manage. */
 export function useDecideApplication() {
   const queryClient = useQueryClient()
 
@@ -176,7 +176,7 @@ export interface DecideEquipmentReviewPayload {
   reason?: string
 }
 
-/** POST /moderation/equipment-reviews/{review}/decide — equipment.review or admissions.manage */
+/** POST /moderation/equipment-reviews/{review}/decide - equipment.review or admissions.manage */
 export function useDecideEquipmentReview() {
   let queryClient: ReturnType<typeof useQueryClient> | null = null
   try {

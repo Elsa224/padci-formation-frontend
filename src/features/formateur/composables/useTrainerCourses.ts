@@ -9,7 +9,7 @@ import type { ResourceMedia } from '@/features/learning/composables/useLearningC
  * Trainer ("formateur") side of the Catalog module. Every endpoint lives
  * under /admin/courses: the backend scopes the list to the courses the
  * current user owns (Course::scopeVisibleTo) and CoursePolicy enforces
- * ownership on writes — this file never filters anything for security.
+ * ownership on writes - this file never filters anything for security.
  */
 
 export type CourseStatus =
@@ -133,7 +133,7 @@ export interface TrainerCourseFilters {
 export const TRAINER_COURSES_PER_PAGE = 24
 
 /**
- * GET /admin/courses — courses.view, scoped server-side to the owner.
+ * GET /admin/courses - courses.view, scoped server-side to the owner.
  * The query key is normalized (status/page defaults spelled out) so every
  * caller asking for the same page shares one cache entry.
  */
@@ -188,7 +188,7 @@ export function useTrainerCourse(courseKey: MaybeRef<string>) {
   })
 }
 
-/** GET /admin/courses/{course}/modules — modules with chapters and resources. */
+/** GET /admin/courses/{course}/modules - modules with chapters and resources. */
 export function useCourseModules(courseKey: MaybeRef<string>) {
   return useQuery({
     queryKey: computed(() => ['trainer-course-modules', toValue(courseKey)]),
@@ -206,7 +206,7 @@ export interface CreateCoursePayload {
   language?: string
 }
 
-/** POST /admin/courses — courses.manage. The course starts as a draft. */
+/** POST /admin/courses - courses.manage. The course starts as a draft. */
 export function useCreateCourse() {
   const client = useQueryClient()
   return useMutation({
@@ -218,7 +218,7 @@ export function useCreateCourse() {
 
 /**
  * POST /admin/courses/{course}/submit. Depending on the moderation toggle
- * (ADR-009) the course becomes `submitted` or is published directly — the
+ * (ADR-009) the course becomes `submitted` or is published directly - the
  * returned resource tells which.
  */
 export function useSubmitCourse() {
@@ -233,7 +233,7 @@ export function useSubmitCourse() {
   })
 }
 
-/** POST /admin/courses/{course}/revert-to-draft — from `rejected` only. */
+/** POST /admin/courses/{course}/revert-to-draft - from `rejected` only. */
 export function useRevertCourseToDraft() {
   const client = useQueryClient()
   return useMutation({
@@ -259,7 +259,7 @@ export interface UpdateCoursePayload {
   level?: CourseLevel
 }
 
-/** PATCH /admin/courses/{course} — while editable (draft/rejected). */
+/** PATCH /admin/courses/{course} - while editable (draft/rejected). */
 export function useUpdateCourse(courseKey: MaybeRef<string>) {
   const client = useQueryClient()
   return useMutation({

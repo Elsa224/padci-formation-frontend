@@ -1,4 +1,4 @@
-// Templates email EMSP — module PUR (aucun effet de bord, importable pour
+// Templates email EMSP - module PUR (aucun effet de bord, importable pour
 // prévisualisation/tests). Charte : bleu #274E8F + orange #E07B00.
 
 export const esc = (s) =>
@@ -19,7 +19,7 @@ export const BRAND = {
   border: '#e9ecf1',
 }
 
-// Coquille HTML email (table-based, styles inline — compatible clients mail)
+// Coquille HTML email (table-based, styles inline - compatible clients mail)
 export function emailLayout({ title, preheader = '', body, footerNote }) {
   const note =
     footerNote ||
@@ -57,7 +57,7 @@ export function highlight(label, value) {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:4px 0 20px;"><tr>
     <td style="background:${BRAND.blueSoft};border-left:4px solid ${BRAND.blue};border-radius:6px;padding:14px 18px;">
       <div style="font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:${BRAND.muted};">${esc(label)}</div>
-      <div style="font-size:16px;font-weight:bold;color:${BRAND.blue};margin-top:3px;">${esc(value || '—')}</div>
+      <div style="font-size:16px;font-weight:bold;color:${BRAND.blue};margin-top:3px;">${esc(value || '-')}</div>
     </td></tr></table>`
 }
 
@@ -69,7 +69,7 @@ export function dataTable(pairs) {
       ([k, v], i) =>
         `<tr style="background:${i % 2 ? '#ffffff' : '#f7f9fc'};">
           <td style="padding:9px 14px;border-bottom:1px solid ${BRAND.border};color:${BRAND.muted};font-weight:bold;width:42%;vertical-align:top;">${esc(k)}</td>
-          <td style="padding:9px 14px;border-bottom:1px solid ${BRAND.border};color:${BRAND.text};">${esc(v || '—')}</td>
+          <td style="padding:9px 14px;border-bottom:1px solid ${BRAND.border};color:${BRAND.text};">${esc(v || '-')}</td>
         </tr>`,
     )
     .join('')

@@ -5,7 +5,7 @@ interface PingResponse {
   pong: boolean
 }
 
-/** Calls the backend's unauthenticated `GET /ping` — proves the frontend can
+/** Calls the backend's unauthenticated `GET /ping` - proves the frontend can
  * actually reach the API (not just that the frontend itself booted). */
 export function useApiPing() {
   return useQuery({

@@ -61,7 +61,7 @@ test('inscription → email non vérifié → vérification → connexion', asyn
   await page.getByPlaceholder('Confirmer le mot de passe *').fill(password)
   await page.getByRole('button', { name: 'Créer mon compte' }).click()
 
-  // État honnête : compte créé, PAS de "connexion possible" mentie —
+  // État honnête : compte créé, PAS de "connexion possible" mentie -
   // et en local le backend renvoie le lien signé, affiché comme lien dev.
   await expect(page.getByText('Compte créé !')).toBeVisible()
   const devLink = page.getByRole('link', { name: /\[dev\] Vérifier l'adresse maintenant/ })
@@ -84,7 +84,7 @@ test('inscription → email non vérifié → vérification → connexion', asyn
   await expect(page.getByRole('button', { name: /Renvoyer l'e-mail/ })).toBeVisible()
 
   // 3. Vérification via le lien signé (le navigateur est renvoyé sur
-  //    /connexion?verified=1 par l'API — le redirect backend doit tomber sur
+  //    /connexion?verified=1 par l'API - le redirect backend doit tomber sur
   //    un chemin SPA qui existe).
   await page.goto(href)
   await expect(page).toHaveURL(/\/connexion\?verified=1/)
@@ -114,7 +114,7 @@ test('règles serveur : confirmation ≠ mot de passe et mot de passe faible', a
   await page.getByPlaceholder('Mot de passe *', { exact: true }).fill('court')
   await page.getByPlaceholder('Confirmer le mot de passe *').fill('court')
   await expect(page.getByRole('button', { name: 'Créer mon compte' })).toBeDisabled()
-  // Toujours sur l'écran d'inscription — pas de faux succès.
+  // Toujours sur l'écran d'inscription - pas de faux succès.
   await expect(page.getByText('Créer un compte')).toBeVisible()
   await expect(page.getByText('Compte créé !')).toHaveCount(0)
 })
@@ -125,7 +125,7 @@ test('mot de passe oublié → email (Mailpit) → réinitialisation → connexi
   const email = uniqueEmail('reset')
 
   // Pré-requis : un compte vérifié. Créé via le flow UI (test 1) puis la
-  // vérification via le lien dev — même parcours qu'un nouvel utilisateur.
+  // vérification via le lien dev - même parcours qu'un nouvel utilisateur.
   await page.goto('/inscription')
   await page.getByPlaceholder('Nom *').fill('Reset')
   await page.getByPlaceholder('Prénoms *').fill('E2E')

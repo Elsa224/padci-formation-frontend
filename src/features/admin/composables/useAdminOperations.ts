@@ -46,7 +46,7 @@ function useInvalidatingMutation<TVariables, TResult = unknown>(
 
 // ── Reports ─────────────────────────────────────────────────────────────
 
-/** GET /admin/dashboard/reports/cohorts — per-cohort enrollment/completion. */
+/** GET /admin/dashboard/reports/cohorts - per-cohort enrollment/completion. */
 export interface CohortMetrics {
   cohort_key: string
   code: string
@@ -74,7 +74,7 @@ export interface CourseSettings {
   course_moderation_enabled: boolean
 }
 
-/** GET/PATCH /admin/settings/courses — courses.settings.manage. */
+/** GET/PATCH /admin/settings/courses - courses.settings.manage. */
 export function useCourseSettings() {
   return useQuery({
     queryKey: ['admin-course-settings'],
@@ -220,7 +220,7 @@ export function useAdminEnrollments(filters: MaybeRef<EnrollmentFilters>) {
 
 export type EnrollmentAction = 'suspend' | 'revoke' | 'reinstate' | 'complete'
 
-/** POST /admin/enrollments/{enrollment}/{action} — suspend/revoke take a reason. */
+/** POST /admin/enrollments/{enrollment}/{action} - suspend/revoke take a reason. */
 export function useEnrollmentAction() {
   return useInvalidatingMutation(
     [['admin-enrollments']],
@@ -310,7 +310,7 @@ export function useDeleteExternalCertification() {
   )
 }
 
-/** GET /admin/users?q= — to pick the learner of a certification. */
+/** GET /admin/users?q= - to pick the learner of a certification. */
 export function useUserSearch(term: MaybeRef<string>) {
   return useQuery({
     queryKey: computed(() => ['admin-user-search', toValue(term)]),
@@ -368,7 +368,7 @@ export function useAuthEvents(
 }
 
 export function formatDateTime(value: string | null): string {
-  if (!value) return '—'
+  if (!value) return '-'
   return new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }).format(
     new Date(value),
   )

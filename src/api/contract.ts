@@ -1,6 +1,6 @@
 /**
  * Typed access to the product contract (AGENTS.md: `docs/api/openapi.json`
- * in emsp-api is the only product contract). `schema.d.ts` is generated —
+ * in emsp-api is the only product contract). `schema.d.ts` is generated -
  * never edit it by hand; regenerate with `npm run gen:api` after every API
  * change, once the backend has re-exported the Scramble spec.
  *

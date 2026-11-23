@@ -1,6 +1,6 @@
 #!/bin/sh
 # =============================================================================
-# local-entrypoint.sh — préparation du conteneur de dev PADCI-WEB
+# local-entrypoint.sh - préparation du conteneur de dev PADCI-WEB
 #
 # node_modules est un volume nommé (voir docker-compose.local.yml) : il
 # survit aux restarts. On ne réinstalle que si package-lock.json a changé

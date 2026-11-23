@@ -77,7 +77,7 @@ export interface UpdateProfilePayload {
   email?: string
 }
 
-/** PATCH /profile — an email change resets verification (backend re-sends the link). */
+/** PATCH /profile - an email change resets verification (backend re-sends the link). */
 export function useUpdateProfile() {
   const queryClient = useQueryClient()
   const auth = useAuthStore()
@@ -102,7 +102,7 @@ export interface ChangePasswordPayload {
   password_confirmation: string
 }
 
-/** PUT /profile/password — revokes every other session's token on success. */
+/** PUT /profile/password - revokes every other session's token on success. */
 export function useChangePassword() {
   return useMutation({
     mutationFn: async (payload: ChangePasswordPayload) => {
@@ -113,7 +113,7 @@ export function useChangePassword() {
 
 /**
  * Lightweight real counts for the profile page (formations suivies,
- * certificats) — `per_page=1` reads `meta.pagination.total` without
+ * certificats) - `per_page=1` reads `meta.pagination.total` without
  * fetching the actual records. No per-course progress/study-time
  * aggregate exists yet (that is the learner dashboard's job, task 05),
  * so this composable only exposes what already has a real contract.

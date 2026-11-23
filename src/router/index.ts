@@ -6,7 +6,7 @@ import { homeFor } from '@/features/auth/utils/homeFor'
 declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth?: boolean
-    /** Any one of these roles is enough — not all of them. */
+    /** Any one of these roles is enough - not all of them. */
     roles?: string[]
     /** Holding any of these roles denies the route, even with an allowed role. */
     excludedRoles?: string[]
@@ -16,7 +16,7 @@ declare module 'vue-router' {
 // A wrong-role user is sent to their own home (homeFor), so "forbidden"
 // doesn't just bounce them to login again.
 
-// Routes are feature-based (src/features/<domain>) rather than role-based —
+// Routes are feature-based (src/features/<domain>) rather than role-based -
 // see docs/architecture note in the PADCI backend repo for the module
 // mapping this mirrors (Catalog, Learning, Admissions...).
 //
@@ -92,7 +92,7 @@ const router = createRouter({
     {
       // Chemin consommé par le lien de l'email de réinitialisation
       // (?token=…&email=…, ResetPasswordNotification). Alias de la route
-      // canonique française — un seul composant, deux chemins d'entrée.
+      // canonique française - un seul composant, deux chemins d'entrée.
       path: '/reinitialiser-mot-de-passe',
       name: 'reset-password',
       alias: '/reset-password',
@@ -456,7 +456,7 @@ router.beforeEach(async (to) => {
   ) {
     const home = homeFor(auth.user.roles)
     // An account with no usable role (e.g. all roles revoked) would be sent
-    // to a home it cannot open either — an infinite redirect. Fall back to
+    // to a home it cannot open either - an infinite redirect. Fall back to
     // the public catalogue instead.
     if (home === to.path) return { path: '/catalogue' }
     return { path: home }

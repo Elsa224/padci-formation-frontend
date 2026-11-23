@@ -6,7 +6,7 @@ import type { ApiFailure, ApiMeta } from './types'
 /**
  * Every response's `meta` (pagination included), read off the response the
  * success interceptor returns. Callers already destructure `const { data } =
- * await http.get(...)` expecting `data` to be the bare resource — `meta` is
+ * await http.get(...)` expecting `data` to be the bare resource - `meta` is
  * attached onto the response object itself rather than nested inside `data`,
  * so none of that existing code has to change to get pagination info.
  */
@@ -15,7 +15,7 @@ export function apiMeta(response: AxiosResponse): ApiMeta | null {
 }
 
 /**
- * Normalized error shape for the whole app — every catch block deals with
+ * Normalized error shape for the whole app - every catch block deals with
  * this, never a raw AxiosError or the backend's envelope directly.
  */
 export class ApiError extends Error {
@@ -42,8 +42,8 @@ export class ApiError extends Error {
   /**
    * The most useful message to show when there is no per-field form to
    * attach `fieldErrors` to (a confirm dialog, a row action...): the first
-   * field-level validation message when there is one — `message` alone is
-   * often just the generic "Les données fournies sont invalides." — falling
+   * field-level validation message when there is one - `message` alone is
+   * often just the generic "Les données fournies sont invalides." - falling
    * back to `message` for every other error shape.
    */
   get displayMessage(): string {
@@ -67,7 +67,7 @@ export const http: AxiosInstance = axios.create({
 })
 
 http.interceptors.request.use((config) => {
-  // Correlates a request with the backend's `audit_logs`/error responses —
+  // Correlates a request with the backend's `audit_logs`/error responses -
   // the API echoes this back (see SetRequestId middleware) so a bug report
   // can quote one exact id.
   config.headers['X-Request-Id'] = crypto.randomUUID()
@@ -81,7 +81,7 @@ http.interceptors.request.use((config) => {
 })
 
 http.interceptors.response.use(
-  // Success responses are always `{ success: true, data, message, meta }` —
+  // Success responses are always `{ success: true, data, message, meta }` -
   // callers want `data`, not the envelope.
   (response) => {
     // Binary downloads (certificate PDF…) carry no JSON envelope.
@@ -94,7 +94,7 @@ http.interceptors.response.use(
     const requestId = error.response?.headers?.['x-request-id'] ?? null
 
     // An expired/invalid token is a dead session regardless of which shape
-    // the error body comes in — drop it before anything else.
+    // the error body comes in - drop it before anything else.
     if (error.response?.status === 401) {
       useAuthStore().clearSession()
     }
@@ -118,7 +118,7 @@ http.interceptors.response.use(
     }
 
     // Network failure, timeout, or a non-JSON error (e.g. a 502 from the
-    // reverse proxy) — the backend's envelope never reached us.
+    // reverse proxy) - the backend's envelope never reached us.
     return Promise.reject(
       new ApiError(
         error.message || 'Erreur réseau.',
