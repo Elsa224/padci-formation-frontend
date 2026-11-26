@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Mini-API d'envoi de mail (SES) pour EMSP — inscriptions + contact",
+  "description": "Mini-API d'envoi de mail (SES) pour EMSP - inscriptions + contact",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

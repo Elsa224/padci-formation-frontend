@@ -4,13 +4,13 @@
 
 /* Le mode sombre reste une variante `.dark` (les composants shadcn
    continuent de compiler), mais aucun bloc `.dark` de variables n'existe
-   plus : la décision est « light only » — tous les `dark:` des composants
+   plus : la décision est « light only » - tous les `dark:` des composants
    restent inertes tant que personne n'ajoute la classe, c'est déterministe
    et une décision produit pourra le réactiver proprement. */
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Futura PT — auto-hébergée, UNE famille sémantique : chaque graisse est
+ * Futura PT - auto-hébergée, UNE famille sémantique : chaque graisse est
  * déclarée avec son `font-weight` réel (pas de faux gras du navigateur, pas
  * de 7 familles distinctes). L'import Google Fonts (Geist) est supprimé :
  * requête externe au runtime inutile (confidentialité, offline).
@@ -73,24 +73,63 @@
 }
 
 /*
- * Palette de marque — décision 2026-11-09 : le vert institutionnel
+ * Palette de marque - décision 2026-11-09 : le vert institutionnel
  * `#198341` (présent dans TOUTES les vues maison) devient le seul
  * `primary`. Échelle dérivée des 4 valeurs déjà utilisées par les vues :
  * primary = #198341 (base), primary-bright = #22a854 (bout du dégradé),
  * primary-shade = #146b34 (hover), primary-deep = #0f5229 (overlay
  * photo). Rien de spéculatif.
  */
+/*
+ * Direction « Forêt & Savane » (2026-11-23) - le vert de marque reste
+ * l'unique couleur d'action ; une forêt profonde encadre l'application
+ * (sidebar, bloc « Reprendre ») ; l'orange du drapeau ivoirien ne sert
+ * qu'à signaler (élément actif, progression, nouveauté), jamais de fond
+ * de bouton courant. Le texte courant gagne en contraste (l'ancien gris
+ * #5c6b63 sur #f6f8f7 en Futura Book faisait « fade »).
+ */
 @theme {
   --color-primary: #198341;
   --color-primary-bright: #22a854;
   --color-primary-shade: #146b34;
   --color-primary-deep: #0f5229;
-  --color-canvas: #f6f8f7;
-  --color-ink: #17211c;
-  --color-quiet: #5c6b63;
-  --color-line: #dce5de;
+
+  --color-forest: #0d2a1c;
+  --color-forest-raised: #143724;
+  --color-forest-line: #24493a;
+  --color-forest-muted: #9db8aa;
+
+  --color-savane: #e8761e;
+  --color-savane-ink: #a24c08;
+  --color-savane-soft: #fdf0e3;
+
+  --color-mint: #e7f2eb;
+  --color-forest-soft: #e4ebe6;
+  --color-canvas: #f3f5f2;
+  --color-ink: #12201a;
+  --color-body: #33423a;
+  --color-quiet: #56645d;
+  --color-line: #dde5df;
+  --color-line-strong: #c7d3ca;
+  /* Contour d'un contrôle (bouton secondaire) : 3:1 sur le canevas. */
+  --color-line-control: #7f9286;
+  /* États : une famille par sens (fond doux, bordure, plein, texte). Jamais
+     de rouge, ambre ou bleu Tailwind bruts dans les vues. */
+  --color-danger: #d92d20;
   --color-danger-ink: #b42318;
+  --color-danger-soft: #fef3f2;
+  --color-danger-line: #fecdca;
+  --color-warning: #f79009;
   --color-warning-ink: #9a6700;
+  --color-warning-soft: #fffaeb;
+  --color-warning-line: #fedf89;
+  --color-info: #1f6f9f;
+  --color-info-ink: #175a85;
+  --color-info-soft: #ebf5fb;
+  --color-info-line: #bddcee;
+
+  --shadow-panel: 0 1px 2px rgb(13 42 28 / 0.05), 0 1px 0 rgb(13 42 28 / 0.03);
+  --shadow-raised: 0 18px 40px -24px rgb(13 42 28 / 0.45);
 }
 
 @theme inline {
@@ -139,44 +178,44 @@
 /*
  * Les variables shadcn injectent la marque : `--primary` était le
  * near-black du starter (oklch 0.205) et `@theme inline` le réexposait
- * en `bg-primary` APRÈS le @theme bleu — le bug de double déclaration du
+ * en `bg-primary` APRÈS le @theme bleu - le bug de double déclaration du
  * constat. Une seule source : la marque ici, plus aucun `--color-primary`
  * au-dessus. Contraste vérifié : blanc sur #198341 ≈ 5.4:1 (AA texte
  * normal).
  */
 :root {
-  --background: #f6f8f7;
-  --foreground: #17211c;
+  --background: #f3f5f2;
+  --foreground: #12201a;
   --card: #ffffff;
   --card-foreground: #17211c;
   --popover: #ffffff;
   --popover-foreground: #17211c;
   --primary: #198341;
   --primary-foreground: #ffffff;
-  --secondary: #edf2ee;
-  --secondary-foreground: #26322b;
-  --muted: #edf2ee;
-  --muted-foreground: #5c6b63;
-  --accent: #edf2ee;
-  --accent-foreground: #26322b;
+  --secondary: #e7f2eb;
+  --secondary-foreground: #12201a;
+  --muted: #eef2ee;
+  --muted-foreground: #56645d;
+  --accent: #e7f2eb;
+  --accent-foreground: #12201a;
   --destructive: #b42318;
-  --border: #dce5de;
-  --input: #cbd7ce;
+  --border: #dde5df;
+  --input: #c7d3ca;
   --ring: #198341;
   --chart-1: #198341;
   --chart-2: #22a854;
   --chart-3: #146b34;
   --chart-4: #0f5229;
   --chart-5: #007668;
-  --radius: 0.625rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #17211c;
-  --sidebar-primary: #198341;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #edf2ee;
-  --sidebar-accent-foreground: #26322b;
-  --sidebar-border: #dce5de;
-  --sidebar-ring: #198341;
+  --radius: 0.75rem;
+  --sidebar: #0d2a1c;
+  --sidebar-foreground: #e6efe9;
+  --sidebar-primary: #e8761e;
+  --sidebar-primary-foreground: #0d2a1c;
+  --sidebar-accent: #143724;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #24493a;
+  --sidebar-ring: #e8761e;
 }
 
 /* Naturalisé : la police est celle des @font-face ci-dessus (la règle
@@ -185,7 +224,8 @@
 body {
   font-family: 'Futura PT', sans-serif;
   min-width: 320px;
-  background: #f6f8f7;
+  background: #f3f5f2;
+  font-feature-settings: 'kern' 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -207,6 +247,15 @@ body {
     @apply bg-background text-foreground;
     @apply font-sans;
   }
+  /* Les graisses fortes de ce Futura sont larges par construction : on les
+     resserre légèrement. Spécificité nulle (:where), donc tout `tracking-*`
+     explicite garde la main. */
+  :where(h1, h2, h3, h4, b, strong, .font-medium, .font-semibold, .font-bold, .font-extrabold) {
+    letter-spacing: -0.022em;
+  }
+  :where(h1, h2, .text-2xl, .text-3xl, .text-4xl) {
+    letter-spacing: -0.028em;
+  }
   button,
   a,
   input,
@@ -214,48 +263,195 @@ body {
   textarea {
     @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
+  /* Sur fond forêt (sidebar, panneaux signature), le vert ne fait que 3,2:1 :
+     contour savane (5,2:1). */
+  :where(.bg-forest, .app-panel-forest) :is(button, a, input, select, textarea) {
+    @apply focus-visible:outline-savane;
+  }
 }
 
+/*
+ * Composants maison - tous les écrans s'appuient dessus, donc la
+ * direction visuelle se règle ici. Hiérarchie des arrondis : panneau 18px,
+ * contrôle 12px, pastille ronde. Pas de capitales espacées : les libellés
+ * restent en casse normale, la hiérarchie vient de la graisse et de la
+ * couleur.
+ */
 @layer components {
+  /* Racine de chaque écran : rythme vertical uniquement. La largeur et les
+     marges sont fixées par le shell (WorkspaceShell <main>), jamais ici. */
   .app-page {
-    @apply mx-auto w-full max-w-[1440px] space-y-8;
+    @apply w-full space-y-8;
   }
 
   .app-page-header {
-    @apply flex flex-col gap-4 border-b border-line pb-6 md:flex-row md:items-end md:justify-between;
+    @apply flex flex-col gap-5 md:flex-row md:items-end md:justify-between;
   }
 
   .app-page-title {
-    @apply text-2xl font-bold tracking-tight text-ink sm:text-[1.75rem];
+    @apply text-[1.75rem] leading-[1.15] font-bold tracking-[-0.02em] text-balance text-ink sm:text-[2.125rem];
   }
 
   .app-page-copy {
-    @apply mt-1 max-w-2xl text-base leading-relaxed text-quiet;
+    @apply mt-2 max-w-[62ch] text-[0.975rem] leading-relaxed text-body;
+  }
+
+  /* Contexte d'une page (« Espace apprenant », « Pédagogie »…) */
+  .app-eyebrow {
+    @apply text-sm font-medium text-primary-shade;
+  }
+
+  .app-label {
+    @apply text-sm font-medium text-quiet;
+  }
+
+  .app-thead {
+    @apply bg-canvas text-[0.8rem] font-semibold text-quiet;
   }
 
   .app-panel {
-    @apply rounded-2xl border border-line bg-white p-5 shadow-[0_14px_34px_-28px_rgba(23,33,28,0.32)] sm:p-7;
+    @apply rounded-[18px] border border-line bg-white p-5 shadow-panel sm:p-6;
   }
 
   .app-panel-muted {
-    @apply rounded-2xl border border-line bg-[#edf2ee]/55 p-5 sm:p-7;
+    @apply rounded-[18px] border border-transparent bg-mint/70 p-5 sm:p-6;
+  }
+
+  /* Surface signature : réservée aux moments clés (reprendre un cours). */
+  .app-panel-forest {
+    @apply relative overflow-hidden rounded-[20px] bg-forest p-6 text-white shadow-raised sm:p-8;
   }
 
   .app-action-primary {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-primary/20 transition duration-150 hover:bg-primary-shade active:translate-y-px disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)] transition duration-150 hover:bg-primary-shade active:translate-y-px disabled:pointer-events-none disabled:border-transparent disabled:bg-[#e3eae5] disabled:text-quiet disabled:shadow-none;
   }
 
   .app-action-secondary {
-    @apply inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink transition duration-150 hover:bg-[#edf2ee] active:translate-y-px disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-control bg-white px-5 py-2.5 text-sm font-semibold text-ink transition duration-150 hover:border-primary/40 hover:bg-mint active:translate-y-px disabled:pointer-events-none disabled:border-transparent disabled:bg-[#e3eae5] disabled:text-quiet disabled:shadow-none;
+  }
+
+  /* Accent savane : texte forêt sur orange (contraste ≈ 6:1). */
+  .app-action-accent {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-savane px-5 py-2.5 text-sm font-bold text-forest transition duration-150 hover:brightness-105 active:translate-y-px disabled:pointer-events-none disabled:border-transparent disabled:bg-[#e3eae5] disabled:text-quiet disabled:shadow-none;
+  }
+
+  /* En cours d'envoi (aria-busy) : le bouton garde sa couleur, seul le curseur
+     et le libellé (« Connexion… ») changent. Le gris neutre est réservé à
+     une action réellement indisponible. */
+  .app-action-primary[aria-busy='true'] {
+    @apply cursor-progress bg-primary text-white opacity-90 shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(13_42_28/0.25)];
+  }
+  .app-action-accent[aria-busy='true'] {
+    @apply cursor-progress bg-savane text-forest opacity-90;
+  }
+  .app-action-secondary[aria-busy='true'] {
+    @apply cursor-progress border-line-control bg-white text-ink opacity-90;
+  }
+
+  /* Indicateur de chargement : une roue devant le libellé de tout bouton
+     occupé (app-action-* ou Button shadcn), sans changer les templates. */
+  :is(
+      .app-action-primary,
+      .app-action-secondary,
+      .app-action-accent,
+      [data-slot='button']
+    )[aria-busy='true']::before {
+    content: '';
+    @apply size-4 shrink-0 animate-spin rounded-full border-2 border-current border-r-transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :is(
+        .app-action-primary,
+        .app-action-secondary,
+        .app-action-accent,
+        [data-slot='button']
+      )[aria-busy='true']::before {
+      @apply animate-none border-r-current opacity-60;
+    }
+  }
+
+  /* Interrupteur : case à cocher native (clavier, formulaires, tests) habillée
+     en bascule. Vert quand activé, contour de contrôle à 3:1 sinon. */
+  .app-switch {
+    @apply relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-line-control transition-colors checked:bg-primary disabled:cursor-progress disabled:opacity-60;
+  }
+  .app-switch::before {
+    content: '';
+    @apply absolute top-0.5 left-0.5 size-5 rounded-full bg-white shadow-sm transition-transform;
+  }
+  .app-switch:checked::before {
+    @apply translate-x-5;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-switch,
+    .app-switch::before {
+      @apply transition-none;
+    }
   }
 
   .app-input {
-    @apply min-h-11 w-full rounded-xl border border-input bg-white px-3 py-2 text-sm text-ink placeholder:text-quiet/70 focus:border-primary focus:ring-2 focus:ring-primary/15;
+    @apply min-h-11 w-full rounded-xl border border-line-strong bg-white px-3.5 py-2 text-sm text-ink transition placeholder:text-quiet/70 hover:border-quiet/50 focus:border-primary focus:ring-4 focus:ring-primary/12 focus:outline-none;
+  }
+
+  /* Listes déroulantes natives : même champ, chevron aux couleurs de la charte. */
+  select.app-input {
+    @apply cursor-pointer appearance-none bg-no-repeat pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2356645d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 0.85rem center;
+    background-size: 1rem;
+  }
+  textarea.app-input {
+    @apply min-h-24 py-2.5 leading-relaxed;
   }
 
   .app-skeleton {
-    @apply animate-pulse rounded-xl bg-[#e7eee9];
+    @apply animate-pulse rounded-xl bg-[#e3eae5];
   }
+
+  /* Pastilles d'état - la couleur porte le sens, pas la décoration. */
+  .app-chip {
+    @apply inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap;
+  }
+  .app-chip-leaf {
+    @apply bg-mint text-primary-shade;
+  }
+  .app-chip-savane {
+    @apply bg-savane-soft text-savane-ink;
+  }
+  .app-chip-neutral {
+    @apply bg-canvas text-quiet ring-1 ring-line ring-inset;
+  }
+  .app-chip-danger {
+    @apply bg-danger-soft text-danger-ink;
+  }
+  .app-chip-warning {
+    @apply bg-warning-soft text-warning-ink;
+  }
+  .app-chip-info {
+    @apply bg-info-soft text-info-ink;
+  }
+
+  /* Bandeaux d'alerte en ligne (erreur de formulaire, avertissement, info). */
+  .app-alert {
+    @apply rounded-xl border px-4 py-3 text-sm;
+  }
+  .app-alert-danger {
+    @apply border-danger-line bg-danger-soft text-danger-ink;
+  }
+  .app-alert-warning {
+    @apply border-warning-line bg-warning-soft text-warning-ink;
+  }
+  .app-alert-info {
+    @apply border-info-line bg-info-soft text-info-ink;
+  }
+  .app-alert-success {
+    @apply border-primary/25 bg-mint text-primary-shade;
+  }
+}
+
+/* Notifications vue-sonner : même police que l'application. */
+:root [data-sonner-toaster] {
+  font-family: inherit;
 }
 
 @layer utilities {
@@ -280,5 +476,60 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Lecture d'un chapitre : mesure de ~70 caractères, rythme vertical
+ * régulier, code lisible. Ne s'applique qu'au HTML produit par
+ * renderMarkdown (src/lib/markdown.ts).
+ */
+@layer components {
+  .app-prose {
+    @apply max-w-[70ch] text-[1.0625rem] leading-[1.75] text-body;
+  }
+  .app-prose > * + * {
+    @apply mt-4;
+  }
+  .app-prose h2 {
+    @apply mt-10 text-2xl font-bold text-ink;
+  }
+  .app-prose h3 {
+    @apply mt-9 text-xl font-bold text-ink;
+  }
+  .app-prose h4,
+  .app-prose h5 {
+    @apply mt-7 text-lg font-semibold text-ink;
+  }
+  .app-prose strong {
+    @apply font-semibold text-ink;
+  }
+  .app-prose a {
+    @apply font-medium text-primary-shade underline decoration-primary/40 underline-offset-2 hover:decoration-primary;
+  }
+  .app-prose ul,
+  .app-prose ol {
+    @apply space-y-1.5 pl-6;
+  }
+  .app-prose ul {
+    @apply list-disc marker:text-primary;
+  }
+  .app-prose ol {
+    @apply list-decimal marker:font-semibold marker:text-quiet;
+  }
+  .app-prose code {
+    @apply rounded-md bg-mint px-1.5 py-0.5 font-mono text-[0.88em] text-forest;
+  }
+  .app-prose pre {
+    @apply overflow-x-auto rounded-xl bg-forest p-4 text-sm leading-relaxed text-[#d9eadf];
+  }
+  .app-prose pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+  .app-prose blockquote {
+    @apply border-l-4 border-savane bg-savane-soft/60 py-2 pr-3 pl-4 text-ink;
+  }
+  .app-prose hr {
+    @apply my-8 border-line;
   }
 }

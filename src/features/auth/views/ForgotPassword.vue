@@ -1,249 +1,163 @@
 <template>
-  <div class="min-h-screen flex flex-col md:flex-row relative">
-    <!-- ================= FORMULAIRE (GAUCHE) ================= -->
-    <div
-      class="flex w-full md:w-1/2 items-center justify-center order-2 md:order-1 py-10 px-5 bg-white relative overflow-hidden"
+  <AuthShell
+    title="Retrouvez l'accès à votre espace"
+    text="Nous vous envoyons un lien pour choisir un nouveau mot de passe."
+  >
+    <!-- Bouton Retour -->
+    <router-link
+      to="/"
+      class="inline-flex items-center gap-2 text-quiet hover:text-primary mb-6 transition group font-medium text-sm"
     >
-      <!-- Bulles décoratives floutées -->
-      <div
-        class="absolute -top-32 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none animate-float-slow"
-      ></div>
-      <div
-        class="absolute -bottom-32 -right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none animate-float-slow"
-        style="animation-delay: 2s"
-      ></div>
+      <svg
+        class="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 19l-7-7m0 0l7-7m-7 7h18"
+        />
+      </svg>
+      Retour à la connexion
+    </router-link>
 
-      <div class="w-full max-w-md relative z-10 animate-fade-in-up">
-        <!-- Bouton Retour -->
-        <router-link
-          to="/"
-          class="inline-flex items-center gap-2 text-quiet hover:text-primary mb-6 transition group font-medium text-sm"
+    <!-- Logo + Titre -->
+    <div class="mb-8">
+      <!-- ÉTAT 1 : FORMULAIRE -->
+      <template v-if="!isSubmitted">
+        <h1 class="text-3xl font-bold text-ink">Mot de passe oublié ?</h1>
+        <p class="text-quiet text-sm mt-2 text-center">
+          Entrez votre adresse email professionnelle. Nous vous enverrons un lien pour réinitialiser
+          votre mot de passe.
+        </p>
+      </template>
+
+      <!-- ÉTAT 2 : SUCCÈS -->
+      <template v-else>
+        <div
+          class="w-16 h-16 bg-mint rounded-full flex items-center justify-center mb-4 animate-bounce"
         >
-          <svg
-            class="w-5 h-5 group-hover:-translate-x-1 transition-transform"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
             />
           </svg>
-          Retour à la connexion
-        </router-link>
-
-        <!-- Logo + Titre -->
-        <div class="flex flex-col items-center mb-8">
-          <img :src="formLogo" alt="PADCI Formation" class="w-36 h-auto mb-4" />
-
-          <!-- ÉTAT 1 : FORMULAIRE -->
-          <template v-if="!isSubmitted">
-            <h1 class="text-2xl font-bold text-ink">Mot de passe oublié ?</h1>
-            <p class="text-quiet text-sm mt-2 text-center">
-              Entrez votre adresse email professionnelle. Nous vous enverrons un lien pour
-              réinitialiser votre mot de passe.
-            </p>
-          </template>
-
-          <!-- ÉTAT 2 : SUCCÈS -->
-          <template v-else>
-            <div
-              class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 animate-bounce"
-            >
-              <svg
-                class="w-8 h-8 text-primary"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            <h1 class="text-2xl font-bold text-ink">Email envoyé !</h1>
-            <p class="text-quiet text-sm mt-2 text-center">
-              Un lien de réinitialisation a été envoyé à <br />
-              <strong class="text-ink">{{ email }}</strong
-              >.
-            </p>
-          </template>
         </div>
-
-        <!-- FORMULAIRE -->
-        <form v-if="!isSubmitted" @submit.prevent="handleSubmit" class="space-y-5">
-          <div class="relative group">
-            <span
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-            </span>
-            <input
-              v-model="email"
-              type="email"
-              required
-              placeholder="Email professionnel"
-              class="w-full pl-12 pr-5 py-3.5 text-base border border-line rounded-xl bg-canvas text-ink placeholder:text-quiet focus:bg-white focus:ring-4 focus:ring-primary/15 focus:border-primary focus:outline-none transition-all duration-300"
-            />
-          </div>
-
-          <!-- Bouton Soumettre -->
-          <button
-            type="submit"
-            :disabled="isPending"
-            class="group w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary text-white py-3.5 rounded-xl font-semibold text-base shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            <svg
-              v-if="isPending"
-              class="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span v-if="!isPending">Envoyer le lien</span>
-            <span v-else>Envoi en cours...</span>
-
-            <svg
-              v-if="!isPending"
-              class="w-5 h-5 transition-transform group-hover:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </button>
-        </form>
-
-        <!-- ÉTAT SUCCÈS : BOUTON RETOUR LOGIN -->
-        <div v-else class="space-y-4">
-          <router-link
-            to="/"
-            class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary text-white py-3.5 rounded-xl font-semibold text-base shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
-          >
-            Retour à la connexion
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-              />
-            </svg>
-          </router-link>
-
-          <button
-            type="button"
-            @click="retry"
-            class="w-full text-center text-sm text-quiet hover:text-primary transition-colors"
-          >
-            Vous n'avez pas reçu l'email ? Réessayer
-          </button>
-        </div>
-
-        <!-- Copyright -->
-        <p class="text-center text-quiet text-xs mt-10 tracking-wide">
-          PADCI Formation - Tous droits réservés © 2024
+        <h1 class="text-3xl font-bold text-ink">Email envoyé !</h1>
+        <p class="text-quiet text-sm mt-2 text-center">
+          Un lien de réinitialisation a été envoyé à <br />
+          <strong class="text-ink">{{ email }}</strong
+          >.
         </p>
-      </div>
+      </template>
     </div>
 
-    <!-- ================= IMAGE (DROITE) ================= -->
-    <div
-      class="w-full md:w-1/2 relative overflow-hidden order-1 md:order-2 min-h-[250px] md:min-h-screen"
-    >
-      <img :src="loginImage" alt="PADCI Formation" class="w-full h-full object-cover" />
+    <!-- FORMULAIRE -->
+    <form v-if="!isSubmitted" @submit.prevent="handleSubmit" class="space-y-5">
+      <div class="relative group">
+        <span
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-quiet group-focus-within:text-primary transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+        </span>
+        <input
+          v-model="email"
+          type="email"
+          required
+          placeholder="Adresse e-mail"
+          class="app-input min-h-12 text-base pl-12 pr-5"
+        />
+      </div>
 
-      <!-- Dégradé vert transparent -->
-      <div
-        class="absolute inset-0 bg-gradient-to-br from-primary/50 via-primary/30 to-primary-deep/50"
-      ></div>
-
-      <!-- Overlay desktop -->
-      <div
-        class="hidden md:flex absolute inset-0 z-20 flex-col justify-center items-center px-10 text-center text-white"
+      <!-- Bouton Soumettre -->
+      <button
+        type="submit"
+        :disabled="isPending"
+        :aria-busy="isPending"
+        class="app-action-primary min-h-12 w-full text-base group"
       >
-        <div class="max-w-md animate-fade-in-up drop-shadow-lg">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 leading-tight">Sécurisez votre accès</h2>
-          <p class="text-base lg:text-lg opacity-90 leading-relaxed">
-            Ne vous inquiétez pas, nous allons vous aider à retrouver votre compte en toute
-            sécurité.
-          </p>
+        <svg
+          v-if="isPending"
+          class="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <span v-if="!isPending">Envoyer le lien</span>
+        <span v-else>Envoi en cours...</span>
 
-          <div class="mt-8 flex items-center justify-center gap-6 text-sm opacity-90">
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
-              Sécurisé
-            </div>
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-              Confidentiel
-            </div>
-          </div>
-        </div>
-      </div>
+        <svg
+          v-if="!isPending"
+          class="w-5 h-5 transition-transform group-hover:translate-x-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M14 5l7 7m0 0l-7 7m7-7H3"
+          />
+        </svg>
+      </button>
+    </form>
 
-      <!-- Overlay mobile -->
-      <div class="absolute inset-0 z-20 flex items-center justify-center md:hidden px-4">
-        <div class="text-center text-white drop-shadow-lg">
-          <h2 class="text-xl font-bold">PADCI Formation</h2>
-          <p class="text-sm opacity-90">Récupération de compte</p>
-        </div>
-      </div>
+    <!-- ÉTAT SUCCÈS : BOUTON RETOUR LOGIN -->
+    <div v-else class="space-y-4">
+      <router-link to="/" class="app-action-primary min-h-12 w-full text-base">
+        Retour à la connexion
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+          />
+        </svg>
+      </router-link>
+
+      <button
+        type="button"
+        @click="retry"
+        class="w-full text-center text-sm text-quiet hover:text-primary transition-colors"
+      >
+        Vous n'avez pas reçu l'email ? Réessayer
+      </button>
     </div>
-  </div>
+  </AuthShell>
 </template>
 
 <script setup lang="ts">
+import AuthShell from '../components/AuthShell.vue'
 import { computed, ref } from 'vue'
 import { ApiError } from '@/api/http'
-import formLogo from '@/assets/images/logoemsp.png'
-import loginImage from '@/assets/images/photodecybersecurite.jpg'
 import { useForgotPassword } from '../composables/useForgotPassword'
 
 const email = ref('')

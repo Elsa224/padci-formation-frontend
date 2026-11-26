@@ -12,22 +12,40 @@ careful decisions. This is a daily product UI, not a marketing site.
 - Visual density: 5/10. Admissions and learning information stay scannable.
 - Existing Futura PT files are the brand typography and remain the typeface.
 
-## 2. Semantic color roles
+## 2. Semantic color roles - « Forêt & Savane » (2026-11-23)
 
-- Canvas `#F6F8F7`: application background.
-- Surface `#FFFFFF`: panels, forms and tables.
-- Ink `#17211C`: titles and primary text.
-- Muted `#5C6B63`: helper copy and metadata.
-- Border `#DCE5DE`: structural separation.
-- Brand green `#198341`: the single visual accent for primary actions, focus
-  and selected navigation.
-- Brand green dark `#146B34`: hover and active primary controls.
-- Destructive red `#B42318` and amber `#9A6700` are semantic states only.
+The interface was perceived as washed-out: one green on near-white, grey
+borders everywhere, low-contrast body copy. The palette now has a frame, an
+action colour and a signal colour, each with one job.
 
-The product is intentionally light-only. This preserves the established PADCI
-brand decision; dark mode is not introduced without product approval.
+- Forest `#0D2A1C` (`bg-forest`): the frame - sidebar, and the single
+  signature surface per screen (e.g. « Reprendre ma formation »). Raised
+  `#143724`, lines `#24493A`, muted text `#9DB8AA`.
+- Brand green `#198341` (`bg-primary`): the only action colour (primary
+  buttons, focus, links). Hover `#146B34`. Soft wash `#E7F2EB` (`bg-mint`).
+- Savane `#E8761E` (`bg-savane`), the orange of the Ivorian flag: a signal,
+  never a routine button - active navigation marker, « next step », progress
+  of the current course, one accent button per screen at most. Text on
+  savane is forest (≈ 6:1). Ink variant `#A24C08`, soft `#FDF0E3`.
+- Canvas `#F3F5F2`, surface `#FFFFFF`, ink `#12201A`, body `#33423A`,
+  quiet `#56645D`, line `#DDE5DF`, strong line `#C7D3CA`.
+- States, one family per meaning, each with `-soft` (background), `-line`
+  (border), plain and `-ink` (text): `danger` (red `#D92D20` / ink `#B42318`),
+  `warning` (amber `#F79009` / ink `#9A6700`), `info` (blue `#1F6F9F` / ink
+  `#175A85`). Success reuses mint + primary. `forest-soft` `#E4EBE6` is an
+  opaque forest tint (roles, quiet badges). Raw Tailwind palettes (`red-*`,
+  `amber-*`, `blue-*`, `gray-*`, `purple-*`…) are not used in views.
+
+All tokens live in `src/style.css` (`@theme`). Never hard-code a hex in a view.
 
 ## 3. Type and spacing
+
+- No tracked ALL-CAPS labels. Context labels use `.app-eyebrow`, field and
+  metadata labels `.app-label`, table headers `.app-thead` - sentence case.
+- Bold Futura is wide by construction: bold/semibold text is tightened
+  globally (−0.022em, headings −0.028em) in `src/style.css`.
+- Course content is Markdown rendered by `src/lib/markdown.ts` (escapes all
+  HTML first) inside `.app-prose` (≈ 70 characters per line).
 
 - Headings use Futura PT weight 700, tight tracking, practical sizes.
 - Body copy uses Futura PT weight 400/500, 1.5-1.65 line height, and a
@@ -75,3 +93,28 @@ brand decision; dark mode is not introduced without product approval.
 - No rounded container around every fragment of information.
 - No visual feature that changes API authorization, route slugs or form field
   order.
+
+
+## 8. Building blocks (code)
+
+- Classes: `.app-page`, `.app-page-header`, `.app-page-title`,
+  `.app-page-copy`, `.app-panel` (18px radius), `.app-panel-forest`
+  (signature surface), `.app-action-primary|secondary|accent`, `.app-input`,
+  `.app-chip` + `-leaf|-savane|-neutral|-danger|-warning|-info`,
+  `.app-alert` + `-danger|-warning|-info|-success` (inline banners),
+  `.app-prose`. A native `<select class="app-input">` gets the palette
+  chevron automatically; `textarea.app-input` gets a taller box.
+- Page frame: width and gutters are set once by `WorkspaceShell` `<main>`
+  (max 1280px). A view root is `.app-page` only - never its own `max-w-*`.
+- Access screens (login, sign-up, password, invitation) use
+  `features/auth/components/AuthShell.vue`: white form column, forest panel
+  that says what the platform offers. No stock photo, no blurred blobs.
+- Components (`src/components/app/`): `ProgressBar`, `ProgressRing`,
+  `StatTile`, `EmptyState`, and `courseProgress()` for a course outline.
+- shadcn-vue: `Button` gains `variant="accent"` (savane), sizes aligned on
+  44px touch targets; `Badge` gains `leaf | savane | neutral | danger |
+  warning | info` tones. `Input` (44px, white, primary focus ring), dropdown
+  menus (mint hover, 12px radius), dialogs (18px, forest overlay), tooltips
+  (forest), cards and tables follow the same tokens.
+- Indicators are grouped in one stat band (summary before detail), not one
+  card per number. Lists are rows with dividers, not grids of identical cards.

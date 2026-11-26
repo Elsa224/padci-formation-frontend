@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import { CheckIcon, CircleIcon, XIcon } from '@lucide/vue'
 import { CLES_REGLES, etatCriteres } from '@/features/auth/utils/passwordRules'
 import type { CleRegle, EtatCritere } from '@/features/auth/utils/passwordRules'
@@ -14,7 +14,7 @@ const LIBELLES: Record<CleRegle, string> = {
   special: 'Un caractère spécial',
 }
 
-const ICONES: Record<EtatCritere, any> = {
+const ICONES: Record<EtatCritere, Component> = {
   remplie: CheckIcon,
   manquante: XIcon,
   'au-repos': CircleIcon,
@@ -22,7 +22,7 @@ const ICONES: Record<EtatCritere, any> = {
 
 const CLASSES: Record<EtatCritere, string> = {
   remplie: 'text-primary font-medium',
-  manquante: 'text-red-600',
+  manquante: 'text-danger-ink',
   'au-repos': 'text-quiet',
 }
 

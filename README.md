@@ -1,10 +1,10 @@
 # PADCI-WEB
 
 Frontend SPA (Vue 3 + Vite + TypeScript + Tailwind) de PADCI LMS. Consomme
-l'API `PADCI-API` (`VITE_API_BASE_URL`, voir `.env.example`) — aucune
+l'API `PADCI-API` (`VITE_API_BASE_URL`, voir `.env.example`) - aucune
 connexion directe à PostgreSQL/Redis/au stockage.
 
-## Docker (recommandé — rien à installer sur l'hôte)
+## Docker (recommandé - rien à installer sur l'hôte)
 
 ```sh
 # Dev avec rechargement à chaud (http://localhost:5173)

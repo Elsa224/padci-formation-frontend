@@ -6,16 +6,14 @@
     :navigation="navigation"
   >
     <template #sidebar-extra>
-      <section v-if="activeCourseKey && courseOutline" class="border-t border-slate-100 pt-5">
-        <p class="px-3 text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
-          Formation en cours
-        </p>
-        <p class="px-3 pb-2 pt-1 text-xs font-semibold text-slate-800">{{ courseOutline.title }}</p>
+      <section v-if="activeCourseKey && courseOutline" class="border-t border-forest-line pt-5">
+        <p class="px-3 text-xs font-medium text-savane">Formation en cours</p>
+        <p class="px-3 pt-1 pb-2 text-sm font-semibold text-white">{{ courseOutline.title }}</p>
         <RouterLink
           v-for="module in courseOutline.modules"
           :key="module.key"
           :to="`/formations/${activeCourseKey}`"
-          class="mx-1 mb-1 block rounded-lg px-3 py-2 text-xs text-slate-600 hover:bg-slate-100"
+          class="mx-1 mb-1 block rounded-lg px-3 py-2 text-xs text-forest-muted hover:bg-forest-raised hover:text-white"
           >{{ module.title }}</RouterLink
         >
       </section>
@@ -32,8 +30,10 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import {
+  Award as AwardIcon,
   Compass as CompassIcon,
   FileText as FileTextIcon,
+  GraduationCap as GraduationCapIcon,
   LayoutDashboard as LayoutDashboardIcon,
   Settings as SettingsIcon,
   User as UserIcon,
@@ -50,6 +50,8 @@ const navigation: WorkspaceNavGroup[] = [
     items: [
       { label: 'Tableau de bord', to: '/formations/dashboard', icon: LayoutDashboardIcon },
       { label: 'Mes candidatures', to: '/mes-candidatures', icon: FileTextIcon },
+      { label: 'Mes notes', to: '/formations/notes', icon: GraduationCapIcon },
+      { label: 'Mes attestations', to: '/formations/attestations', icon: AwardIcon },
       { label: 'Catalogue', to: '/catalogue', icon: CompassIcon },
     ],
   },

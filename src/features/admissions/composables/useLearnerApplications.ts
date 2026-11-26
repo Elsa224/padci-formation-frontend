@@ -5,11 +5,14 @@ import type { ApiPaginationMeta } from '@/api/types'
 export interface EquipmentDeclaration {
   device_type: string
   cpu_model: string
+  cpu?: string
   cpu_cores?: number
   ram_gb: number
   storage_total_gb: number
+  storage_gb?: number
   storage_free_gb?: number
   os_name: string
+  os?: string
   os_version?: string
   virtualization_supported?: boolean
   notes?: string
@@ -33,7 +36,14 @@ export interface EquipmentReview {
 export interface LearnerApplication {
   id: number
   key: string
-  status: 'submitted' | 'in_review' | 'accepted' | 'waitlisted' | 'rejected' | 'withdrawn'
+  status:
+    | 'submitted'
+    | 'in_review'
+    | 'accepted'
+    | 'standby'
+    | 'waitlisted'
+    | 'rejected'
+    | 'withdrawn'
   motivation: string | null
   payload: ApplicationPayload | null
   equipment_review?: EquipmentReview | null
@@ -63,9 +73,9 @@ export interface LearnerApplication {
 
 export interface SubmitApplicationDto {
   pathway_key: string
-  cohort_key: string
   motivation?: string
   equipment?: EquipmentDeclaration
+  proof_media_key?: string
 }
 
 export function useRespondToEquipmentReview() {

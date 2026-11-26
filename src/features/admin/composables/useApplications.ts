@@ -9,6 +9,13 @@ export interface ApplicationPathway {
   code: string
   name: string
   slug: string
+  requires_equipment_validation?: boolean
+  equipment_requirements?: {
+    min_cpu?: string
+    min_ram_gb?: number
+    min_storage_gb?: number
+    notes?: string
+  } | null
 }
 
 export interface ApplicationCohort {
@@ -17,6 +24,9 @@ export interface ApplicationCohort {
   code: string
   name: string
   session: string | null
+  capacity?: number | null
+  enrolled_count?: number
+  available_seats?: number
   starts_at: string | null
   ends_at: string | null
   status: string
@@ -27,24 +37,43 @@ export interface ApplicationUser {
   key: string
   name: string
   email: string
+  phone?: string | null
 }
 
 export interface ApplicationEquipmentReview {
   key: string
   status: 'not_required' | 'pending' | 'needs_info' | 'approved' | 'rejected'
   declaration: Record<string, unknown> | null
+  requirements_snapshot?: Record<string, unknown> | null
   reason: string | null
+  proof_media?: {
+    id: number
+    key: string
+    original_name: string
+    mime_detected: string
+    size_bytes: number
+    download_url: string
+  } | null
+  proof_media_url?: string | null
   reviewed_by?: { key: string; name: string } | null
 }
 
-/** `ApplicationResource` shape. `payload` is free-form — see StoreApplicationRequest. */
+/** `ApplicationResource` shape. `payload` is free-form - see StoreApplicationRequest. */
 export interface Application {
   id: number
   key: string
-  status: 'submitted' | 'in_review' | 'accepted' | 'waitlisted' | 'rejected' | 'withdrawn'
+  status:
+    | 'submitted'
+    | 'in_review'
+    | 'accepted'
+    | 'waitlisted'
+    | 'rejected'
+    | 'withdrawn'
+    | 'standby'
   motivation: string | null
   payload: Record<string, unknown> | null
   equipment_review?: ApplicationEquipmentReview | null
+  proof_media_url?: string | null
   user?: ApplicationUser
   pathway?: ApplicationPathway
   cohort?: ApplicationCohort | null
@@ -63,7 +92,7 @@ export interface ApplicationListFilters {
   page?: number
 }
 
-/** GET /admin/applications — admissions.view. Server-side filtering/paging. */
+/** GET /admin/applications - admissions.view. Server-side filtering/paging. */
 export function useApplications(filters: Ref<ApplicationListFilters>) {
   return useQuery({
     queryKey: computed(() => ['admin-applications', filters.value]),
@@ -85,7 +114,7 @@ export function useApplications(filters: Ref<ApplicationListFilters>) {
   })
 }
 
-/** GET /admin/applications/{application} — full detail (cohort, decided_by). */
+/** GET /admin/applications/{application} - full detail (cohort, decided_by). */
 export function useApplication(key: Ref<string | null>) {
   return useQuery({
     queryKey: computed(() => ['admin-application', key.value]),
@@ -97,7 +126,7 @@ export function useApplication(key: Ref<string | null>) {
   })
 }
 
-/** POST /admin/applications/{application}/start-review — admissions.manage. */
+/** POST /admin/applications/{application}/start-review - admissions.manage. */
 export function useStartApplicationReview() {
   const queryClient = useQueryClient()
 
@@ -108,6 +137,7 @@ export function useStartApplicationReview() {
     },
     onSuccess: (application) => {
       queryClient.invalidateQueries({ queryKey: ['admin-applications'] })
+      queryClient.invalidateQueries({ queryKey: ['admin-application-status-counts'] })
       queryClient.invalidateQueries({ queryKey: ['admin-application', application.key] })
     },
   })
@@ -120,7 +150,7 @@ export interface DecideApplicationPayload {
   reason?: string
 }
 
-/** POST /admin/applications/{application}/decide — admissions.manage. */
+/** POST /admin/applications/{application}/decide - admissions.manage. */
 export function useDecideApplication() {
   const queryClient = useQueryClient()
 
@@ -134,7 +164,39 @@ export function useDecideApplication() {
     },
     onSuccess: (application) => {
       queryClient.invalidateQueries({ queryKey: ['admin-applications'] })
+      queryClient.invalidateQueries({ queryKey: ['admin-application-status-counts'] })
       queryClient.invalidateQueries({ queryKey: ['admin-application', application.key] })
+    },
+  })
+}
+
+export interface DecideEquipmentReviewPayload {
+  key: string
+  decision: 'approved' | 'rejected' | 'needs_info'
+  reason?: string
+}
+
+/** POST /moderation/equipment-reviews/{review}/decide - equipment.review or admissions.manage */
+export function useDecideEquipmentReview() {
+  let queryClient: ReturnType<typeof useQueryClient> | null = null
+  try {
+    queryClient = useQueryClient()
+  } catch {
+    // Vue query client not found in test context
+  }
+
+  return useMutation({
+    mutationFn: async ({ key, decision, reason }: DecideEquipmentReviewPayload) => {
+      const { data } = await http.post(`/moderation/equipment-reviews/${key}/decide`, {
+        decision,
+        reason,
+      })
+      return data
+    },
+    onSuccess: () => {
+      queryClient?.invalidateQueries({ queryKey: ['admin-applications'] })
+      queryClient?.invalidateQueries({ queryKey: ['admin-application-status-counts'] })
+      queryClient?.invalidateQueries({ queryKey: ['admin-application'] })
     },
   })
 }

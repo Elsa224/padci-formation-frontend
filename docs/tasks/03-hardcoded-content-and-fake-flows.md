@@ -1,4 +1,4 @@
-# 03 — Remplacer le contenu en dur et les flux factices
+# 03 - Remplacer le contenu en dur et les flux factices
 
 > Ce qui reste après le 01 (flux auth) : les vues métier affichent des
 > données inventées et n'appellent aucune API. Brancher celles qui ont un
@@ -16,12 +16,12 @@ grep -rn "useApiPing\|http\.\(get\|post\|patch\|put\)" src --include="*.vue"
 ```
 
 Les composables auth (`useLogin`, `useLogout`, `useBootstrapAuth`,
-`useMfaSetup`, `useMfaChallenge`) sont les seuls consommateurs réels —
+`useMfaSetup`, `useMfaChallenge`) sont les seuls consommateurs réels -
 vérifiés en conditions réelles (audit 2026-11-08).
 
 ### Données en dur citées précisément (toutes relues le 2026-11-09)
 
-- `src/features/admin/views/AdminCandidatures.vue` l.274 : `const candidats = ref([...])` — dossier de candidatures.
+- `src/features/admin/views/AdminCandidatures.vue` l.274 : `const candidats = ref([...])` - dossier de candidatures.
 - `src/features/admin/views/AdminCohortes.vue` l.142 : `const cohortes = ref([...])`.
 - `src/features/admin/views/AdminDashboard.vue` l.255 : `const recentCandidats = [...]`.
 - `src/features/superadmin/views/SuperAdminDashboard.vue` l.102-122 : `budgetChartData`, `progressChartData` (graphiques chart.js alimentés par des littéraux).
@@ -32,7 +32,7 @@ vérifiés en conditions réelles (audit 2026-11-08).
 
 ### Flux factices résiduels
 
-- Vues auth : couvertes par `01-auth-flow-completion.md` — ne pas les
+- Vues auth : couvertes par `01-auth-flow-completion.md` - ne pas les
   rebrancher ici.
 
 ## Contraintes de méthode (non négociables)
@@ -43,32 +43,32 @@ vérifiés en conditions réelles (audit 2026-11-08).
   frontend (`src/api/types.ts` et modules générés).
 - **Pattern obligatoire** : `@tanstack/vue-query` dans
   `src/features/<domaine>/composables/` (symétrique des composables auth)
-  — jamais d'appel `http.*` inline dans le `<script setup>` d'une vue.
+  - jamais d'appel `http.*` inline dans le `<script setup>` d'une vue.
 - Erreurs via `ApiError` (code/status/details/fieldErrors), jamais un
   catch brut sur l'AxiosError.
 - Pagination : si le backend renvoie `meta` (page/per_page...), l'afficher
-  — pas de "load more" improvisé.
+  - pas de "load more" improvisé.
 
 ## Ordre recommandé (par contrat disponible)
 
-### A. AdminCandidatures — FAIT (2026-11-09)
+### A. AdminCandidatures - FAIT (2026-11-09)
 
 Endpoint backend exact (`PADCI-API/app/Modules/Admissions/Routes/api.php`,
 middleware `can:admissions.view` / `can:admissions.manage`) :
 
-- `GET /v1/admin/applications` — liste de la file
-- `GET /v1/admin/applications/{application}` — détail
+- `GET /v1/admin/applications` - liste de la file
+- `GET /v1/admin/applications/{application}` - détail
 - `POST /v1/admin/applications/{application}/start-review`
 - `POST /v1/admin/applications/{application}/decide`
 
 - [x] `ApplicationResource.php` / `DecideApplicationRequest.php` lus
       avant de coder.
-- [x] `src/features/admin/composables/useApplications.ts` — query liste
+- [x] `src/features/admin/composables/useApplications.ts` - query liste
       (filtres serveur `status`/`pathway_key`/`q`/`page`) + query détail +
       mutations `start-review`/`decide`.
 - [x] Liste branchée (`candidats` factices retirés), états chargement /
       erreur / vide via vue-query, pagination réelle (`meta.pagination`,
-      plomberie ajoutée dans `src/api/http.ts`/`types.ts` — `meta` n'était pas
+      plomberie ajoutée dans `src/api/http.ts`/`types.ts` - `meta` n'était pas
       accessible aux composables avant, uniquement `data`).
 - [x] Vérifié en HTTP réel (candidature créée via l'API, revue +
       décision testées avec le compte `admin@example.com`) et en navigateur
@@ -76,7 +76,7 @@ middleware `can:admissions.view` / `can:admissions.manage`) :
       payload, session et décision).
 - **Bug backend trouvé et corrigé en chemin** : `Admin\ApplicationController`
   ne chargeait jamais la relation `cohort` (ADR-012 l'avait ajoutée au
-  contrat candidat mais pas à ce contrôleur admin) — un admin ne pouvait
+  contrat candidat mais pas à ce contrôleur admin) - un admin ne pouvait
   jamais voir la session choisie par le candidat. Corrigé sur
   `PADCI-API` (commit `79db5ca`), testé (266 tests passent).
 - Champs identité civile/diplôme de l'ancienne modale (nationalité,
@@ -87,27 +87,27 @@ middleware `can:admissions.view` / `can:admissions.manage`) :
   supporte, il ne faisait rien.
 - Note trouvée en vérifiant visuellement, hors scope de cette tâche :
   le badge "12" à côté de "Candidatures" dans `SidebarAdmin.vue` est
-  statique (pas branché) — à traiter si quelqu'un retouche ce composant.
+  statique (pas branché) - à traiter si quelqu'un retouche ce composant.
 
-### B. AdminCohortes + AdminDashboard — FAIT (2026-11-09)
+### B. AdminCohortes + AdminDashboard - FAIT (2026-11-09)
 
 - [x] `AdminCohortes.vue` branché sur `GET /v1/admin/cohorts`
       (`src/features/admin/composables/useCohorts.ts`) : filtres filière/statut
       server-side, cartes réelles (filière, session, statut sur les 5 valeurs
       réelles `CohortStatus`, effectif/capacité, dates), stats résumé calculées
       depuis les cohortes chargées (plus de "200 formateurs"/"parité femmes"
-      inventés — aucune donnée de genre n'existe côté backend, volontairement
+      inventés - aucune donnée de genre n'existe côté backend, volontairement
       pas affiché).
 - [x] `AdminDashboard.vue` entièrement refondu sur le vrai module
       Operations (`src/features/admin/composables/useDashboard.ts`) :
   - `GET /v1/admin/dashboard/overview` → les 4 KPI (apprenants, cohortes
-    actives, taux de complétion, certificats délivrés) — les anciennes
+    actives, taux de complétion, certificats délivrés) - les anciennes
     cartes ("Formateurs formés 148/200", "Kits pédagogiques") n'avaient
     aucun contrat backend, retirées plutôt que laissées fictives.
   - `GET /v1/admin/dashboard/reports/pathways` → graphique "Inscrits par
     filière" (barres réelles, inscrits + complétés).
   - Statut des candidatures (doughnut) : pas d'endpoint d'agrégat dédié
-    (Admissions est un module séparé d'Operations) — calculé via 6 appels
+    (Admissions est un module séparé d'Operations) - calculé via 6 appels
     légers `GET /admin/applications?status=X&per_page=1` lisant
     `meta.pagination.total` (jamais le contenu), reste correct quel que
     soit le volume contrairement à compter une page plafonnée côté client.
@@ -119,7 +119,7 @@ middleware `can:admissions.view` / `can:admissions.manage`) :
   0 erreur console sur les deux pages, données affichées correspondent
   exactement aux données seedées/créées en HTTP réel (captures prises).
 
-### C. Profil / paramètres apprenant — FAIT (2026-11-09)
+### C. Profil / paramètres apprenant - FAIT (2026-11-09)
 
 Contrat existant (module Identity) :
 
@@ -129,7 +129,7 @@ Contrat existant (module Identity) :
 - [x] `ProfilApprenants.vue` branché sur `GET /v1/profile`
       (`src/features/profile/composables/useProfile.ts`) : statut compte/email
       vérifié/MFA réels, plus téléphone/genre/date de naissance/adresse
-      fictifs (aucun champ backend, retirés comme pour la candidature — 05).
+      fictifs (aucun champ backend, retirés comme pour la candidature - 05).
       "Cours suivis"/"TP réalisés"/"Temps d'étude"/"Ma progression"/"Activités
       récentes" retirés aussi : aucun endpoint d'agrégat n'existe pour ça
       (progression par cours = tableau de bord apprenant, 05) ; gardé
@@ -137,7 +137,7 @@ Contrat existant (module Identity) :
       `GET /enrollments` et `GET /learning/certificates`
       (`meta.pagination.total`, mêmes léger que pour le 03.B). Bug trouvé au
       passage : le lien "Modifier le profil" pointait vers `/profil/modifier`,
-      une route qui n'existe pas — corrigé vers `/parametres` (la vraie route).
+      une route qui n'existe pas - corrigé vers `/parametres` (la vraie route).
 - [x] `ParametresApprenant.vue` refondu : formulaire profil réel
       (`PATCH /profile`, erreurs par champ), changement de mot de passe réel
       (`PUT /profile/password`, champs exacts `current_password`/`password`/
@@ -146,14 +146,14 @@ Contrat existant (module Identity) :
       → `POST /auth/mfa/disable`, nouveau composable `useMfaDisable`).
       Retiré entièrement : langue/mode sombre/notifications (aucun contrat
       backend, 02 a déjà tranché "dark mode off") et "Supprimer mon compte"
-      (aucun endpoint de suppression de compte n'existe — le bouton ne
+      (aucun endpoint de suppression de compte n'existe - le bouton ne
       faisait qu'un `alert()`, c'était trompeur, pas juste un détail
       cosmétique à garder "pour plus tard").
 - Vérifié en navigateur réel (Playwright, `user@example.com`) :
   compte/profil réels affichés (6 formations, 3 certificats), formulaire
   de mot de passe testé avec un mauvais mot de passe actuel → erreur
   réelle du backend affichée sous le bon champ ("The password is
-  incorrect" — message Laravel natif non traduit en `lang/fr/`, mineur,
+  incorrect" - message Laravel natif non traduit en `lang/fr/`, mineur,
   hors scope frontend).
 
 ### D. Dashboard apprenant / learning
@@ -163,28 +163,28 @@ Contrat existant (module Identity) :
   `GET /v1/catalog/pathways/{key}`, `GET /v1/catalog/courses`).
   **Correction du 2026-11-09** : contrairement à ce que cette section
   disait, les pages chapitre (Chapitre2…7, network/\*) **ont bien un
-  équivalent backend réel** — module Learning, déjà testé de bout en
+  équivalent backend réel** - module Learning, déjà testé de bout en
   bout : `GET /v1/learning/courses/{course}` (outline générique, modules
   → chapitres, verrouillage, progression), `GET
 /v1/learning/courses/{course}/chapters/{chapter}` (contenu),
-  `PUT .../progress`. Ce n'est pas "à attendre", c'est à brancher — plan
+  `PUT .../progress`. Ce n'est pas "à attendre", c'est à brancher - plan
   détaillé (y compris la suppression des fichiers chapitre codés en dur
   et du dashboard figé) dans
   `05-onboarding-catalog-and-learning-flow.md` section "Layout : un seul,
   dynamique". Ne pas refaire ce travail ici, le fichier 05 est la
   référence pour tout ce domaine (candidature, session, apprentissage).
-- [x] Décision enregistrée — voir 05, plus de blocage sur ce point.
+- [x] Décision enregistrée - voir 05, plus de blocage sur ce point.
 
-### E. SuperAdmin — utilisateurs & dashboard — FAIT (2026-11-09)
+### E. SuperAdmin - utilisateurs & dashboard - FAIT (2026-11-09)
 
 - [x] `SuperAdminUtilisateurs.vue` branché sur `GET /v1/admin/users`, `PATCH /v1/admin/users/{user}` (`src/features/superadmin/composables/useAdminUsers.ts`) : liste paginée réelle, recherche textuelle par `q`, filtre par rôle, modification du rôle et toggle actif/désactivé avec gestion des erreurs serveur via `displayMessage`. Les actions sur son propre compte sont désactivées (`isSelf`).
 - [x] `SuperAdminDashboard.vue` branché sur les contrats réels : KPIs via `useDashboardOverview` (`learners_total`, `completion_rate`, `certificates_issued_total`), compteur d'ANO en attente via `useAnoRequests({ status: 'pending' })`, et graphique à barres alimenté par les lignes budgétaires réelles (`useBudgetLines`).
 
-### F. SuperAdmin — budget, décaissements et ANO (module Finance, contrat réel) — FAIT (2026-11-09)
+### F. SuperAdmin - budget, décaissements et ANO (module Finance, contrat réel) - FAIT (2026-11-09)
 
 `SuperAdminFinance.vue` et `SuperAdminAno.vue` modélisent la gouvernance
 programme (bailleur Banque Mondiale), **pas** le paiement d'une formation
-par un apprenant (ADR-010, celui-ci reste différé — fournisseur de
+par un apprenant (ADR-010, celui-ci reste différé - fournisseur de
 paiement non choisi). Le module backend `Finance` pour le budget/ANO
 existe et est **vérifié de bout en bout en HTTP réel** (session du
 2026-11-08) : décaissement refusé sans ANO signée (422), signature
@@ -207,12 +207,12 @@ Endpoints (`PADCI-API/app/Modules/Finance/Routes/governance.php`) :
 
 Permissions : `finance.view`/`finance.manage` (admin+super_admin),
 `ano.manage` (admin+super_admin, soumettre), `ano.sign` (**super_admin
-seul** — vérifié en HTTP réel qu'un admin reçoit 403).
+seul** - vérifié en HTTP réel qu'un admin reçoit 403).
 
 - [x] `AnoRequestResource.php`, `BudgetLineResource.php`, `DisbursementRequestResource.php` lus avant de coder.
 - [x] Composables `src/features/superadmin/composables/{useAnoRequests,useBudgetLines,useDisbursements}.ts`.
 - [x] Brancher `SuperAdminAno.vue` : liste réelle, action "Signer" uniquement visible/activée si l'utilisateur connecté a le rôle `super_admin`, saisie de motif obligatoire pour le rejet.
-- [x] Brancher `SuperAdminFinance.vue` : lignes de budget réelles (remplacer "128.6 M €"), tableau de décaissements réel, action "Valider le paiement" qui appelle `mark-paid` — échoue proprement (422, message backend affiché via `displayMessage`) si l'ANO liée n'est pas signée.
+- [x] Brancher `SuperAdminFinance.vue` : lignes de budget réelles (remplacer "128.6 M €"), tableau de décaissements réel, action "Valider le paiement" qui appelle `mark-paid` - échoue proprement (422, message backend affiché via `displayMessage`) si l'ANO liée n'est pas signée.
 - [x] Test de cycle complet et tests e2e réels (Playwright `e2e/superadmin.spec.ts`) validés : affichage des KPIs, affichage des lignes budgétaires, erreur 422 exacte affichée lors de la tentative de validation d'un décaissement sans ANO signée, signature d'ANO par un super administrateur.
 
 ## Validation avant chaque case cochée

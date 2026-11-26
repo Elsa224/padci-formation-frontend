@@ -11,10 +11,12 @@
     "test:e2e": "playwright test",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
+    "gen:api": "openapi-typescript ${OPENAPI_SPEC:-../EMSP-API/docs/api/openapi.json} -o src/api/schema.d.ts && prettier --write --log-level warn src/api/schema.d.ts",
     "lint": "run-s lint:*",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "format:check": "prettier --check --experimental-cli src/"
   },
   "dependencies": {
     "@lucide/vue": "^1.70.0",
@@ -53,6 +55,7 @@
     "jiti": "^2.6.1",
     "jsdom": "^28.1.0",
     "npm-run-all2": "^8.0.4",
+    "openapi-typescript": "7.4.4",
     "oxlint": "~1.50.0",
     "prettier": "3.8.1",
     "tailwindcss": "^4.2.1",

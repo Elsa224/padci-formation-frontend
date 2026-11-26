@@ -1,52 +1,32 @@
 <template>
-  <section class="app-page max-w-6xl">
+  <section class="app-page">
     <header class="app-page-header">
       <div>
-        <p class="text-xs font-bold uppercase tracking-wider text-primary">Pédagogie</p>
-        <h1 class="app-page-title mt-2">Modération des cours</h1>
+        <h1 class="app-page-title">Modération des cours</h1>
         <p class="app-page-copy">Examinez les cours soumis avant leur publication.</p>
       </div>
     </header>
     <div class="app-panel space-y-5">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 class="text-lg font-bold text-ink">Cours à examiner</h2>
-          <p class="text-sm text-quiet">
-            Les cours sont soumis à revue lorsque la modération est activée.
-          </p>
-        </div>
-        <label class="text-sm font-semibold text-ink"
-          >Statut<select v-model="status" class="app-input mt-1">
-            <option value="submitted">Soumis</option>
-            <option value="in_review">En cours d'examen</option>
-            <option value="published">Publiés</option>
-            <option value="suspended">Suspendus</option>
-            <option value="rejected">Rejetés</option>
-          </select></label
-        >
-      </div>
+      <QueueTabs v-model="status" :tabs="tabs" label="Statut des cours" />
       <div v-if="courses.isPending.value" class="space-y-3">
         <div v-for="n in 3" :key="n" class="app-skeleton h-24" />
       </div>
-      <div
-        v-else-if="courses.isError.value"
-        class="rounded-xl bg-red-50 p-4 text-sm text-red-800"
-        role="alert"
-      >
+      <div v-else-if="courses.isError.value" class="app-alert app-alert-danger" role="alert">
         {{ errorMessage(courses.error.value) }}
         <button class="underline" @click="courses.refetch()">Réessayer</button>
       </div>
-      <p
+      <EmptyState
         v-else-if="!courses.data.value?.items.length"
-        class="rounded-xl bg-canvas p-8 text-center text-sm text-quiet"
-      >
-        Aucun cours pour ce statut.
-      </p>
+        :title="emptyTitle"
+        description="Les cours apparaissent ici dès qu'un formateur les soumet à validation."
+      />
       <div v-else class="space-y-3">
         <article
           v-for="course in courses.data.value?.items"
           :key="course.key"
-          class="rounded-xl border border-line p-5"
+          class="rounded-xl border p-5 transition"
+          :class="selected?.key === course.key ? 'border-primary/40 bg-mint/30' : 'border-line'"
+          :data-test="`course-${course.key}`"
         >
           <div class="flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -69,7 +49,7 @@
             <div class="rounded-xl bg-canvas p-4">
               <h4 class="font-bold text-ink">Contenu du cours</h4>
               <p v-if="modules.isPending.value" class="mt-2 text-sm text-quiet">Chargement...</p>
-              <p v-else-if="modules.isError.value" class="mt-2 text-sm text-red-700">
+              <p v-else-if="modules.isError.value" class="mt-2 text-sm text-danger-ink">
                 {{ errorMessage(modules.error.value) }}
               </p>
               <p v-else-if="!modules.data.value?.length" class="mt-2 text-sm text-quiet">
@@ -87,9 +67,11 @@
                     class="mt-3 rounded-lg border border-line bg-white p-3"
                   >
                     <h5 class="font-semibold text-ink">{{ chapter.title }}</h5>
-                    <p v-if="chapter.body" class="mt-2 whitespace-pre-wrap break-words text-quiet">
-                      {{ chapter.body }}
-                    </p>
+                    <div
+                      v-if="chapter.body"
+                      class="app-prose mt-2 max-w-none text-sm"
+                      v-html="renderMarkdown(chapter.body)"
+                    />
                     <ul v-if="chapter.resources?.length" class="mt-2 space-y-2">
                       <li
                         v-for="resource in chapter.resources"
@@ -111,43 +93,49 @@
             </div>
             <form
               v-if="['submitted', 'in_review'].includes(course.status)"
-              class="space-y-3"
-              @submit.prevent="submit(course)"
+              class="sticky bottom-4 z-10 space-y-3 rounded-xl border border-line bg-white p-4 shadow-raised"
+              @submit.prevent="decide(course, 'approve')"
             >
-              <label class="block text-sm font-semibold text-ink"
-                >Décision<select v-model="action" class="app-input mt-1">
-                  <option value="approve">Approuver et publier</option>
-                  <option value="reject">Rejeter</option>
-                </select></label
-              ><label class="block text-sm font-semibold text-ink"
-                >Motif
-                <span class="font-normal text-quiet">{{
-                  action === 'reject' ? '(obligatoire)' : '(facultatif)'
-                }}</span
-                ><textarea
-                  v-model.trim="note"
-                  class="app-input mt-1"
-                  rows="3"
-                  maxlength="2000"
-                  :required="action === 'reject'"
-                />
+              <label class="block text-sm font-semibold text-ink" :for="`note-${course.key}`">
+                Commentaire au formateur
+                <span class="font-normal text-quiet">(obligatoire pour un rejet)</span>
               </label>
-              <p v-if="actionError" role="alert" class="text-sm text-red-700">{{ actionError }}</p>
-              <button
-                class="app-action-primary"
-                :disabled="
-                  mutation.isPending.value || modules.isError.value || modules.isPending.value
-                "
-              >
-                {{
-                  mutation.isPending.value
-                    ? 'Enregistrement...'
-                    : action === 'approve'
-                      ? 'Approuver et publier'
-                      : 'Rejeter le cours'
-                }}
-              </button>
+              <textarea
+                :id="`note-${course.key}`"
+                v-model.trim="note"
+                class="app-input"
+                rows="3"
+                maxlength="2000"
+                placeholder="Ce qui doit être corrigé, ou un mot d'encouragement."
+              />
+              <p v-if="actionError" role="alert" class="text-sm text-danger-ink">
+                {{ actionError }}
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  type="submit"
+                  class="app-action-primary"
+                  :disabled="busy"
+                  :aria-busy="busy"
+                  data-test="approve-course"
+                >
+                  {{ pendingAction === 'approve' ? 'Publication…' : 'Approuver et publier' }}
+                </button>
+                <button
+                  type="button"
+                  class="app-action-secondary text-danger-ink hover:border-danger-line hover:bg-danger-soft"
+                  :disabled="busy"
+                  :aria-busy="busy"
+                  data-test="reject-course"
+                  @click="decide(course, 'reject')"
+                >
+                  {{ pendingAction === 'reject' ? 'Rejet…' : 'Rejeter' }}
+                </button>
+              </div>
             </form>
+            <p v-else-if="course.status === 'rejected'" class="text-sm text-quiet">
+              Ce cours a été rejeté. Le formateur peut le corriger et le soumettre à nouveau.
+            </p>
           </div>
         </article>
       </div>
@@ -172,8 +160,14 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import { toast } from 'vue-sonner'
 import { apiMeta, ApiError, http } from '@/api/http'
+import EmptyState from '@/components/app/EmptyState.vue'
+import QueueTabs from '@/components/app/QueueTabs.vue'
+import { renderMarkdown } from '@/lib/markdown'
+import { useCourseStatusCounts } from '../composables/useModerationQueues'
 interface Course {
   key: string
   title: string
@@ -199,16 +193,50 @@ interface Module {
     }>
   }>
 }
-const status = ref('submitted'),
-  page = ref(1),
-  selected = ref<Course | null>(null),
-  action = ref<'approve' | 'reject'>('approve'),
-  note = ref(''),
-  actionError = ref('')
+const STATUSES = [
+  { value: 'submitted', label: 'Soumis', empty: 'Aucun cours soumis', urgent: true },
+  {
+    value: 'in_review',
+    label: "En cours d'examen",
+    empty: "Aucun cours en cours d'examen",
+    urgent: true,
+  },
+  { value: 'published', label: 'Publiés', empty: 'Aucun cours publié' },
+  { value: 'suspended', label: 'Suspendus', empty: 'Aucun cours suspendu' },
+  { value: 'rejected', label: 'Rejetés', empty: 'Aucun cours rejeté' },
+] as const
+type Action = 'approve' | 'reject'
+
+const route = useRoute()
+const router = useRouter()
+const initialStatus = String(route.query.statut ?? '')
+const status = ref<string>(
+  STATUSES.some((s) => s.value === initialStatus) ? initialStatus : 'submitted',
+)
+const page = ref(1)
+const selected = ref<Course | null>(null)
+const note = ref('')
+const actionError = ref('')
+const pendingAction = ref<Action | null>(null)
 const client = useQueryClient()
-watch(status, () => {
+
+const counts = useCourseStatusCounts(STATUSES.map((s) => s.value))
+const tabs = computed(() =>
+  STATUSES.map((s) => ({
+    value: s.value,
+    label: s.label,
+    count: counts.data.value?.[s.value] ?? null,
+    urgent: 'urgent' in s && s.urgent,
+  })),
+)
+const emptyTitle = computed(
+  () => STATUSES.find((s) => s.value === status.value)?.empty ?? 'Aucun cours',
+)
+
+watch(status, (value) => {
   page.value = 1
   selected.value = null
+  void router.replace({ query: { ...route.query, statut: value, cle: undefined } })
 })
 const courses = useQuery({
   queryKey: computed(() => ['moderation-courses', status.value, page.value]),
@@ -219,6 +247,17 @@ const courses = useQuery({
     return { items: response.data, pagination: apiMeta(response)?.pagination ?? null }
   },
 })
+// Arrivée depuis le tableau de bord (?cle=…) : ouvrir directement ce cours.
+watch(
+  () => courses.data.value?.items,
+  (items) => {
+    const key = route.query.cle
+    if (!key || selected.value) return
+    const match = items?.find((course) => course.key === key)
+    if (match) select(match)
+  },
+  { immediate: true },
+)
 const modules = useQuery({
   queryKey: computed(() => ['moderation-course-modules', selected.value?.key]),
   enabled: computed(() => !!selected.value),
@@ -226,27 +265,43 @@ const modules = useQuery({
     (await http.get<Module[]>(`/admin/courses/${selected.value?.key}/modules`)).data,
 })
 const mutation = useMutation({
-  mutationFn: (course: Course) =>
-    http.post(`/admin/courses/${course.key}/${action.value}`, { note: note.value || null }),
-  onSuccess: () => {
+  mutationFn: ({ course, action }: { course: Course; action: Action }) =>
+    http.post(`/admin/courses/${course.key}/${action}`, { note: note.value || null }),
+  onSuccess: (_data, { course, action }) => {
+    toast.success(
+      action === 'approve' ? `« ${course.title} » est publié.` : `« ${course.title} » est rejeté.`,
+    )
     selected.value = null
     note.value = ''
-    action.value = 'approve'
     void client.invalidateQueries({ queryKey: ['moderation-courses'] })
   },
+  onSettled: () => {
+    pendingAction.value = null
+  },
 })
+const busy = computed(
+  () => mutation.isPending.value || modules.isError.value || modules.isPending.value,
+)
 function select(course: Course) {
   selected.value = selected.value?.key === course.key ? null : course
   actionError.value = ''
   note.value = ''
 }
-function submit(course: Course) {
+function decide(course: Course, action: Action) {
   actionError.value = ''
-  mutation.mutate(course, {
-    onError: (error) => {
-      actionError.value = errorMessage(error)
+  if (action === 'reject' && !note.value) {
+    actionError.value = 'Indiquez au formateur ce qui doit être corrigé avant de rejeter.'
+    return
+  }
+  pendingAction.value = action
+  mutation.mutate(
+    { course, action },
+    {
+      onError: (error) => {
+        actionError.value = errorMessage(error)
+      },
     },
-  })
+  )
 }
 function errorMessage(error: unknown) {
   return error instanceof ApiError

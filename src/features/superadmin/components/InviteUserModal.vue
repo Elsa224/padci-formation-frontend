@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import {
   XIcon,
   MailIcon,
-  ShieldIcon,
   ArrowRightIcon,
   ClockIcon,
   AlertTriangleIcon,
@@ -13,7 +12,7 @@ import { useCreateAdminInvitation, type AdminInvitation } from '../composables/u
 import { ApiError } from '@/api/http'
 import { useAuthStore } from '@/stores/auth'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     open: boolean
   }>(),
@@ -43,19 +42,19 @@ const availableRoles = computed(() => {
       value: 'admin',
       label: 'Administrateur',
       desc: 'Gestion opérationnelle, utilisateurs, formations et cohortes',
-      badge: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
+      badge: 'bg-info-soft text-info-ink ring-1 ring-info-line',
     },
     {
       value: 'moderateur',
       label: 'Modérateur',
       desc: 'Revue, validation et publication des contenus de formation',
-      badge: 'bg-purple-50 text-purple-700 ring-1 ring-purple-200',
+      badge: 'bg-forest-soft text-forest ring-1 ring-forest/20',
     },
     {
       value: 'formateur',
       label: 'Formateur',
       desc: 'Création et animation des cours et évaluations',
-      badge: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+      badge: 'bg-mint text-primary-shade ring-1 ring-primary/25',
     },
   ]
 
@@ -64,7 +63,7 @@ const availableRoles = computed(() => {
       value: 'super_admin',
       label: 'Super Administrateur',
       desc: 'Accès total : gouvernance, paramètres critiques, signature ANO',
-      badge: 'bg-orange-50 text-orange-700 ring-1 ring-orange-200',
+      badge: 'bg-savane-soft text-savane-ink ring-1 ring-savane/30',
     })
   }
 
@@ -120,7 +119,7 @@ function handleClose() {
   <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
     <!-- Backdrop flouté -->
     <div
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"
+      class="fixed inset-0 bg-forest/60 backdrop-blur-sm transition-opacity duration-300"
       @click="handleClose"
     ></div>
 
@@ -149,27 +148,21 @@ function handleClose() {
           <button
             type="button"
             @click="handleClose"
-            class="p-2 rounded-xl text-quiet hover:text-ink hover:bg-slate-100 transition-colors"
+            class="p-2 rounded-xl text-quiet hover:text-ink hover:bg-canvas transition-colors"
           >
             <XIcon class="w-5 h-5" />
           </button>
         </div>
 
         <!-- Success Alert -->
-        <div
-          v-if="successMessage"
-          class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3 text-xs text-emerald-800 animate-fade-in"
-        >
-          <CheckCircle2Icon class="w-5 h-5 text-emerald-600 shrink-0" />
+        <div v-if="successMessage" class="app-alert app-alert-success flex items-center gap-3">
+          <CheckCircle2Icon class="w-5 h-5 text-primary-shade shrink-0" />
           <span>{{ successMessage }}</span>
         </div>
 
         <!-- Error Alert -->
-        <div
-          v-if="errorMessage"
-          class="p-4 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3 text-xs text-red-700 animate-fade-in"
-        >
-          <AlertTriangleIcon class="w-5 h-5 text-red-500 shrink-0" />
+        <div v-if="errorMessage" class="app-alert app-alert-danger flex items-center gap-3">
+          <AlertTriangleIcon class="w-5 h-5 text-danger shrink-0" />
           <span>{{ errorMessage }}</span>
         </div>
 
@@ -177,8 +170,8 @@ function handleClose() {
         <form @submit.prevent="handleSubmit" class="space-y-5">
           <!-- Email Input -->
           <div class="space-y-1.5">
-            <label for="invite-email" class="block text-xs font-semibold text-slate-700">
-              Adresse e-mail institutionnelle <span class="text-red-500">*</span>
+            <label for="invite-email" class="block text-xs font-semibold text-body">
+              Adresse e-mail institutionnelle <span class="text-danger">*</span>
             </label>
             <div class="relative">
               <MailIcon
@@ -190,15 +183,15 @@ function handleClose() {
                 type="email"
                 required
                 placeholder="collaborateur@emsp.ci"
-                class="w-full pl-10 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl text-ink focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300"
+                class="app-input w-full pl-10 pr-3.5"
               />
             </div>
           </div>
 
           <!-- Role Selection Grid -->
           <div class="space-y-2">
-            <label class="block text-xs font-semibold text-slate-700">
-              Rôle attribué <span class="text-red-500">*</span>
+            <label class="block text-xs font-semibold text-body">
+              Rôle attribué <span class="text-danger">*</span>
             </label>
 
             <div class="space-y-2">
@@ -209,7 +202,7 @@ function handleClose() {
                 :class="
                   selectedRole === role.value
                     ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
-                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                    : 'border-line hover:border-line-strong bg-white'
                 "
               >
                 <input
@@ -242,16 +235,12 @@ function handleClose() {
             <button
               type="button"
               @click="handleClose"
-              class="px-5 py-2.5 rounded-full text-xs font-semibold text-slate-600 hover:text-ink hover:bg-slate-100 transition-colors"
+              class="px-5 py-2.5 rounded-full text-xs font-semibold text-body hover:text-ink hover:bg-canvas transition-colors"
             >
               Annuler
             </button>
 
-            <button
-              type="submit"
-              :disabled="!canSubmit"
-              class="group relative inline-flex items-center gap-3 pl-5 pr-2 py-2 rounded-full font-semibold text-xs text-white bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary shadow-md hover:shadow-lg transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-            >
+            <button type="submit" :disabled="!canSubmit" class="app-action-primary group relative">
               <span v-if="createMutation.isPending.value">Envoi en cours...</span>
               <span v-else>Envoyer l'invitation</span>
 

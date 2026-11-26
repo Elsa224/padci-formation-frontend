@@ -1,163 +1,69 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- EN-TÊTE -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Vue Globale PADCI</h1>
-        <p class="text-sm text-quiet mt-1">
+        <h1 class="app-page-title">Vue Globale PADCI</h1>
+        <p class="app-page-copy">
           Pilotage du programme : apprentissage et gouvernance financière.
         </p>
       </div>
-      <div
-        class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-line"
-      >
-        <div class="w-2 h-2 rounded-full bg-orange-300 animate-pulse"></div>
-        <span class="text-sm font-medium text-quiet">Financement : Banque Mondiale (ADR-011)</span>
-      </div>
-    </div>
+      <p class="text-sm text-quiet">Financement : Banque Mondiale (ADR-011)</p>
+    </header>
 
-    <!-- BANDEAU BUDGET (réel, agrégé depuis les lignes budgétaires) -->
-    <div
-      v-if="budgetTotals.length > 0"
-      class="bg-gradient-to-r from-orange-400 to-orange-400 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden"
-    >
-      <div
-        class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"
-      ></div>
+    <!-- Budget du programme : surface signature (chiffres réels des lignes budgétaires) -->
+    <section v-if="budgetTotals.length > 0" class="app-panel-forest space-y-6" aria-label="Budget">
       <div
         v-for="total in budgetTotals"
         :key="total.currency"
-        class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4"
+        class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
       >
         <div>
-          <p class="text-white/80 text-sm font-medium">Budget alloué ({{ total.currency }})</p>
-          <h2 class="text-4xl font-bold mt-1">
+          <p class="text-sm font-medium text-savane">Budget alloué ({{ total.currency }})</p>
+          <p class="mt-1 text-[2.25rem] leading-none font-bold tabular-nums text-white">
             {{ formatAmount(total.allocated, total.currency) }}
-          </h2>
+          </p>
         </div>
-        <div class="w-full md:w-64">
-          <div class="flex justify-between text-sm mb-1">
-            <span class="text-white/80">Consommation</span>
-            <span class="font-bold">{{ total.consumedPercent }}%</span>
-          </div>
-          <div class="w-full bg-black/20 rounded-full h-3">
-            <div
-              class="bg-white h-3 rounded-full"
-              :style="{ width: total.consumedPercent + '%' }"
-            ></div>
-          </div>
+        <div class="w-full md:w-72">
+          <ProgressBar
+            :value="total.consumedPercent / 100"
+            label="Consommé"
+            show-value
+            tone="savane"
+            on-dark
+          />
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- STATISTIQUES CLÉS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Apprenants</p>
-            <p class="text-3xl font-bold text-orange-600 mt-1">
-              {{ overview?.learners_total ?? '-' }}
-            </p>
-          </div>
-          <div class="bg-orange-50 p-3 rounded-xl">
-            <svg
-              class="w-6 h-6 text-orange-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Taux de complétion</p>
-            <p class="text-3xl font-bold text-orange-600 mt-1">
-              {{ overview ? Math.round(overview.completion_rate * 100) : '-' }}%
-            </p>
-          </div>
-          <div class="bg-orange-50 p-3 rounded-xl">
-            <svg
-              class="w-6 h-6 text-orange-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Certificats délivrés</p>
-            <p class="text-3xl font-bold text-orange-600 mt-1">
-              {{ overview?.certificates_issued_total ?? '-' }}
-            </p>
-          </div>
-          <div class="bg-orange-50 p-3 rounded-xl">
-            <svg
-              class="w-6 h-6 text-orange-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">ANO en attente</p>
-            <p class="text-3xl font-bold text-orange-600 mt-1">{{ pendingAnoCount }}</p>
-            <p class="text-xs text-quiet mt-2 font-medium">Signature requise</p>
-          </div>
-          <div class="bg-orange-50 p-3 rounded-xl">
-            <svg
-              class="w-6 h-6 text-orange-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Indicateurs clés : une bande, comme l'espace admin -->
+    <section
+      class="grid grid-cols-2 gap-x-6 gap-y-7 rounded-[18px] border border-line bg-white p-6 shadow-panel lg:grid-cols-4 lg:divide-x lg:divide-line"
+      aria-label="Indicateurs clés"
+    >
+      <StatTile label="Apprenants" :value="overview?.learners_total ?? '-'" />
+      <StatTile
+        class="lg:pl-6"
+        label="Taux d'achèvement"
+        tone="leaf"
+        :value="overview ? `${Math.round(overview.completion_rate * 100)} %` : '-'"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="Attestations délivrées"
+        :value="overview?.certificates_issued_total ?? '-'"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="ANO en attente"
+        :tone="pendingAnoCount > 0 ? 'savane' : 'neutral'"
+        :value="pendingAnoCount"
+        hint="Signature requise"
+      />
+    </section>
 
     <!-- GRAPHIQUE : lignes budgétaires réelles -->
-    <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+    <div class="app-panel">
       <h3 class="text-lg font-bold text-ink mb-4">
         Allocation et consommation par ligne budgétaire
       </h3>
@@ -177,6 +83,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import ProgressBar from '@/components/app/ProgressBar.vue'
+import StatTile from '@/components/app/StatTile.vue'
 import { Bar } from 'vue-chartjs'
 import {
   BarElement,
@@ -192,6 +100,9 @@ import { useAnoRequests } from '../composables/useAnoRequests'
 import { useBudgetLines } from '../composables/useBudgetLines'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+// Graphiques dans la police et les couleurs de texte de l'application.
+ChartJS.defaults.font.family = getComputedStyle(document.body).fontFamily
+ChartJS.defaults.color = '#56645d'
 
 // ==================== KPIs (module Operations, partagé avec AdminDashboard) ====================
 const { data: overview } = useDashboardOverview()

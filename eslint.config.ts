@@ -17,10 +17,27 @@ export default defineConfigWithVueTs(
     files: ['**/*.{vue,ts,mts,tsx}'],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  globalIgnores([
+    '**/dist/**',
+    '**/dist-ssr/**',
+    '**/coverage/**',
+    '**/.claude/**',
+    '**/.worktrees/**',
+  ]),
 
   ...pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
+
+  {
+    files: [
+      'src/components/ui/**/*.vue',
+      'src/views/**/*.vue',
+      'src/features/**/views/**/*.vue',
+    ],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
 
   {
     ...pluginPlaywright.configs['flat/recommended'],

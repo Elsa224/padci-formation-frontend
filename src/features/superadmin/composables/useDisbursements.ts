@@ -3,7 +3,7 @@ import { computed, type Ref } from 'vue'
 import { apiMeta, http } from '@/api/http'
 import type { ApiPaginationMeta } from '@/api/types'
 
-/** `DisbursementRequestResource` shape (ADR-011). Append-only ledger row — never deleted, even rejected. */
+/** `DisbursementRequestResource` shape (ADR-011). Append-only ledger row - never deleted, even rejected. */
 export interface Disbursement {
   id: number
   key: string
@@ -29,7 +29,7 @@ export interface DisbursementListFilters {
   page?: number
 }
 
-/** GET /admin/disbursement-requests — finance.view. */
+/** GET /admin/disbursement-requests - finance.view. */
 export function useDisbursements(filters: Ref<DisbursementListFilters>) {
   return useQuery({
     queryKey: computed(() => ['admin-disbursements', filters.value]),
@@ -59,7 +59,7 @@ export interface CreateDisbursementPayload {
   ano_request_key?: string
 }
 
-/** POST /admin/disbursement-requests — finance.manage. */
+/** POST /admin/disbursement-requests - finance.manage. */
 export function useCreateDisbursement() {
   const queryClient = useQueryClient()
 
@@ -73,8 +73,8 @@ export function useCreateDisbursement() {
 }
 
 /**
- * POST /admin/disbursement-requests/{disbursementRequest}/mark-paid —
- * finance.manage, fails with 422 if the linked ANO isn't signed yet — the
+ * POST /admin/disbursement-requests/{disbursementRequest}/mark-paid -
+ * finance.manage, fails with 422 if the linked ANO isn't signed yet - the
  * backend enforces this, the UI must show that error, never pre-validate
  * and hide the button (the server stays authoritative, see task 03.F).
  */
@@ -92,7 +92,7 @@ export function useMarkDisbursementPaid() {
   })
 }
 
-/** POST /admin/disbursement-requests/{disbursementRequest}/reject — finance.manage. */
+/** POST /admin/disbursement-requests/{disbursementRequest}/reject - finance.manage. */
 export function useRejectDisbursement() {
   const queryClient = useQueryClient()
 

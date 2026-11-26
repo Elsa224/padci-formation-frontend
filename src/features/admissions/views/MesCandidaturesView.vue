@@ -1,17 +1,17 @@
 <template>
-  <section class="app-page max-w-6xl" aria-labelledby="applications-title">
+  <section class="app-page" aria-labelledby="applications-title">
     <!-- EN-TÊTE -->
     <header class="app-page-header">
       <div>
-        <span class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Admissions</span>
-        <h1 id="applications-title" class="app-page-title mt-2">Mes candidatures</h1>
+        <h1 id="applications-title" class="app-page-title">Mes candidatures</h1>
         <p class="app-page-copy">
           Consultez le statut de vos candidatures aux différentes sessions de formation.
         </p>
       </div>
       <div>
         <router-link to="/catalogue" class="app-action-primary">
-          Découvrir d'autres filières &rarr;
+          Découvrir d'autres filières
+          <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
         </router-link>
       </div>
     </header>
@@ -116,7 +116,7 @@
 
           <form
             v-if="app.equipment_review?.status === 'needs_info' && editingEquipmentKey === app.key"
-            class="space-y-3 rounded-xl border border-amber-200 bg-amber-50 p-4"
+            class="space-y-3 rounded-xl border border-warning-line bg-warning-soft p-4"
             @submit.prevent="respondToEquipment(app)"
           >
             <div>
@@ -162,13 +162,14 @@
                 <input v-model.trim="equipmentForm.os_name" required class="app-input mt-1" />
               </label>
             </div>
-            <p v-if="equipmentResponseError" class="text-xs text-red-700" role="alert">
+            <p v-if="equipmentResponseError" class="text-xs text-danger-ink" role="alert">
               {{ equipmentResponseError }}
             </p>
             <div class="flex flex-wrap gap-2">
               <button
                 :disabled="equipmentResponseMutation.isPending.value"
-                class="app-action-primary text-xs disabled:opacity-60"
+                :aria-busy="equipmentResponseMutation.isPending.value"
+                class="app-action-primary text-xs"
               >
                 {{
                   equipmentResponseMutation.isPending.value ? 'Envoi…' : 'Renvoyer mes informations'
@@ -195,19 +196,30 @@
         <div class="flex flex-col sm:flex-row items-center gap-3">
           <button
             v-if="app.equipment_review?.status === 'needs_info' && editingEquipmentKey !== app.key"
-            class="w-full rounded-xl border border-amber-300 px-4 py-2 text-xs font-semibold text-amber-800 transition hover:bg-amber-50 sm:w-auto"
+            class="w-full rounded-xl border border-warning-line px-4 py-2 text-xs font-semibold text-warning-ink transition hover:bg-warning-soft sm:w-auto"
             @click="startEquipmentResponse(app)"
           >
             Compléter les informations
           </button>
-          <button
-            v-if="app.status === 'submitted' || app.status === 'in_review'"
-            @click="withdraw(app)"
-            :disabled="withdrawMutation.isPending.value"
-            class="w-full rounded-xl border border-red-200 px-4 py-2 text-xs font-semibold text-danger-ink transition hover:bg-red-50 disabled:opacity-50 sm:w-auto"
+          <ConfirmButton
+            v-if="
+              app.status === 'submitted' || app.status === 'in_review' || app.status === 'standby'
+            "
+            label="Retirer ma candidature"
+            confirm="Confirmer le retrait de votre candidature ?"
+            button-class="w-full rounded-xl border border-danger-line px-4 py-2 text-xs font-semibold text-danger-ink transition hover:bg-danger-soft disabled:opacity-50 sm:w-auto"
+            @confirm="withdraw(app)"
+          />
+          <div
+            v-if="app.status === 'standby'"
+            class="rounded-xl border border-info-line bg-info-soft/70 p-3 text-xs text-info-ink sm:max-w-xs"
           >
-            Retirer ma candidature
-          </button>
+            <p class="font-semibold text-info-ink">Liste prioritaire (Standby)</p>
+            <p class="mt-1 text-info-ink leading-relaxed">
+              Dossier validé avec succès ! Vous êtes sur la liste prioritaire (Standby) et serez
+              automatiquement affecté dès l'ouverture de la prochaine session.
+            </p>
+          </div>
           <p
             v-if="app.status === 'accepted'"
             class="max-w-xs text-center text-xs font-medium text-primary"
@@ -222,7 +234,9 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowRight as ArrowRightIcon } from '@lucide/vue'
 import { computed, ref } from 'vue'
+import ConfirmButton from '@/features/admin/components/ConfirmButton.vue'
 import type { ApiError } from '@/api/http'
 import {
   type EquipmentDeclaration,
@@ -246,12 +260,16 @@ const equipmentForm = ref<EquipmentDeclaration>({
 const equipmentResponseMutation = useRespondToEquipmentReview()
 
 const statusMap: Record<string, { label: string; class: string }> = {
-  submitted: { label: 'Soumise, en attente d’examen', class: 'bg-sky-100 text-sky-800' },
-  in_review: { label: 'En cours d’examen', class: 'bg-amber-100 text-amber-800' },
+  submitted: { label: 'Soumise, en attente d’examen', class: 'bg-info-soft text-info-ink' },
+  in_review: { label: 'En cours d’examen', class: 'bg-warning-soft text-warning-ink' },
   accepted: { label: 'Candidature acceptée', class: 'bg-primary/10 text-primary' },
-  waitlisted: { label: 'Sur liste d’attente', class: 'bg-violet-100 text-violet-800' },
-  rejected: { label: 'Non retenue', class: 'bg-red-100 text-red-800' },
-  withdrawn: { label: 'Candidature retirée', class: 'bg-slate-100 text-slate-700' },
+  standby: {
+    label: 'En attente de cohorte (Standby)',
+    class: 'bg-info-soft text-info-ink border border-info-line',
+  },
+  waitlisted: { label: 'Sur liste d’attente', class: 'bg-forest-soft text-forest' },
+  rejected: { label: 'Non retenue', class: 'bg-danger-soft text-danger-ink' },
+  withdrawn: { label: 'Candidature retirée', class: 'bg-canvas text-body' },
 }
 
 function statusLabel(status: string): string {
@@ -259,7 +277,7 @@ function statusLabel(status: string): string {
 }
 
 function statusClass(status: string): string {
-  return statusMap[status]?.class ?? 'bg-slate-100 text-slate-700'
+  return statusMap[status]?.class ?? 'bg-canvas text-body'
 }
 
 function equipmentReviewLabel(status: string): string {
@@ -276,10 +294,10 @@ function equipmentReviewLabel(status: string): string {
 function equipmentReviewClass(status: string): string {
   const classes: Record<string, string> = {
     not_required: 'text-quiet',
-    pending: 'text-amber-700',
-    needs_info: 'text-amber-700',
-    approved: 'text-green-700',
-    rejected: 'text-red-700',
+    pending: 'text-warning-ink',
+    needs_info: 'text-warning-ink',
+    approved: 'text-primary-shade',
+    rejected: 'text-danger-ink',
   }
   return classes[status] ?? 'text-quiet'
 }
@@ -320,8 +338,6 @@ function respondToEquipment(application: LearnerApplication) {
 }
 
 function withdraw(app: LearnerApplication) {
-  if (confirm(`Confirmez-vous le retrait de votre candidature pour ${app.pathway?.name} ?`)) {
-    withdrawMutation.mutate(app.key)
-  }
+  withdrawMutation.mutate(app.key)
 }
 </script>

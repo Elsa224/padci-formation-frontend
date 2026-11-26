@@ -1,23 +1,19 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- EN-TÊTE -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Gestion des Accès</h1>
-        <p class="text-sm text-quiet mt-1">Rôles, permissions et invitations de la plateforme.</p>
+        <h1 class="app-page-title">Gestion des Accès</h1>
+        <p class="app-page-copy">Rôles, permissions et invitations de la plateforme.</p>
       </div>
 
       <div class="flex items-center gap-3">
-        <button
-          type="button"
-          @click="showInviteModal = true"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs text-white bg-gradient-to-r from-primary to-primary-bright hover:from-primary-shade hover:to-primary shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-        >
+        <button type="button" @click="showInviteModal = true" class="app-action-primary">
           <UserPlusIcon class="w-4 h-4" />
           <span>Inviter un collaborateur</span>
         </button>
       </div>
-    </div>
+    </header>
 
     <!-- ONGLETS DE NAVIGATION -->
     <div class="flex items-center gap-2 border-b border-line pb-px">
@@ -36,7 +32,7 @@
         <span
           v-if="pagination?.total !== undefined"
           class="px-2 py-0.5 rounded-full text-[11px]"
-          :class="activeTab === 'users' ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-quiet'"
+          :class="activeTab === 'users' ? 'bg-primary/10 text-primary' : 'bg-canvas text-quiet'"
         >
           {{ pagination.total }}
         </span>
@@ -58,7 +54,7 @@
           v-if="pendingInvitations.length > 0"
           class="px-2 py-0.5 rounded-full text-[11px] font-bold"
           :class="
-            activeTab === 'invitations' ? 'bg-primary text-white' : 'bg-orange-100 text-orange-700'
+            activeTab === 'invitations' ? 'bg-primary text-white' : 'bg-savane-soft text-savane-ink'
           "
         >
           {{ pendingInvitations.length }}
@@ -77,13 +73,10 @@
               v-model="searchQuery"
               type="text"
               placeholder="Rechercher un nom, un email..."
-              class="w-full pl-10 pr-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+              class="app-input w-full pl-10 pr-4"
             />
           </div>
-          <select
-            v-model="filterRole"
-            class="px-4 py-2.5 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-ink bg-white min-w-[200px]"
-          >
+          <select v-model="filterRole" class="app-input md:w-56">
             <option value="">Tous les rôles</option>
             <option v-for="role in roleOptions" :key="role.value" :value="role.value">
               {{ role.label }}
@@ -93,13 +86,11 @@
       </div>
 
       <!-- TABLEAU DES UTILISATEURS -->
-      <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr
-                class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
-              >
+              <tr class="app-thead border-b border-line">
                 <th class="py-4 px-6">Utilisateur</th>
                 <th class="py-4 px-6">Rôle</th>
                 <th class="py-4 px-6">Statut</th>
@@ -114,7 +105,7 @@
                 </td>
               </tr>
               <tr v-else-if="isError">
-                <td colspan="5" class="py-10 text-center text-red-600">
+                <td colspan="5" class="py-10 text-center text-danger-ink">
                   {{ (error as ApiError)?.message ?? 'Impossible de charger les utilisateurs.' }}
                 </td>
               </tr>
@@ -161,13 +152,11 @@
                 <td class="py-4 px-6">
                   <span
                     class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
-                    :class="
-                      user.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-quiet'
-                    "
+                    :class="user.is_active ? 'bg-mint text-primary-shade' : 'bg-canvas text-quiet'"
                   >
                     <span
                       class="w-1.5 h-1.5 rounded-full"
-                      :class="user.is_active ? 'bg-green-500' : 'bg-gray-400'"
+                      :class="user.is_active ? 'bg-primary' : 'bg-quiet'"
                     ></span>
                     {{ user.is_active ? 'Actif' : 'Désactivé' }}
                   </span>
@@ -184,7 +173,7 @@
                     class="text-xs font-semibold px-3 py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
                     :class="
                       user.is_active
-                        ? 'text-red-600 hover:bg-red-50'
+                        ? 'text-danger-ink hover:bg-danger-soft'
                         : 'text-primary hover:bg-primary/10'
                     "
                   >
@@ -228,7 +217,7 @@
             </button>
           </nav>
         </div>
-        <p v-if="actionError" class="px-6 py-3 text-sm text-red-600 border-t border-line">
+        <p v-if="actionError" class="px-6 py-3 text-sm text-danger-ink border-t border-line">
           {{ actionError }}
         </p>
       </div>
@@ -236,7 +225,7 @@
 
     <!-- ── VUE 2 : INVITATIONS EN ATTENTE ──────────────────────────────── -->
     <div v-else class="space-y-6">
-      <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+      <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
         <div
           class="p-5 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
@@ -259,9 +248,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr
-                class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider border-b border-line"
-              >
+              <tr class="app-thead border-b border-line">
                 <th class="py-4 px-6">Destinataire</th>
                 <th class="py-4 px-6">Rôle</th>
                 <th class="py-4 px-6">Émis par</th>
@@ -278,7 +265,7 @@
               <tr v-else-if="pendingInvitations.length === 0">
                 <td colspan="5" class="py-12 text-center text-quiet">
                   <div class="flex flex-col items-center justify-center space-y-2">
-                    <MailIcon class="w-8 h-8 text-slate-300" />
+                    <MailIcon class="w-8 h-8 text-line-strong" />
                     <p class="font-medium text-ink">Aucune invitation en attente</p>
                     <p class="text-xs text-quiet max-w-sm">
                       Tous les collaborateurs invités ont activé leur compte ou aucune invitation
@@ -296,7 +283,7 @@
                 <td class="py-4 px-6">
                   <div class="flex items-center gap-2.5">
                     <div
-                      class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-quiet"
+                      class="w-8 h-8 rounded-full bg-canvas flex items-center justify-center text-quiet"
                     >
                       <MailIcon class="w-4 h-4" />
                     </div>
@@ -329,24 +316,19 @@
                 </td>
 
                 <td class="py-4 px-6">
-                  <span
-                    class="inline-flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full font-medium"
-                  >
-                    <ClockIcon class="w-3 h-3 text-amber-500" />
+                  <span class="app-chip app-chip-warning">
+                    <ClockIcon class="w-3 h-3 text-warning" />
                     <span>{{ formatRelativeExpiration(inv.expires_at) }}</span>
                   </span>
                 </td>
 
                 <td class="py-4 px-6 text-center">
-                  <button
-                    type="button"
-                    @click="handleRevoke(inv)"
-                    :disabled="revokingKey === inv.key"
-                    class="text-xs font-semibold px-3 py-1.5 rounded-lg text-red-600 hover:bg-red-50 transition disabled:opacity-50 cursor-pointer"
-                  >
-                    <span v-if="revokingKey === inv.key">Révocation...</span>
-                    <span v-else>Révoquer</span>
-                  </button>
+                  <ConfirmButton
+                    label="Révoquer"
+                    confirm="Révoquer l'invitation ?"
+                    button-class="text-xs font-semibold px-3 py-1.5 rounded-lg text-danger-ink hover:bg-danger-soft transition disabled:opacity-50 cursor-pointer"
+                    @confirm="handleRevoke(inv)"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -366,6 +348,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import ConfirmButton from '@/features/admin/components/ConfirmButton.vue'
 import {
   UsersRound as UsersRoundIcon,
   UserPlus as UserPlusIcon,
@@ -419,9 +402,6 @@ const revokeMutation = useRevokeAdminInvitation()
 const revokingKey = ref<string | null>(null)
 
 async function handleRevoke(inv: AdminInvitation) {
-  if (!confirm(`Êtes-vous sûr de vouloir révoquer l'invitation pour ${inv.email} ?`)) {
-    return
-  }
   revokingKey.value = inv.key
   try {
     await revokeMutation.mutateAsync(inv.key)
@@ -445,15 +425,15 @@ function primaryRole(user: AdminUser): AppRole {
 function roleColors(role: AppRole): { bg: string; text: string } {
   switch (role) {
     case 'super_admin':
-      return { bg: 'bg-orange-100', text: 'text-orange-700' }
+      return { bg: 'bg-savane-soft', text: 'text-savane-ink' }
     case 'admin':
-      return { bg: 'bg-blue-100', text: 'text-blue-700' }
+      return { bg: 'bg-info-soft', text: 'text-info-ink' }
     case 'moderateur':
-      return { bg: 'bg-purple-100', text: 'text-purple-700' }
+      return { bg: 'bg-forest-soft', text: 'text-forest' }
     case 'formateur':
-      return { bg: 'bg-emerald-100', text: 'text-emerald-700' }
+      return { bg: 'bg-mint', text: 'text-primary-shade' }
     default:
-      return { bg: 'bg-gray-100', text: 'text-quiet' }
+      return { bg: 'bg-canvas', text: 'text-quiet' }
   }
 }
 

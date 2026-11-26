@@ -5,6 +5,7 @@ import { ShieldCheck, KeyRound } from '@lucide/vue'
 import { useAuthStore } from '@/stores/auth'
 import { ApiError } from '@/api/http'
 import { useMfaSetup, useMfaConfirm } from '../composables/useMfaSetup'
+import { homeFor } from '../utils/homeFor'
 
 // FR-006/ADR-006: super_admin/admin cannot use anything beyond their own
 // profile until TOTP is confirmed (enforced server-side by
@@ -46,13 +47,11 @@ async function submitConfirm(): Promise<void> {
 }
 
 async function finishAndContinue(): Promise<void> {
-  await router.push(
-    auth.hasRole('super_admin')
-      ? '/superadmin/dashboard'
-      : auth.hasRole('admin')
-        ? '/admin/dashboard'
-        : '/parametres',
-  )
+  // Learners reach MFA setup from their settings page, so they go back there;
+  // every other role lands on its own workspace.
+  const roles = auth.user?.roles ?? []
+  // `every` is true for an empty list too: a role-less account goes to settings.
+  await router.push(roles.every((role) => role === 'apprenant') ? '/parametres' : homeFor(roles))
 }
 </script>
 
@@ -69,7 +68,7 @@ async function finishAndContinue(): Promise<void> {
         Configurez la double authentification avec votre application d'authentification.
       </p>
       <div class="mt-6 space-y-5">
-        <p v-if="errorMessage" role="alert" class="text-sm text-red-600">{{ errorMessage }}</p>
+        <p v-if="errorMessage" role="alert" class="text-sm text-danger-ink">{{ errorMessage }}</p>
 
         <!-- Codes de récupération : affichés une seule fois, après confirmation -->
         <div v-if="recoveryCodes" class="space-y-4">
@@ -77,10 +76,10 @@ async function finishAndContinue(): Promise<void> {
             class="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary"
             >Activée</span
           >
-          <p class="text-sm text-neutral-700">
+          <p class="text-sm text-body">
             Conservez ces codes de récupération en lieu sûr - ils ne seront plus jamais affichés.
           </p>
-          <div class="grid grid-cols-2 gap-2 rounded-lg bg-neutral-100 p-4 font-mono text-sm">
+          <div class="grid grid-cols-2 gap-2 rounded-lg bg-canvas p-4 font-mono text-sm">
             <span v-for="rc in recoveryCodes" :key="rc">{{ rc }}</span>
           </div>
           <button class="app-action-primary w-full" @click="finishAndContinue">
@@ -90,7 +89,7 @@ async function finishAndContinue(): Promise<void> {
 
         <!-- Étape 1 : scanner / saisir le secret -->
         <div v-else-if="secret" class="space-y-4">
-          <p class="text-sm text-neutral-600">
+          <p class="text-sm text-quiet">
             Ajoutez ce secret dans votre application d'authentification (Google Authenticator,
             Authy…), puis saisissez le code généré.
           </p>
@@ -118,13 +117,14 @@ async function finishAndContinue(): Promise<void> {
               type="submit"
               class="app-action-primary w-full"
               :disabled="confirm.isPending.value"
+              :aria-busy="confirm.isPending.value"
             >
               {{ confirm.isPending.value ? 'Vérification…' : 'Activer' }}
             </button>
           </form>
         </div>
 
-        <p v-else class="text-sm text-neutral-500">Préparation…</p>
+        <p v-else class="text-sm text-quiet">Préparation…</p>
       </div>
     </section>
   </main>

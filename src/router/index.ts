@@ -1,32 +1,73 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { bootstrapAuth } from '@/features/auth/composables/useBootstrapAuth'
+import { homeFor } from '@/features/auth/utils/homeFor'
 
 declare module 'vue-router' {
   interface RouteMeta {
     requiresAuth?: boolean
-    /** Any one of these roles is enough — not all of them. */
+    /** Any one of these roles is enough - not all of them. */
     roles?: string[]
+    /** Holding any of these roles denies the route, even with an allowed role. */
+    excludedRoles?: string[]
   }
 }
 
-/** Where a route's own `roles` meta sends an authenticated-but-wrong-role
- * user — each role's own home, so "forbidden" doesn't just bounce them to
- * login again. */
-function homeFor(roles: string[]): string {
-  if (roles.includes('super_admin')) return '/superadmin/dashboard'
-  if (roles.includes('admin')) return '/admin/dashboard'
-  if (roles.includes('moderateur')) return '/moderation/materiel'
-  return '/formations/dashboard'
-}
+// A wrong-role user is sent to their own home (homeFor), so "forbidden"
+// doesn't just bounce them to login again.
 
-// Routes are feature-based (src/features/<domain>) rather than role-based —
+// Routes are feature-based (src/features/<domain>) rather than role-based -
 // see docs/architecture note in the PADCI backend repo for the module
 // mapping this mirrors (Catalog, Learning, Admissions...).
 //
 // Every page is lazy-loaded: the previous single-chunk build warned about a
 // >500KB bundle (no code-splitting at all). This also means each route's
 // component only downloads when actually navigated to.
+
+/**
+ * Operations screens shared by the admin and super-admin workspaces (each
+ * mounts them in its own shell). Permissions are enforced by the API:
+ * admin and super_admin hold every permission these screens need.
+ */
+function operationsRoutes(prefix: 'admin' | 'superadmin') {
+  return [
+    {
+      path: 'rapports',
+      name: `${prefix}-rapports`,
+      component: () => import('@/features/admin/views/AdminRapports.vue'),
+    },
+    {
+      path: 'catalogue',
+      name: `${prefix}-catalogue`,
+      component: () => import('@/features/admin/views/AdminCatalogue.vue'),
+    },
+    {
+      path: 'inscriptions',
+      name: `${prefix}-inscriptions`,
+      component: () => import('@/features/admin/views/AdminInscriptions.vue'),
+    },
+    {
+      path: 'attestations',
+      name: `${prefix}-attestations`,
+      component: () => import('@/features/admin/views/AdminAttestations.vue'),
+    },
+    {
+      path: 'rapports-formateurs',
+      name: `${prefix}-rapports-formateurs`,
+      component: () => import('@/features/admin/views/AdminRapportsFormateurs.vue'),
+    },
+    {
+      path: 'audit',
+      name: `${prefix}-audit`,
+      component: () => import('@/features/admin/views/AdminAudit.vue'),
+    },
+    {
+      path: 'parametres',
+      name: `${prefix}-parametres`,
+      component: () => import('@/features/admin/views/AdminParametres.vue'),
+    },
+  ]
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,7 +92,7 @@ const router = createRouter({
     {
       // Chemin consommé par le lien de l'email de réinitialisation
       // (?token=…&email=…, ResetPasswordNotification). Alias de la route
-      // canonique française — un seul composant, deux chemins d'entrée.
+      // canonique française - un seul composant, deux chemins d'entrée.
       path: '/reinitialiser-mot-de-passe',
       name: 'reset-password',
       alias: '/reset-password',
@@ -92,6 +133,12 @@ const router = createRouter({
       path: '/contact',
       name: 'contact',
       component: () => import('@/features/public/views/Contact.vue'),
+    },
+    {
+      // Printed on every certificate (CERTIFICATE_VERIFY_URL?code=…): public.
+      path: '/verifier',
+      name: 'verify-certificate',
+      component: () => import('@/features/public/views/VerifierAttestation.vue'),
     },
 
     // ==================== CATALOGUE PUBLIC (ADR-012) ====================
@@ -166,6 +213,17 @@ const router = createRouter({
           component: () => import('@/features/learning/views/LearnerDashboard.vue'),
         },
         {
+          // Static segments: matched before ':courseKey'.
+          path: 'notes',
+          name: 'mes-notes',
+          component: () => import('@/features/learning/views/MesNotes.vue'),
+        },
+        {
+          path: 'attestations',
+          name: 'mes-attestations',
+          component: () => import('@/features/learning/views/MesAttestations.vue'),
+        },
+        {
           path: ':courseKey',
           name: 'course-overview',
           component: () => import('@/features/learning/views/CourseOverview.vue'),
@@ -174,6 +232,11 @@ const router = createRouter({
           path: ':courseKey/chapitres/:chapterKey',
           name: 'chapter-viewer',
           component: () => import('@/features/learning/views/ChapterViewer.vue'),
+        },
+        {
+          path: ':courseKey/evaluations/:attemptKey',
+          name: 'assessment-attempt',
+          component: () => import('@/features/learning/views/AttemptView.vue'),
         },
         {
           path: '/profil',
@@ -191,9 +254,21 @@ const router = createRouter({
     {
       path: '/moderation',
       component: () => import('@/features/moderation/layouts/ModeratorLayout.vue'),
-      redirect: '/moderation/materiel',
+      redirect: '/moderation/tableau-de-bord',
       meta: { requiresAuth: true, roles: ['moderateur', 'super_admin'] },
       children: [
+        {
+          path: 'tableau-de-bord',
+          name: 'moderation-dashboard',
+          component: () => import('@/features/moderation/views/ModeratorDashboard.vue'),
+        },
+        {
+          // Décision produit 2026-11-23 : le modérateur décide aussi les
+          // candidatures (admissions.manage) ; même écran que l'admin.
+          path: 'candidatures',
+          name: 'moderation-candidatures',
+          component: () => import('@/features/admin/views/AdminCandidatures.vue'),
+        },
         {
           path: 'materiel',
           name: 'moderation-equipment',
@@ -230,20 +305,18 @@ const router = createRouter({
           component: () => import('@/features/admin/views/AdminCohortes.vue'),
         },
         {
+          // admin holds courses.moderate/courses.publish (PermissionMatrix):
+          // same review screen as moderators, inside the admin shell.
+          path: 'moderation-cours',
+          name: 'admin-moderation-cours',
+          component: () => import('@/features/moderation/views/CourseReviews.vue'),
+        },
+        {
           path: 'utilisateurs',
           name: 'admin-utilisateurs',
           component: () => import('@/features/superadmin/views/SuperAdminUtilisateurs.vue'),
         },
-        {
-          path: 'rapports',
-          name: 'admin-rapports',
-          component: () => import('@/features/admin/views/AdminRapports.vue'),
-        },
-        {
-          path: 'parametres',
-          name: 'admin-parametres',
-          component: () => import('@/features/admin/views/AdminParametres.vue'),
-        },
+        ...operationsRoutes('admin'),
       ],
     },
 
@@ -270,15 +343,18 @@ const router = createRouter({
           component: () => import('@/features/superadmin/views/SuperAdminAno.vue'),
         },
         {
+          // Real cohort management (super_admin holds cohorts.manage);
+          // replaces the read-only mockup with invented figures.
           path: 'cohortes',
           name: 'superadmin-cohortes',
-          component: () => import('@/features/superadmin/views/SuperAdminCohortes.vue'),
+          component: () => import('@/features/admin/views/AdminCohortes.vue'),
         },
         {
-          path: 'rapports',
-          name: 'superadmin-rapports',
-          component: () => import('@/features/superadmin/views/SuperAdminRapports.vue'),
+          path: 'moderation-cours',
+          name: 'superadmin-moderation-cours',
+          component: () => import('@/features/moderation/views/CourseReviews.vue'),
         },
+        ...operationsRoutes('superadmin'),
         {
           path: 'utilisateurs',
           name: 'superadmin-utilisateurs',
@@ -287,9 +363,72 @@ const router = createRouter({
       ],
     },
 
-    // TODO(roles): no routes yet for `formateur` — the real
-    // backend has 5 roles, this frontend only covers 3. Tracked, not built
-    // here (see the audit report / plan).
+    // ==================== FORMATEUR ====================
+    // Ported from the legacy-main mockups (FormateurDashboard/Cours), rebuilt
+    // on the Catalog API. Attendance ("présences") and progress reports have
+    // no backend yet and are intentionally not routed.
+    {
+      path: '/formateur',
+      component: () => import('@/features/formateur/layouts/FormateurLayout.vue'),
+      redirect: '/formateur/dashboard',
+      // Formateur only. /admin/courses is not owner-scoped for staff who see
+      // every course (admin, super_admin, moderateur): for a multi-role
+      // account "Mes cours" would list the whole institution, so those roles
+      // are excluded even when the account also holds `formateur`.
+      meta: {
+        requiresAuth: true,
+        roles: ['formateur'],
+        excludedRoles: ['super_admin', 'admin', 'moderateur'],
+      },
+      children: [
+        {
+          path: 'dashboard',
+          name: 'formateur-dashboard',
+          component: () => import('@/features/formateur/views/FormateurDashboard.vue'),
+        },
+        {
+          path: 'cours',
+          name: 'formateur-cours',
+          component: () => import('@/features/formateur/views/FormateurCours.vue'),
+        },
+        {
+          path: 'cours/:courseKey',
+          name: 'formateur-cours-detail',
+          component: () => import('@/features/formateur/views/FormateurCoursDetail.vue'),
+        },
+        {
+          path: 'corrections',
+          name: 'formateur-corrections',
+          component: () => import('@/features/formateur/views/FormateurCorrections.vue'),
+        },
+        {
+          path: 'notes',
+          name: 'formateur-notes',
+          component: () => import('@/features/formateur/views/FormateurNotes.vue'),
+        },
+        {
+          path: 'rapports',
+          name: 'formateur-rapports',
+          component: () => import('@/features/formateur/views/FormateurRapports.vue'),
+        },
+        {
+          path: 'cohortes',
+          name: 'formateur-cohortes',
+          component: () => import('@/features/formateur/views/FormateurCohortes.vue'),
+        },
+        // Same /profile API as learners; the views are role-agnostic.
+        {
+          path: 'profil',
+          name: 'formateur-profil',
+          component: () => import('@/features/profile/views/ProfilApprenants.vue'),
+        },
+        {
+          path: 'parametres',
+          name: 'formateur-parametres',
+          component: () => import('@/features/profile/views/ParametresApprenant.vue'),
+        },
+      ],
+    },
   ],
 })
 
@@ -310,8 +449,17 @@ router.beforeEach(async (to) => {
   }
 
   const allowedRoles = to.matched.flatMap((record) => record.meta.roles ?? [])
-  if (allowedRoles.length > 0 && !allowedRoles.some((role) => auth.hasRole(role))) {
-    return { path: homeFor(auth.user.roles) }
+  const excludedRoles = to.matched.flatMap((record) => record.meta.excludedRoles ?? [])
+  if (
+    (allowedRoles.length > 0 && !allowedRoles.some((role) => auth.hasRole(role))) ||
+    excludedRoles.some((role) => auth.hasRole(role))
+  ) {
+    const home = homeFor(auth.user.roles)
+    // An account with no usable role (e.g. all roles revoked) would be sent
+    // to a home it cannot open either - an infinite redirect. Fall back to
+    // the public catalogue instead.
+    if (home === to.path) return { path: '/catalogue' }
+    return { path: home }
   }
 
   return true

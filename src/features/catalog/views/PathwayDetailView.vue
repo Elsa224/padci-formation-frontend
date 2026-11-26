@@ -1,5 +1,5 @@
 <template>
-  <section class="app-page max-w-6xl" aria-labelledby="pathway-title">
+  <section class="app-page" aria-labelledby="pathway-title">
     <router-link
       to="/catalogue"
       class="inline-flex items-center gap-2 text-sm font-semibold text-quiet transition hover:text-primary"
@@ -37,9 +37,9 @@
               class="rounded-lg bg-primary px-2.5 py-1 text-xs font-bold tracking-wide text-white"
               >{{ pathway.code }}</span
             >
-            <span v-if="pathway.programme" class="text-xs font-semibold text-quiet"
-              >Programme {{ pathway.programme.name }}</span
-            >
+            <span v-if="pathway.programme" class="text-xs font-semibold text-quiet">{{
+              pathway.programme.name
+            }}</span>
           </div>
           <h1
             id="pathway-title"
@@ -57,16 +57,16 @@
 
         <div
           v-if="pathway.equipment_requirements"
-          class="m-6 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm sm:m-8 sm:items-start"
+          class="m-6 flex gap-3 rounded-xl border border-warning-line bg-warning-soft p-4 text-sm sm:m-8 sm:items-start"
         >
-          <MonitorIcon class="mt-0.5 shrink-0 text-amber-700" :size="20" aria-hidden="true" />
+          <MonitorIcon class="mt-0.5 shrink-0 text-warning-ink" :size="20" aria-hidden="true" />
           <div>
-            <h2 class="font-bold text-amber-950">Équipement à prévoir</h2>
-            <p class="mt-1 text-sm leading-6 text-amber-900">
+            <h2 class="font-bold text-warning-ink">Équipement à prévoir</h2>
+            <p class="mt-1 text-sm leading-6 text-warning-ink">
               Cette formation comprend des travaux pratiques. Vérifiez que votre matériel répond aux
               critères ci-dessous avant de candidater.
             </p>
-            <ul class="mt-3 grid gap-1 text-sm text-amber-950 sm:grid-cols-3">
+            <ul class="mt-3 grid gap-1 text-sm text-warning-ink sm:grid-cols-3">
               <li v-if="pathway.equipment_requirements.min_cpu">
                 <span class="font-semibold">Processeur :</span>
                 {{ pathway.equipment_requirements.min_cpu }}
@@ -82,7 +82,7 @@
             </ul>
             <p
               v-if="pathway.equipment_requirements.notes"
-              class="mt-3 text-xs leading-5 text-amber-900"
+              class="mt-3 text-xs leading-5 text-warning-ink"
             >
               {{ pathway.equipment_requirements.notes }}
             </p>
@@ -90,80 +90,95 @@
         </div>
       </header>
 
-      <section class="app-panel" aria-labelledby="sessions-title">
-        <div
-          class="flex flex-col justify-between gap-4 border-b border-line pb-5 sm:flex-row sm:items-end"
-        >
-          <div>
-            <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Admissions</p>
-            <h2 id="sessions-title" class="mt-1 text-2xl font-bold text-ink">
-              Choisissez votre session
-            </h2>
-            <p class="mt-1 text-sm text-quiet">
-              Les candidatures ne sont possibles que pour les sessions ouvertes.
+      <!-- Candidature : on candidate à une FILIÈRE, jamais à une session.
+           À l'acceptation (admin), l'API affecte l'apprenant à la première
+           cohorte ouverte qui a des places, par ordre d'arrivée (FIFO), ou
+           le place en liste d'attente (CohortAssignmentService). -->
+      <section class="app-panel space-y-5" aria-labelledby="apply-title">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div class="max-w-2xl">
+            <h2 id="apply-title" class="text-2xl font-bold text-ink">Rejoindre cette filière</h2>
+            <p class="mt-2 text-sm leading-relaxed text-body">
+              Vous candidatez à la filière, pas à une session. Une fois votre candidature acceptée,
+              vous êtes inscrit automatiquement dans la prochaine session qui a des places, dans
+              l'ordre d'arrivée des candidatures.
             </p>
           </div>
-          <span
-            class="inline-flex w-fit items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary"
-            ><CalendarIcon :size="14" aria-hidden="true" />{{ availableCohorts }} ouverte{{
-              availableCohorts > 1 ? 's' : ''
-            }}</span
-          >
-        </div>
 
-        <div v-if="isCohortsPending" class="mt-5 space-y-3">
-          <div v-for="index in 2" :key="index" class="app-skeleton h-28 w-full" />
-        </div>
-        <div v-else-if="cohorts.length === 0" class="py-10 text-center">
-          <CalendarIcon class="mx-auto text-quiet" :size="28" aria-hidden="true" />
-          <p class="mt-3 text-sm font-semibold text-ink">Aucune session planifiée</p>
-          <p class="mt-1 text-sm text-quiet">
-            Revenez prochainement pour consulter les nouvelles ouvertures.
-          </p>
-        </div>
-        <div v-else class="mt-5 space-y-3">
-          <article
-            v-for="cohort in cohorts"
-            :key="cohort.key"
-            class="flex flex-col gap-5 rounded-xl border p-5 transition sm:flex-row sm:items-center sm:justify-between"
-            :class="
-              cohort.available ? 'border-primary/30 bg-primary/[0.025]' : 'border-line bg-canvas'
-            "
-          >
-            <div>
-              <div class="flex flex-wrap items-center gap-2">
-                <span
-                  class="rounded-full px-2.5 py-1 text-xs font-bold"
-                  :class="
-                    cohort.available ? 'bg-primary/10 text-primary' : 'bg-slate-200 text-slate-600'
-                  "
-                  >{{ cohort.available ? 'Candidature ouverte' : 'Bientôt disponible' }}</span
-                ><span class="text-xs font-medium text-quiet">{{ cohort.code }}</span>
-              </div>
-              <h3 class="mt-3 text-lg font-bold text-ink">{{ cohort.name }}</h3>
-              <p class="mt-1 text-sm text-quiet">
-                Du {{ formatDate(cohort.starts_at) }} au {{ formatDate(cohort.ends_at) }}
-              </p>
+          <div class="shrink-0">
+            <span
+              v-if="isStaffViewer"
+              class="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet sm:w-auto"
+              data-testid="apply-learners-only"
+            >
+              <LockIcon :size="14" aria-hidden="true" /> Réservé aux apprenants
+            </span>
+            <div
+              v-else-if="activeFormationName"
+              class="flex flex-col items-stretch gap-1 sm:items-end"
+            >
+              <button
+                type="button"
+                disabled
+                class="app-action-secondary w-full sm:w-auto"
+                data-testid="btn-already-enrolled"
+              >
+                Vous suivez déjà {{ activeFormationName }}
+              </button>
+              <router-link
+                to="/mes-candidatures"
+                class="text-center text-xs font-semibold text-primary hover:underline sm:text-right"
+                data-testid="link-to-candidatures"
+              >
+                Mes candidatures
+                <ArrowRightIcon class="inline size-4 align-[-0.2em]" aria-hidden="true" />
+              </router-link>
             </div>
             <button
-              v-if="cohort.available"
-              class="app-action-primary shrink-0"
-              @click="goToCandidature(cohort)"
-            >
-              Candidater <ArrowRightIcon :size="16" aria-hidden="true" />
-            </button>
-            <span
               v-else
-              class="inline-flex shrink-0 items-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-semibold text-quiet"
-              >Inscriptions fermées</span
+              type="button"
+              class="app-action-primary w-full sm:w-auto"
+              data-testid="btn-apply-pathway"
+              @click="goToCandidature()"
             >
-          </article>
+              Participer à cette formation <ArrowRightIcon :size="16" aria-hidden="true" />
+            </button>
+          </div>
         </div>
+
+        <p
+          v-if="isStaffViewer"
+          class="app-alert app-alert-info flex items-center gap-2"
+          data-testid="staff-cannot-apply"
+        >
+          <InfoIcon :size="16" class="shrink-0" aria-hidden="true" />
+          Vous consultez cette filière avec un compte de l'équipe : seuls les apprenants peuvent
+          candidater.
+        </p>
+        <template v-else-if="!isCohortsPending">
+          <p
+            v-if="hasOpenSeat"
+            class="app-alert app-alert-success flex items-center gap-2"
+            data-testid="seats-available"
+          >
+            <CalendarIcon :size="16" class="shrink-0" aria-hidden="true" />
+            Des places sont disponibles dans la prochaine session.
+          </p>
+          <p
+            v-else
+            class="app-alert app-alert-info flex items-start gap-2"
+            data-testid="waitlist-note"
+          >
+            <InfoIcon :size="16" class="mt-0.5 shrink-0" aria-hidden="true" />
+            Aucune place libre pour le moment. Vous pouvez candidater : si votre candidature est
+            acceptée, vous serez placé en liste d'attente et inscrit dès qu'une session s'ouvre.
+          </p>
+        </template>
       </section>
 
       <section class="app-panel" aria-labelledby="courses-title">
         <div class="border-b border-line pb-5">
-          <p class="text-xs font-bold uppercase tracking-[0.14em] text-primary">Programme</p>
+          <p class="app-eyebrow">Programme</p>
           <h2 id="courses-title" class="mt-1 text-2xl font-bold text-ink">Cours du parcours</h2>
         </div>
         <div v-if="isCoursesPending" class="mt-5 grid gap-3 sm:grid-cols-2">
@@ -200,10 +215,13 @@ import {
   ArrowRight as ArrowRightIcon,
   BookOpen as BookOpenIcon,
   Calendar as CalendarIcon,
+  Info as InfoIcon,
+  Lock as LockIcon,
   Monitor as MonitorIcon,
 } from '@lucide/vue'
 import type { ApiError } from '@/api/http'
 import { useAuthStore } from '@/stores/auth'
+import { useLearnerApplications } from '@/features/admissions/composables/useLearnerApplications'
 import {
   usePathway,
   usePathwayCohorts,
@@ -215,6 +233,21 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const pathwayKey = computed(() => String(route.params.key ?? ''))
+
+const { data: myAppsData } = useLearnerApplications()
+const activeFormation = computed(() => {
+  if (!auth.token) return null
+  const items = myAppsData.value?.items ?? []
+  return (
+    items.find((a) =>
+      ['submitted', 'in_review', 'waitlisted', 'standby', 'accepted'].includes(a.status),
+    ) ?? null
+  )
+})
+const activeFormationName = computed(() => activeFormation.value?.pathway?.name ?? null)
+// Seuls les apprenants candidatent (ApplicationPolicy::create côté API). Un
+// visiteur non connecté garde le bouton : il sera invité à se connecter.
+const isStaffViewer = computed(() => !!auth.token && !!auth.user && !auth.hasRole('apprenant'))
 const {
   data: pathway,
   isPending: isPathwayPending,
@@ -223,21 +256,24 @@ const {
 } = usePathway(pathwayKey)
 const { data: cohortsData, isPending: isCohortsPending } = usePathwayCohorts(pathwayKey)
 const cohorts = computed(() => cohortsData.value ?? [])
-const availableCohorts = computed(() => cohorts.value.filter((cohort) => cohort.available).length)
+// Seul indicateur montré à l'apprenant : reste-t-il une place quelque part ?
+const hasOpenSeat = computed(() =>
+  cohorts.value.some(
+    (cohort) => (cohort.available || cohort.status === 'open') && !isCohortFull(cohort),
+  ),
+)
 const { data: coursesData, isPending: isCoursesPending } = usePathwayCourses(pathwayKey)
 const courses = computed(() => coursesData.value?.items ?? [])
 
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return 'date à confirmer'
-  return new Date(dateStr).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
+function isCohortFull(cohort: PublicCohort): boolean {
+  return Boolean(
+    cohort.is_full || (cohort.available_seats !== undefined && cohort.available_seats <= 0),
+  )
 }
 
-function goToCandidature(cohort: PublicCohort) {
-  const target = `/candidature?pathway=${pathwayKey.value}&cohort=${cohort.key}`
+function goToCandidature(cohort?: PublicCohort) {
+  void cohort
+  const target = `/candidature?pathway=${pathwayKey.value}`
   router.push(auth.token ? target : `/connexion?redirect=${encodeURIComponent(target)}`)
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="app-page max-w-4xl">
+  <div class="app-page">
     <!-- ================= EN-TÊTE ================= -->
     <div class="app-page-header">
       <div>
@@ -9,7 +9,7 @@
     </div>
 
     <!-- ================= SECTION : PROFIL ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line bg-canvas/50">
         <h2 class="text-lg font-bold text-ink flex items-center gap-2">
           <CircleUserIcon class="text-primary" :size="20" /> Profil
@@ -21,17 +21,17 @@
           <div>
             <label class="block text-sm font-medium text-ink mb-1">Nom</label>
             <input v-model="profileForm.name" type="text" class="app-input" />
-            <p v-if="profileErrors.name" class="text-xs text-red-600 mt-1">
+            <p v-if="profileErrors.name" class="text-xs text-danger-ink mt-1">
               {{ profileErrors.name[0] }}
             </p>
           </div>
           <div>
             <label class="block text-sm font-medium text-ink mb-1">Email</label>
             <input v-model="profileForm.email" type="email" class="app-input" />
-            <p v-if="profileErrors.email" class="text-xs text-red-600 mt-1">
+            <p v-if="profileErrors.email" class="text-xs text-danger-ink mt-1">
               {{ profileErrors.email[0] }}
             </p>
-            <p v-else-if="emailChanged" class="text-xs text-amber-600 mt-1">
+            <p v-else-if="emailChanged" class="text-xs text-warning-ink mt-1">
               Changer l'email nécessite de le vérifier à nouveau avant la prochaine connexion.
             </p>
           </div>
@@ -39,6 +39,7 @@
             <button
               type="submit"
               :disabled="updateProfileMutation.isPending.value"
+              :aria-busy="updateProfileMutation.isPending.value"
               class="app-action-primary gap-2"
             >
               <SaveIcon :size="18" />
@@ -51,7 +52,7 @@
     </div>
 
     <!-- ================= SECTION : SÉCURITÉ ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line bg-canvas/50">
         <h2 class="text-lg font-bold text-ink flex items-center gap-2">
           <ShieldHalfIcon class="text-primary" :size="20" /> Sécurité
@@ -64,7 +65,7 @@
           <div>
             <label class="block text-sm font-medium text-ink mb-1">Mot de passe actuel</label>
             <input v-model="passwordForm.current_password" type="password" class="app-input" />
-            <p v-if="passwordErrors.current_password" class="text-xs text-red-600 mt-1">
+            <p v-if="passwordErrors.current_password" class="text-xs text-danger-ink mt-1">
               {{ passwordErrors.current_password[0] }}
             </p>
           </div>
@@ -72,7 +73,7 @@
             <div>
               <label class="block text-sm font-medium text-ink mb-1">Nouveau mot de passe</label>
               <input v-model="passwordForm.password" type="password" class="app-input" />
-              <p v-if="passwordErrors.password" class="text-xs text-red-600 mt-1">
+              <p v-if="passwordErrors.password" class="text-xs text-danger-ink mt-1">
                 {{ passwordErrors.password[0] }}
               </p>
             </div>
@@ -89,6 +90,7 @@
             <button
               type="submit"
               :disabled="changePasswordMutation.isPending.value"
+              :aria-busy="changePasswordMutation.isPending.value"
               class="app-action-primary"
             >
               Changer le mot de passe
@@ -122,7 +124,8 @@
             v-else
             @click="disableMfa"
             :disabled="mfaDisableMutation.isPending.value"
-            class="app-action-secondary shrink-0 text-red-700"
+            :aria-busy="mfaDisableMutation.isPending.value"
+            class="app-action-secondary shrink-0 text-danger-ink"
           >
             Désactiver
           </button>

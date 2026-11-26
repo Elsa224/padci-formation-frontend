@@ -1,106 +1,91 @@
 <template>
-  <div class="space-y-6">
-    <!-- ================= EN-TÊTE ================= -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div class="app-page">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Tableau de bord</h1>
-        <p class="text-sm text-quiet mt-1">
-          Vue d'ensemble du programme : apprenants, cohortes, cours et certifications.
+        <h1 class="app-page-title">Tableau de bord</h1>
+        <p class="app-page-copy">
+          Apprenants, cohortes, cours et attestations du programme, en temps réel.
         </p>
       </div>
-    </div>
+      <RouterLink to="/admin/rapports" class="app-action-secondary">Voir les rapports</RouterLink>
+    </header>
 
-    <!-- ================= STATISTIQUES PRINCIPALES (KPIs réels) ================= -->
-    <div v-if="isOverviewPending" class="text-center text-quiet py-6">
-      Chargement des indicateurs…
-    </div>
-    <div v-else-if="isOverviewError" class="text-center text-red-600 py-6">
-      {{ (overviewError as ApiError)?.message ?? 'Impossible de charger les indicateurs.' }}
-    </div>
-    <div v-else-if="overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Apprenants</p>
-            <p class="text-3xl font-bold text-ink mt-1">{{ overview.learners_total }}</p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+    <!-- À traiter : n'apparaît que si une décision attend l'administration -->
+    <section
+      v-if="todo.length"
+      class="app-panel-forest"
+      aria-labelledby="admin-todo-title"
+      data-test="admin-todo"
+    >
+      <h2 id="admin-todo-title" class="text-sm font-semibold text-savane">À traiter</h2>
+      <ul class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <li v-for="item in todo" :key="item.key">
+          <RouterLink
+            :to="item.to"
+            class="group flex items-center justify-between gap-4 rounded-xl bg-forest-raised p-4 transition hover:bg-forest-line/60"
+          >
+            <div class="min-w-0">
+              <p class="text-[1.9rem] leading-none font-bold text-white tabular-nums">
+                {{ item.count }}
+              </p>
+              <p class="mt-1.5 text-sm text-forest-muted">{{ item.label }}</p>
+            </div>
+            <span class="inline-flex items-center gap-1 text-sm font-semibold text-savane">
+              {{ item.action }}
+              <ChevronRightIcon
+                class="size-4 transition group-hover:translate-x-0.5"
+                aria-hidden="true"
               />
-            </svg>
-          </div>
-        </div>
-      </div>
+            </span>
+          </RouterLink>
+        </li>
+      </ul>
+    </section>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Cohortes actives</p>
-            <p class="text-3xl font-bold text-ink mt-1">{{ overview.active_cohorts_total }}</p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Taux de complétion</p>
-            <p class="text-3xl font-bold text-ink mt-1">
-              {{ Math.round(overview.completion_rate * 100) }}%
-            </p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line hover:shadow-md transition">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-quiet text-sm font-medium">Certificats délivrés</p>
-            <p class="text-3xl font-bold text-ink mt-1">{{ overview.certificates_issued_total }}</p>
-          </div>
-          <div class="bg-primary/10 p-3 rounded-xl">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Indicateurs principaux : une seule bande, lue d'un coup d'œil -->
+    <p
+      v-if="isOverviewError"
+      class="rounded-[18px] bg-danger-soft p-4 text-sm text-danger-ink"
+      role="alert"
+    >
+      {{ (overviewError as ApiError)?.message ?? 'Indicateurs indisponibles. Rechargez la page.' }}
+    </p>
+    <section
+      v-else
+      class="grid grid-cols-2 gap-x-6 gap-y-7 rounded-[18px] border border-line bg-white p-6 shadow-panel lg:grid-cols-4 lg:divide-x lg:divide-line"
+      aria-label="Indicateurs principaux"
+    >
+      <StatTile
+        label="Apprenants"
+        :value="overview?.learners_total ?? '-'"
+        :loading="isOverviewPending"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="Cohortes actives"
+        :value="overview?.active_cohorts_total ?? '-'"
+        :loading="isOverviewPending"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="Taux d'achèvement"
+        tone="leaf"
+        :value="overview ? `${Math.round(overview.completion_rate * 100)} %` : '-'"
+        :loading="isOverviewPending"
+      />
+      <StatTile
+        class="lg:pl-6"
+        label="Attestations délivrées"
+        tone="savane"
+        :value="overview?.certificates_issued_total ?? '-'"
+        :loading="isOverviewPending"
+      />
+    </section>
 
     <!-- ================= GRAPHIQUES ================= -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Répartition par filière (réel, GET /admin/dashboard/reports/pathways) -->
-      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="lg:col-span-2 app-panel">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-bold text-ink">Inscrits par filière</h3>
         </div>
@@ -112,7 +97,7 @@
         </div>
         <div
           v-else-if="isPathwaysError"
-          class="h-64 flex items-center justify-center text-sm text-red-600"
+          class="h-64 flex items-center justify-center text-sm text-danger-ink"
         >
           Impossible de charger.
         </div>
@@ -125,7 +110,7 @@
       </div>
 
       <!-- Statut des candidatures (réel, totaux par statut via GET /admin/applications) -->
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <h3 class="text-lg font-bold text-ink mb-4">Statut des candidatures</h3>
         <div
           v-if="isStatusCountsPending"
@@ -135,7 +120,7 @@
         </div>
         <div
           v-else-if="isStatusCountsError"
-          class="h-64 flex items-center justify-center text-sm text-red-600"
+          class="h-64 flex items-center justify-center text-sm text-danger-ink"
         >
           Impossible de charger.
         </div>
@@ -149,7 +134,7 @@
     </div>
 
     <!-- ================= DERNIÈRES CANDIDATURES ACCEPTÉES (réel) ================= -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line flex items-center justify-between">
         <h3 class="text-lg font-bold text-ink">Dernières candidatures acceptées</h3>
         <router-link
@@ -170,7 +155,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider">
+            <tr class="app-thead">
               <th class="py-3 px-6">Candidat</th>
               <th class="py-3 px-6">Filière</th>
               <th class="py-3 px-6">Session</th>
@@ -229,6 +214,10 @@ import {
   ArcElement,
 } from 'chart.js'
 import type { ApiError } from '@/api/http'
+import { ChevronRight as ChevronRightIcon } from '@lucide/vue'
+import StatTile from '@/components/app/StatTile.vue'
+import { useCourseStatusCounts } from '@/features/moderation/composables/useModerationQueues'
+import { usePendingReportCount } from '@/features/cohorts/composables/useTrainerReports'
 import { useApplications } from '../composables/useApplications'
 import {
   useApplicationStatusCounts,
@@ -237,6 +226,9 @@ import {
 } from '../composables/useDashboard'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
+// Graphiques dans la police et les couleurs de texte de l'application.
+ChartJS.defaults.font.family = getComputedStyle(document.body).fontFamily
+ChartJS.defaults.color = '#56645d'
 
 // ==================== KPIs ====================
 const {
@@ -284,7 +276,7 @@ const chartOptions = {
     },
   },
   scales: {
-    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f3f4f6' } },
+    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#dde5df' } },
     x: { grid: { display: false } },
   },
 }
@@ -326,14 +318,15 @@ const statusChartData = computed(() => {
         backgroundColor: entries.map(([status]) => {
           switch (status) {
             case 'accepted':
-              return '#198341'
+              return '#198341' // primary
             case 'in_review':
+              return '#1f6f9f' // info
             case 'waitlisted':
-              return '#f59e0b'
+              return '#e8761e' // savane
             case 'rejected':
-              return '#ef4444'
+              return '#d92d20' // danger
             default:
-              return '#9ca3af'
+              return '#9db8aa' // forest-muted : soumises, retirées
           }
         }),
         borderColor: '#ffffff',
@@ -351,6 +344,46 @@ const doughnutOptions = {
   },
   cutout: '75%',
 }
+
+// ==================== À TRAITER ====================
+const courseCounts = useCourseStatusCounts(['submitted', 'in_review'])
+const pendingReports = usePendingReportCount()
+const todo = computed(() => {
+  const items = []
+  const counts = statusCounts.value as Record<string, number> | undefined
+  const applications = (counts?.submitted ?? 0) + (counts?.in_review ?? 0)
+  if (applications > 0) {
+    items.push({
+      key: 'applications',
+      count: applications,
+      label: applications === 1 ? 'candidature à décider' : 'candidatures à décider',
+      action: 'Examiner',
+      to: '/admin/candidatures?statut=submitted',
+    })
+  }
+  const c = courseCounts.data.value
+  const courses = (c?.submitted ?? 0) + (c?.in_review ?? 0)
+  if (courses > 0) {
+    items.push({
+      key: 'courses',
+      count: courses,
+      label: courses === 1 ? 'cours à valider' : 'cours à valider',
+      action: 'Modérer',
+      to: '/admin/moderation-cours',
+    })
+  }
+  const reports = pendingReports.data.value ?? 0
+  if (reports > 0) {
+    items.push({
+      key: 'reports',
+      count: reports,
+      label: reports === 1 ? 'rapport de formateur à valider' : 'rapports de formateurs à valider',
+      action: 'Valider',
+      to: '/admin/rapports-formateurs',
+    })
+  }
+  return items
+})
 
 // ==================== DERNIÈRES CANDIDATURES ACCEPTÉES ====================
 const { data: recentData, isPending: isRecentPending } = useApplications(

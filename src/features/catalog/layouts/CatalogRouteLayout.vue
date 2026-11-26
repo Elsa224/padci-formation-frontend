@@ -20,6 +20,7 @@ import LearnerLayout from '@/features/learning/layouts/LearnerLayout.vue'
 import AdminLayout from '@/features/admin/layouts/DefaultLayoutAdmin.vue'
 import SuperAdminLayout from '@/features/superadmin/layouts/DefaultLayoutSuperAdmin.vue'
 import ModeratorLayout from '@/features/moderation/layouts/ModeratorLayout.vue'
+import FormateurLayout from '@/features/formateur/layouts/FormateurLayout.vue'
 import { bootstrapAuth } from '@/features/auth/composables/useBootstrapAuth'
 import { useAuthStore } from '@/stores/auth'
 
@@ -30,6 +31,7 @@ const layout = computed(() => {
   if (auth.hasRole('super_admin')) return SuperAdminLayout
   if (auth.hasRole('admin')) return AdminLayout
   if (auth.hasRole('moderateur')) return ModeratorLayout
+  if (auth.hasRole('formateur')) return FormateurLayout
   if (auth.user !== null) return LearnerLayout
   return PublicLayout
 })

@@ -1,12 +1,12 @@
 <template>
-  <div class="space-y-6">
+  <div class="app-page">
     <!-- EN-TÊTE -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header class="app-page-header">
       <div>
-        <h1 class="text-2xl font-bold text-ink">Budget &amp; Décaissements</h1>
-        <p class="text-sm text-quiet mt-1">Gouvernance financière du programme (ADR-011).</p>
+        <h1 class="app-page-title">Budget &amp; Décaissements</h1>
+        <p class="app-page-copy">Gouvernance financière du programme (ADR-011).</p>
       </div>
-    </div>
+    </header>
 
     <!-- CARTES DE BUDGET -->
     <div v-if="isBudgetPending || isDisbursementsPending" class="text-center text-quiet py-6">
@@ -16,10 +16,10 @@
       <div
         v-for="total in budgetTotals"
         :key="total.currency"
-        class="bg-white rounded-xl shadow-sm p-6 border border-line relative overflow-hidden"
+        class="app-panel relative overflow-hidden"
       >
         <div
-          class="absolute top-0 right-0 w-20 h-20 bg-orange-50 rounded-bl-full -mr-4 -mt-4"
+          class="absolute top-0 right-0 w-20 h-20 bg-savane-soft rounded-bl-full -mr-4 -mt-4"
         ></div>
         <p class="text-quiet text-sm font-medium relative z-10">
           Budget alloué ({{ total.currency }})
@@ -27,9 +27,9 @@
         <p class="text-2xl font-bold text-ink mt-1 relative z-10">
           {{ formatAmount(total.allocated, total.currency) }}
         </p>
-        <div class="w-full bg-gray-100 rounded-full h-2 mt-4 relative z-10">
+        <div class="w-full bg-canvas rounded-full h-2 mt-4 relative z-10">
           <div
-            class="bg-orange-500 h-2 rounded-full"
+            class="bg-savane h-2 rounded-full"
             :style="{ width: total.consumedPercent + '%' }"
           ></div>
         </div>
@@ -40,14 +40,11 @@
         </p>
       </div>
 
-      <div
-        v-if="budgetTotals.length === 0"
-        class="bg-white rounded-xl shadow-sm p-6 border border-line text-sm text-quiet md:col-span-2"
-      >
+      <div v-if="budgetTotals.length === 0" class="app-panel text-sm text-quiet md:col-span-2">
         Aucune ligne budgétaire créée pour l'instant.
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm p-6 border border-line">
+      <div class="app-panel">
         <p class="text-quiet text-sm font-medium">Décaissements en attente</p>
         <div class="flex items-end gap-2 mt-1">
           <p class="text-2xl font-bold text-ink">{{ pendingDisbursementsCount }}</p>
@@ -57,17 +54,17 @@
     </div>
 
     <!-- TABLEAU DES DÉCAISSEMENTS -->
-    <div class="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+    <div class="overflow-hidden rounded-[18px] border border-line bg-white shadow-panel">
       <div class="px-6 py-4 border-b border-line flex items-center justify-between">
         <h3 class="text-lg font-bold text-ink">Demandes de décaissement</h3>
-        <span class="text-xs font-medium bg-gray-100 text-quiet px-3 py-1 rounded-full"
+        <span class="text-xs font-medium bg-canvas text-quiet px-3 py-1 rounded-full"
           >{{ disbursements.length }} au total</span
         >
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-canvas text-xs font-semibold text-quiet uppercase tracking-wider">
+            <tr class="app-thead">
               <th class="py-3 px-6">Date</th>
               <th class="py-3 px-6">Bénéficiaire</th>
               <th class="py-3 px-6">Objet</th>
@@ -79,7 +76,7 @@
           </thead>
           <tbody class="divide-y divide-line text-sm">
             <tr v-if="isDisbursementsError">
-              <td colspan="7" class="py-8 text-center text-red-600">
+              <td colspan="7" class="py-8 text-center text-danger-ink">
                 {{
                   (disbursementsError as ApiError)?.message ??
                   'Impossible de charger les décaissements.'
@@ -106,7 +103,9 @@
                 <span
                   v-if="disbursement.ano_request"
                   :class="
-                    disbursement.ano_request.status === 'signed' ? 'text-primary' : 'text-amber-600'
+                    disbursement.ano_request.status === 'signed'
+                      ? 'text-primary'
+                      : 'text-warning-ink'
                   "
                 >
                   {{ disbursement.ano_request.status === 'signed' ? 'Signée' : 'Non signée' }}
@@ -126,7 +125,7 @@
                   v-if="disbursement.status === 'pending_ano'"
                   @click="ouvrirValidation(disbursement)"
                   :disabled="isMutating(disbursement.key)"
-                  class="text-orange-600 hover:bg-orange-50 p-2 rounded-lg font-medium text-xs transition disabled:opacity-50"
+                  class="text-savane-ink hover:bg-savane-soft p-2 rounded-lg font-medium text-xs transition disabled:opacity-50"
                 >
                   Valider
                 </button>
@@ -146,14 +145,9 @@
       <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-modal">
         <div class="p-6 text-center">
           <div
-            class="w-16 h-16 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-4"
+            class="w-16 h-16 mx-auto bg-savane-soft rounded-full flex items-center justify-center mb-4"
           >
-            <svg
-              class="w-8 h-8 text-orange-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg class="w-8 h-8 text-savane" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -172,24 +166,22 @@
             }}
             - {{ selectedDisbursement?.beneficiary }}
           </p>
-          <p
-            v-if="actionError"
-            class="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4 text-left"
-          >
+          <p v-if="actionError" class="app-alert app-alert-danger mb-4">
             {{ actionError }}
           </p>
 
           <div class="flex gap-3">
             <button
               @click="showConfirmModal = false"
-              class="flex-1 px-4 py-2.5 bg-gray-100 text-ink rounded-xl font-medium hover:bg-gray-200 transition"
+              class="flex-1 px-4 py-2.5 bg-canvas text-ink rounded-xl font-medium hover:bg-line transition"
             >
               Annuler
             </button>
             <button
               @click="confirmerValidation"
               :disabled="markPaidMutation.isPending.value"
-              class="flex-1 px-4 py-2.5 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition shadow-md shadow-orange-500/30 disabled:opacity-50"
+              :aria-busy="markPaidMutation.isPending.value"
+              class="flex-1 px-4 py-2.5 bg-savane text-white rounded-xl font-medium hover:bg-savane transition shadow-md shadow-savane/20 disabled:opacity-50"
             >
               Valider le paiement
             </button>
@@ -269,13 +261,13 @@ function statusLabel(status: string): string {
 function statusClass(status: string): string {
   switch (status) {
     case 'pending_ano':
-      return 'bg-amber-100 text-amber-700'
+      return 'bg-warning-soft text-warning-ink'
     case 'paid':
-      return 'bg-green-100 text-green-700'
+      return 'bg-mint text-primary-shade'
     case 'rejected':
-      return 'bg-red-100 text-red-700'
+      return 'bg-danger-soft text-danger-ink'
     default:
-      return 'bg-gray-100 text-ink'
+      return 'bg-canvas text-ink'
   }
 }
 

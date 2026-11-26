@@ -1,167 +1,201 @@
 <template>
-  <div class="space-y-8">
-    <!-- RETOUR DASHBOARD -->
-    <div>
-      <router-link
-        to="/formations/dashboard"
-        class="inline-flex items-center gap-2 text-xs font-semibold text-quiet hover:text-primary transition"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-        Retour à mon tableau de bord
-      </router-link>
-    </div>
+  <div class="app-page">
+    <RouterLink
+      to="/formations/dashboard"
+      class="inline-flex items-center gap-1.5 text-sm font-medium text-quiet transition hover:text-primary-shade"
+    >
+      <ChevronLeftIcon :size="16" aria-hidden="true" />
+      Mon tableau de bord
+    </RouterLink>
 
-    <!-- ÉTAT CHARGEMENT / ERREUR -->
-    <div v-if="isPending" class="text-center py-16 text-quiet">Chargement du plan de cours…</div>
-    <div v-else-if="isError" class="text-center py-16 text-red-600">
-      {{ (error as ApiError)?.message ?? 'Impossible de charger ce cours.' }}
+    <div v-if="isPending" class="space-y-4">
+      <div class="app-skeleton h-40" />
+      <div class="app-skeleton h-72" />
+    </div>
+    <div v-else-if="isError" class="app-panel">
+      <EmptyState
+        title="Ce cours n'est pas disponible."
+        :description="(error as ApiError)?.message ?? 'Réessayez dans quelques instants.'"
+      />
     </div>
 
     <template v-else-if="course">
-      <!-- HERO DU COURS -->
-      <div class="bg-white rounded-2xl border border-line p-8 shadow-sm space-y-4">
-        <div class="flex flex-wrap items-center gap-2">
-          <span
-            class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-primary/10 text-primary"
-          >
-            {{ course.level }}
-          </span>
-          <span v-if="course.pathway" class="text-xs text-quiet font-medium">
-            Filière : {{ course.pathway.name }}
-          </span>
-        </div>
-
-        <h1 class="text-3xl font-extrabold text-ink">{{ course.title }}</h1>
-        <p v-if="course.summary" class="text-quiet text-sm max-w-2xl leading-relaxed">
-          {{ course.summary }}
-        </p>
-
-        <!-- REPRENDRE LA LECTURE -->
-        <div
-          v-if="course.resume"
-          class="pt-4 border-t border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-        >
-          <div class="space-y-0.5">
-            <span class="text-xs text-quiet font-semibold uppercase tracking-wider"
-              >Reprendre où vous vous êtes arrêté</span
-            >
-            <p class="text-sm font-bold text-ink">{{ course.resume.chapter_title }}</p>
+      <!-- En-tête du cours -->
+      <header class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div class="min-w-0 space-y-4">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="app-chip app-chip-leaf">{{ levelLabel(course.level) }}</span>
+            <span v-if="course.pathway" class="text-sm text-quiet">
+              Filière {{ course.pathway.name }}
+            </span>
           </div>
-          <router-link
-            :to="`/formations/${course.key}/chapitres/${course.resume.chapter_key}`"
-            class="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-bold hover:bg-primary/90 transition shadow-sm text-center"
-          >
-            Continuer la lecture &rarr;
-          </router-link>
+          <h1 class="app-page-title max-w-[26ch]">{{ course.title }}</h1>
+          <p v-if="course.summary" class="app-page-copy">{{ course.summary }}</p>
         </div>
-      </div>
-
-      <!-- STRUCTURE DU COURS (MODULES & CHAPITRES) -->
-      <div class="space-y-6">
-        <h2 class="text-xl font-bold text-ink">Sommaire de la formation</h2>
 
         <div
-          v-if="course.modules.length === 0"
-          class="bg-white rounded-xl p-8 border border-line text-center text-sm text-quiet"
+          v-if="course.has_access"
+          class="flex items-center gap-5 rounded-[18px] border border-line bg-white p-5 shadow-panel"
         >
-          Ce cours n'a pas encore de modules publiés.
+          <ProgressRing
+            :value="progress.ratio"
+            :size="84"
+            :stroke="8"
+            label="Progression du cours"
+          />
+          <div class="space-y-3">
+            <p class="text-sm text-quiet">
+              <span class="font-semibold text-ink tabular-nums">{{ progress.completed }}</span>
+              sur {{ progress.total }} chapitres terminés
+            </p>
+            <RouterLink
+              v-if="progress.next"
+              :to="`/formations/${course.key}/chapitres/${progress.next.key}`"
+              class="app-action-primary"
+            >
+              {{ progress.completed > 0 ? 'Continuer' : 'Commencer le cours' }}
+            </RouterLink>
+          </div>
         </div>
+      </header>
 
-        <div
+      <!-- Parcours : modules et chapitres en séquence -->
+      <section class="space-y-8" aria-labelledby="syllabus-title">
+        <h2 id="syllabus-title" class="text-lg font-bold text-ink">Parcours du cours</h2>
+
+        <EmptyState
+          v-if="course.modules.length === 0"
+          framed
+          title="Aucun module publié pour l'instant"
+          description="Le contenu apparaîtra ici dès sa publication par votre formateur."
+        />
+
+        <section
           v-for="module in course.modules"
           :key="module.key"
-          class="bg-white rounded-2xl border border-line overflow-hidden shadow-sm"
+          class="grid gap-4 md:grid-cols-[13rem_1fr]"
+          :aria-label="`Module ${module.position} : ${module.title}`"
         >
-          <div class="bg-canvas px-6 py-4 border-b border-line flex items-center justify-between">
-            <div>
-              <span class="text-xs font-bold text-quiet uppercase tracking-wide"
-                >Module {{ module.position }}</span
+          <div class="md:pt-3">
+            <p class="text-sm font-medium text-savane-ink">Module {{ module.position }}</p>
+            <h3 class="mt-1 text-lg leading-snug font-bold text-ink">{{ module.title }}</h3>
+            <p class="mt-1 text-sm text-quiet">
+              {{ moduleDone(module) }} / {{ module.chapters.length }} terminés
+            </p>
+          </div>
+
+          <ol class="relative rounded-[18px] border border-line bg-white p-2 shadow-panel">
+            <li v-for="(chapter, index) in module.chapters" :key="chapter.key" class="relative">
+              <!-- Rail reliant les jalons -->
+              <span
+                v-if="index < module.chapters.length - 1"
+                class="absolute top-10 bottom-[-0.5rem] left-[1.9rem] w-px"
+                :class="chapter.progress?.status === 'completed' ? 'bg-primary/40' : 'bg-line'"
+                aria-hidden="true"
+              />
+              <component
+                :is="chapter.locked ? 'div' : RouterLink"
+                v-bind="
+                  chapter.locked ? {} : { to: `/formations/${course.key}/chapitres/${chapter.key}` }
+                "
+                class="group relative flex items-center gap-4 rounded-xl px-3 py-3"
+                :class="chapter.locked ? 'cursor-not-allowed' : 'transition hover:bg-mint/60'"
               >
-              <h3 class="text-base font-bold text-ink">{{ module.title }}</h3>
-            </div>
-            <span class="text-xs font-medium text-quiet"
-              >{{ module.chapters.length }} chapitre(s)</span
-            >
-          </div>
-
-          <div class="divide-y divide-line">
-            <div
-              v-for="chapter in module.chapters"
-              :key="chapter.key"
-              class="px-6 py-4 flex items-center justify-between gap-4 hover:bg-canvas/50 transition"
-              :class="chapter.locked ? 'opacity-60 bg-canvas/30' : ''"
-            >
-              <div class="flex items-center gap-3">
-                <!-- STATUT / VERROUILLÉ -->
-                <div class="shrink-0">
-                  <span
-                    v-if="chapter.progress?.status === 'completed'"
-                    class="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs"
-                    title="Terminé"
-                  >
-                    ✓
-                  </span>
-                  <span
-                    v-else-if="chapter.locked"
-                    class="w-6 h-6 rounded-full bg-gray-100 text-quiet flex items-center justify-center text-xs"
-                    title="Verrouillé"
-                  >
-                    🔒
-                  </span>
-                  <span
-                    v-else
-                    class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold"
-                  >
-                    {{ chapter.position }}
-                  </span>
-                </div>
-
-                <div>
-                  <h4 class="text-sm font-semibold text-ink">{{ chapter.title }}</h4>
-                  <p class="text-xs text-quiet">
-                    {{ chapterTypeLabel(chapter.type) }}
-                    <span v-if="chapter.duration_seconds">
-                      · {{ Math.round(chapter.duration_seconds / 60) }} min</span
-                    >
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <router-link
-                  v-if="!chapter.locked"
-                  :to="`/formations/${course.key}/chapitres/${chapter.key}`"
-                  class="px-3.5 py-1.5 bg-gray-100 hover:bg-primary hover:text-white rounded-lg text-xs font-semibold text-ink transition"
+                <span
+                  class="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ring-4 ring-white"
+                  :class="nodeClass(chapter)"
+                  aria-hidden="true"
                 >
-                  Lire
-                </router-link>
-                <span v-else class="text-xs text-quiet italic">Verrouillé</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                  <CheckIcon
+                    v-if="chapter.progress?.status === 'completed'"
+                    :size="15"
+                    :stroke-width="3"
+                  />
+                  <LockIcon v-else-if="chapter.locked" :size="13" />
+                  <template v-else>{{ chapter.position }}</template>
+                </span>
+                <span class="min-w-0 flex-1">
+                  <span
+                    class="block font-semibold"
+                    :class="
+                      chapter.locked ? 'text-quiet' : 'text-ink group-hover:text-primary-shade'
+                    "
+                    >{{ chapter.title }}</span
+                  >
+                  <span class="block text-sm text-quiet">
+                    {{ chapterTypeLabel(chapter.type) }}
+                    <template v-if="chapter.duration_seconds">
+                      · {{ Math.round(chapter.duration_seconds / 60) }} min</template
+                    >
+                  </span>
+                </span>
+                <span
+                  v-if="progress.next?.key === chapter.key && !chapter.locked"
+                  class="app-chip app-chip-savane"
+                  >À suivre</span
+                >
+                <span v-else-if="chapter.progress?.status === 'completed'" class="sr-only">
+                  Terminé
+                </span>
+                <span v-else-if="chapter.locked" class="text-sm text-quiet">Verrouillé</span>
+                <ChevronRightIcon
+                  v-if="!chapter.locked"
+                  :size="18"
+                  class="shrink-0 text-quiet transition group-hover:translate-x-0.5 group-hover:text-primary"
+                  aria-hidden="true"
+                />
+              </component>
+            </li>
+          </ol>
+        </section>
+      </section>
+
+      <!-- Évaluations et attestation (accès inscrit uniquement) -->
+      <CourseAssessmentsPanel v-if="course.has_access" :course-key="course.key" />
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+import {
+  Check as CheckIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Lock as LockIcon,
+} from '@lucide/vue'
 import type { ApiError } from '@/api/http'
-import { useCourseOutline } from '../composables/useLearningCourse'
+import EmptyState from '@/components/app/EmptyState.vue'
+import ProgressRing from '@/components/app/ProgressRing.vue'
+import { courseProgress } from '@/components/app/courseProgress'
+import {
+  useCourseOutline,
+  type OutlineChapter,
+  type OutlineModule,
+} from '../composables/useLearningCourse'
+import CourseAssessmentsPanel from '../components/CourseAssessmentsPanel.vue'
 
 const route = useRoute()
 const courseKey = computed(() => String(route.params.courseKey ?? ''))
 
 const { data: course, isPending, isError, error } = useCourseOutline(courseKey)
+const progress = computed(() => courseProgress(course.value))
+
+function moduleDone(module: OutlineModule): number {
+  return module.chapters.filter((chapter) => chapter.progress?.status === 'completed').length
+}
+
+function nodeClass(chapter: OutlineChapter): string {
+  if (chapter.progress?.status === 'completed') return 'bg-primary text-white'
+  if (chapter.locked) return 'border border-line bg-canvas text-quiet'
+  if (progress.value.next?.key === chapter.key) return 'bg-savane text-forest'
+  return 'border-2 border-line-strong bg-white text-body'
+}
+
+function levelLabel(level: string): string {
+  return { beginner: 'Débutant', intermediate: 'Intermédiaire', advanced: 'Avancé' }[level] ?? level
+}
 
 function chapterTypeLabel(type: string): string {
   switch (type) {

@@ -15,7 +15,13 @@
 
 <script setup lang="ts">
 import {
+  Award as AwardIcon,
+  FileCheck as ReportsIcon,
   BarChart3 as BarChartIcon,
+  ClipboardList as EnrollIcon,
+  Library as CatalogueIcon,
+  ScrollText as AuditIcon,
+  BookOpenCheck as BookOpenCheckIcon,
   CalendarDays as CalendarIcon,
   LayoutDashboard as LayoutDashboardIcon,
   Settings as SettingsIcon,
@@ -33,6 +39,16 @@ const navigation: WorkspaceNavGroup[] = [
       { label: 'Tableau de bord', to: '/admin/dashboard', icon: LayoutDashboardIcon },
       { label: 'Candidatures', to: '/admin/candidatures', icon: CandidaturesIcon },
       { label: 'Cohortes', to: '/admin/cohortes', icon: CalendarIcon },
+      { label: 'Inscriptions', to: '/admin/inscriptions', icon: EnrollIcon },
+    ],
+  },
+  {
+    label: 'Pédagogie',
+    items: [
+      { label: 'Modération des cours', to: '/admin/moderation-cours', icon: BookOpenCheckIcon },
+      { label: 'Catalogue', to: '/admin/catalogue', icon: CatalogueIcon },
+      { label: 'Attestations', to: '/admin/attestations', icon: AwardIcon },
+      { label: 'Rapports formateurs', to: '/admin/rapports-formateurs', icon: ReportsIcon },
     ],
   },
   {
@@ -40,6 +56,7 @@ const navigation: WorkspaceNavGroup[] = [
     items: [
       { label: 'Utilisateurs & Accès', to: '/admin/utilisateurs', icon: UsersIcon },
       { label: 'Rapports', to: '/admin/rapports', icon: BarChartIcon },
+      { label: "Journal d'audit", to: '/admin/audit', icon: AuditIcon },
       { label: 'Paramètres', to: '/admin/parametres', icon: SettingsIcon },
     ],
   },

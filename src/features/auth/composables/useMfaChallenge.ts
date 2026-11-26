@@ -14,9 +14,9 @@ interface ChallengeSuccess {
   user: SessionUser
 }
 
-/** POST /auth/mfa/challenge — the second step after a 428 from useLogin. No
+/** POST /auth/mfa/challenge - the second step after a 428 from useLogin. No
  * Authorization header exists yet at this point (that's the whole point:
- * the caller doesn't have a token until this succeeds), which is fine —
+ * the caller doesn't have a token until this succeeds), which is fine -
  * this route doesn't require one. */
 export function useMfaChallenge() {
   const auth = useAuthStore()

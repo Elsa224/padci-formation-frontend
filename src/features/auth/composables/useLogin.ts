@@ -16,7 +16,7 @@ interface LoginSuccess {
 
 /**
  * POST /auth/login. A privileged account with TOTP confirmed gets a 428
- * (`AUTH_MFA_REQUIRED`) instead of a token — that is not a failure for the
+ * (`AUTH_MFA_REQUIRED`) instead of a token - that is not a failure for the
  * UI to show as "wrong credentials", the caller must branch on
  * `error.code === 'AUTH_MFA_REQUIRED'` and move to the challenge step
  * (see useMfaChallenge). This composable only does the plain login call.

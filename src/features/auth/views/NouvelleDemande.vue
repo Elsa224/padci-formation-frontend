@@ -11,9 +11,10 @@
       <div class="mb-10 relative">
         <RouterLink
           to="/"
-          class="text-primary text-2xl font-bold hover:scale-110 transition absolute left-0 bottom-3"
+          class="text-primary transition hover:-translate-x-0.5 absolute left-0 bottom-3"
+          aria-label="Retour"
         >
-          ←
+          <ArrowLeftIcon class="size-6" aria-hidden="true" />
         </RouterLink>
 
         <p class="text-sm font-semibold text-primary absolute left-0 top-5">Retour</p>
@@ -47,8 +48,8 @@
   </div>
 </template>
 
-<script setup>
-import { BookOpenIcon, UserPlusIcon } from '@lucide/vue'
+<script setup lang="ts">
+import { BookOpenIcon, UserPlusIcon, ArrowLeft as ArrowLeftIcon } from '@lucide/vue'
 import { RouterLink } from 'vue-router'
 import bannerImage from '@/assets/images/banierepadciformation.png'
 </script>

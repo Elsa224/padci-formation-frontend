@@ -1,23 +1,8 @@
-import { test, expect } from '@playwright/test'
-import { execSync } from 'node:child_process'
+import { test, expect } from './fixtures'
 
-function getSuperAdminToken(): string {
-  const output = execSync(
-    `docker exec emsp_app php artisan tinker --execute="\\$u = \\App\\Modules\\Identity\\Models\\User::where('email', 'smoke-superadmin@example.com')->first(); echo \\$u->createToken('playwright-superadmin')->plainTextToken;"`,
-    { encoding: 'utf-8', timeout: 15000 },
-  )
-  const match = output.trim().match(/([0-9]+\|[A-Za-z0-9]+)/)
-  if (!match) throw new Error('Failed to extract token: ' + output)
-  return match[1]
-}
+const token = 'mock-smoke-superadmin-token'
 
 test.describe('SuperAdmin pages', () => {
-  let token: string
-
-  test.beforeAll(() => {
-    token = getSuperAdminToken()
-  })
-
   test.beforeEach(async ({ page }) => {
     await page.addInitScript((authToken) => {
       sessionStorage.setItem('padci.session_token', authToken)
@@ -28,8 +13,8 @@ test.describe('SuperAdmin pages', () => {
     await page.goto('/superadmin/dashboard')
     await expect(page.getByRole('heading', { name: 'Vue Globale PADCI' })).toBeVisible()
     await expect(page.getByText('Apprenants')).toBeVisible()
-    await expect(page.getByText('Taux de complétion')).toBeVisible()
-    await expect(page.getByText('Certificats délivrés')).toBeVisible()
+    await expect(page.getByText("Taux d'achèvement")).toBeVisible()
+    await expect(page.getByText('Attestations délivrées')).toBeVisible()
     await expect(page.getByText('ANO en attente')).toBeVisible()
     await expect(
       page.getByRole('heading', { name: 'Allocation et consommation par ligne budgétaire' }),
@@ -56,22 +41,23 @@ test.describe('SuperAdmin pages', () => {
     await expect(page.getByText('Cisco Networking Academy')).toBeVisible()
 
     const validerBtn = page.getByRole('button', { name: 'Valider' }).first()
-    if (await validerBtn.isVisible()) {
-      await validerBtn.click()
-      await expect(page.getByRole('heading', { name: 'Confirmer le décaissement' })).toBeVisible()
-      await page.getByRole('button', { name: 'Valider le paiement' }).click()
-      await expect(
-        page.getByText(
-          'Un décaissement ne peut être marqué payé que si une ANO signée y est rattachée.',
-        ),
-      ).toBeVisible()
-      await page.getByRole('button', { name: 'Annuler' }).click()
-    }
+    await expect(validerBtn).toBeVisible()
+    await validerBtn.click()
+    await expect(page.getByRole('heading', { name: 'Confirmer le décaissement' })).toBeVisible()
+    await page.getByRole('button', { name: 'Valider le paiement' }).click()
+    await expect(
+      page.getByText(
+        'Un décaissement ne peut être marqué payé que si une ANO signée y est rattachée.',
+      ),
+    ).toBeVisible()
+    await page.getByRole('button', { name: 'Annuler' }).click()
   })
 
   test('SuperAdmin ANO displays list and allows signing', async ({ page }) => {
     await page.goto('/superadmin/ano')
     await expect(page.getByRole('heading', { name: 'Validation des ANO' })).toBeVisible()
-    await expect(page.getByText('Avis de Non-Objection (UCP / Banque Mondiale)')).toBeVisible()
+    await expect(
+      page.getByText('Avis de Non-Objection (UCP / Banque Mondiale)').first(),
+    ).toBeVisible()
   })
 })
